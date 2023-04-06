@@ -1,5 +1,4 @@
 import { tap, from, Observable, share, switchMap, map, mergeMap } from "rxjs";
-import { Draw } from "./Draw";
 import { Field } from "./LavirintItems/Field";
 import { LavirintItem } from "./LavirintItems/LavirintItem";
 import { NoWall } from "./LavirintItems/NoWall";
@@ -41,7 +40,7 @@ export class Level implements ILevel {
     private mat2Stream(lavirintMat: Array<Array<LavirintItem>>): Observable<LavirintItem> {        
         let arr = new Array<LavirintItem>();
 
-        const tok1 = from(this.LevelMat).pipe(
+        return from(this.LevelMat).pipe(
             tap(() => {
                 arr = new Array<LavirintItem>();
                 lavirintMat.push(arr);
@@ -54,15 +53,10 @@ export class Level implements ILevel {
             }),
             share()
         ); 
-
-
-        return tok1;
     }
 
     public getLevel(lvl: number, lavirintMat: Array<Array<LavirintItem>>): Observable<LavirintItem> {
-
-        const fetchLevel$ = this.fetchLevel(lvl)
-        const tok1 =  fetchLevel$
+        return this.fetchLevel(lvl)
         .pipe(
             switchMap(lav => {                
                 this.Wall = lav.Wall;
@@ -74,8 +68,6 @@ export class Level implements ILevel {
             }),
             share()
         );
-
-        return tok1;
     }
 
     private num2LavirintItem(num: number) {
