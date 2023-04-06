@@ -1,0 +1,33 @@
+.grid-container {
+    display: grid;
+    gap: 0px;
+    padding: 10px;
+    width: 90vh;
+    height: 90vh;
+  }
+  
+  .row-tmp {
+    grid-template-rows: 2% auto 2% auto 2% auto 2%;
+  }
+
+  .col-tmp {
+    grid-template-columns: 2% auto 2% auto 2% auto 2%;
+  }
+  
+  .grid-container > div {
+    text-align: center;
+    padding: 0px;
+    font-size: 30px;
+  }
+  
+  .wall {
+    background-color: red;
+  }
+  
+  .no-wall {
+    background-color: white;
+  }
+
+  .item {
+    background-color: white;
+  }
