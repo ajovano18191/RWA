@@ -7,6 +7,6 @@ export class Field extends LavirintItem {
     }
 
     public draw(par: HTMLElement): HTMLDivElement {
-        return Draw.div(par, "field");
+        return Draw.div(par, "div-field");
     }
 }

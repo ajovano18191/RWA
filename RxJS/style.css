@@ -20,14 +20,14 @@
     font-size: 30px;
   }
   
-  .wall {
+  .div-wall {
     background-color: red;
   }
   
-  .no-wall {
+  .div-no-wall {
     background-color: white;
   }
 
-  .item {
+  .div-item {
     background-color: white;
   }

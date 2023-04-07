@@ -7,6 +7,6 @@ export class NoWall extends LavirintItem {
     }
 
     public draw(par: HTMLElement): HTMLDivElement {
-        return Draw.div(par, "no-wall");
+        return Draw.div(par, "div-no-wall");
     }
 }

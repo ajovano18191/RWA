@@ -1,6 +1,7 @@
 import { Draw } from "../Draw";
+import { IDrawable } from "../IDrawable";
 
-export abstract class LavirintItem {
+export abstract class LavirintItem implements IDrawable {
     protected parent: HTMLElement;
     constructor() {
 

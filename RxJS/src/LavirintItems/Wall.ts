@@ -7,6 +7,6 @@ export class Wall extends LavirintItem {
     }
 
     public draw(par: HTMLElement): HTMLDivElement {
-        return Draw.div(par, "wall");
+        return Draw.div(par, "div-wall");
     }
 }

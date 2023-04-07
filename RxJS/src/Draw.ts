@@ -15,7 +15,19 @@ export class Draw {
     }
 
     public static div(parent: HTMLElement, cssClasses?: string): HTMLDivElement {
-        const divEl = this.element("div", parent, cssClasses);
+        const divEl = Draw.element("div", parent, cssClasses);
         return Object.assign(divEl, { align: "center" });
+    }
+
+    public static label(parent: HTMLElement, text: string, cssClasses?: string): HTMLElement {
+        const lblEl = Draw.element("label", parent, cssClasses);
+        lblEl.innerText = text;
+        return lblEl;
+    }
+
+    public static input(parent: HTMLElement, type: string, cssClasses?: string): HTMLInputElement {
+        const inEl = Draw.element("input", parent, cssClasses) as HTMLInputElement;
+        inEl.type = type;
+        return inEl;
     }
 }
