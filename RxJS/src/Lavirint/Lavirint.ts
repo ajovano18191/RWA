@@ -21,7 +21,7 @@ export class Lavirint implements IDrawable {
         this.root = Draw.div(parent, "div-lavirint");
 
         this.lavirintDrawer = new LavirintDrawer(this);
-        this.setLevel(0);
+        this.setLevel(1);
         this.draw(this.root);
     }
 
