@@ -1,6 +1,7 @@
 import { concat, fromEvent, map, Observable, of } from "rxjs";
 import { Draw } from "../Draw";
 import { IDrawable } from "../IDrawable";
+import { Lavirint } from "./Lavirint";
 
 export class LavirintConfigurator implements IDrawable {
 
@@ -11,10 +12,10 @@ export class LavirintConfigurator implements IDrawable {
     private _wallColor$: Observable<string>;
     private _wallWidth$: Observable<string>;
     private _backColor$: Observable<string>;
-    private _level$: Observable<string>;
+    private _level$: Observable<string> = new Observable<string>();
 
-    constructor(private parent: HTMLElement) {
-        this.draw(parent);
+    constructor(private lavirint: Lavirint) {
+        
     }
 
     public draw(parent: HTMLElement): HTMLElement {
@@ -145,10 +146,21 @@ export class LavirintConfigurator implements IDrawable {
     private drawLevel() {
         const levelLabel = Draw.label(this.root, "Level: ", "lbl-level");
         const levelPicker = Draw.input(this.root, "number", "input-level-picker");
-        this._level$ = fromEvent(levelPicker, "change").pipe(
-            map(
-                (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
-            ),
-        ); 
+
+        levelPicker.setAttribute("min", "0");
+        levelPicker.setAttribute("max", "1");
+
+        const defaultLevel = "0";
+
+        this._level$ = concat(
+            of(defaultLevel),
+            fromEvent(levelPicker, "change").pipe(
+                map(
+                    (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
+                ),
+            )
+        );
+
+        levelPicker.value = defaultLevel;
     }
 }
