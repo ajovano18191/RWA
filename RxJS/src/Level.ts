@@ -1,4 +1,5 @@
-import { tap, from, Observable, share, switchMap, map, mergeMap } from "rxjs";
+import { Observable, switchMap, map } from "rxjs";
+import { fromFetch } from 'rxjs/fetch';
 import { Field } from "./LavirintItems/Field";
 import { LavirintItem } from "./LavirintItems/LavirintItem";
 import { NoWall } from "./LavirintItems/NoWall";
@@ -11,62 +12,51 @@ interface ILevel {
     LevelMat: number[][];
 }
 
-export class Level implements ILevel {
+export class Level {
     private readonly baseURL: string = "http://localhost:3000/lavirint";
 
-    public Wall: number;
-    public NoWall: number;
-    public Field: number;
-    public LevelMat: number[][];  
+    private Wall: number;
+    private NoWall: number;
+    private Field: number;
 
     constructor() {
 
     }
 
     private fetchLevel(lvlID: number): Observable<ILevel> {
-        return from(
-            fetch(this.baseURL + "/" + lvlID)
-            .then((response) => {
-                if (response.ok) {
+        return fromFetch(this.baseURL + "/" + lvlID)
+        .pipe(
+            switchMap(response => {
+                if(response.ok) {
                     return response.json();
-                } else {
+                }
+                else {
                     throw Error("Failed to fetch level");
                 }
             })
-            .catch((err) => console.log(err))
         );
     }
 
-    private mat2Stream(lavirintMat: Array<Array<LavirintItem>>): Observable<LavirintItem> {        
-        let arr = new Array<LavirintItem>();
-
-        return from(this.LevelMat).pipe(
-            tap(() => {
-                arr = new Array<LavirintItem>();
-                lavirintMat.push(arr);
-            }),
-            mergeMap(row => row),
-            map(col => {
-                let it = this.num2LavirintItem(col);
-                arr.push(it);
-                return it;
-            }),
-            share()
-        ); 
-    }
-
-    public getLevel(lvl: number, lavirintMat: Array<Array<LavirintItem>>): Observable<LavirintItem> {
+    public getLevel(lvl: number, lavirintMat: Array<Array<LavirintItem>>): Observable<LavirintItem[][]> {
         return this.fetchLevel(lvl)
         .pipe(
-            switchMap(lav => {                
+            map(lav => {
                 this.Wall = lav.Wall;
                 this.NoWall = lav.NoWall;
                 this.Field = lav.Field;
-                this.LevelMat = lav.LevelMat;
 
-                return this.mat2Stream(lavirintMat);
+                return lav.LevelMat.map(row => {
+                    let arr: Array<LavirintItem> = new Array<LavirintItem>();
+                    lavirintMat.push(arr);
+                    return row.map(num => {
+                        let x = this.num2LavirintItem(num);
+                        arr.push(x);
+                        return x;
+                    }
+                    )
+                }
+                );
             }),
-            share()
         );
     }
 
