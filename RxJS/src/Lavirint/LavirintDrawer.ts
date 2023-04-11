@@ -7,15 +7,15 @@ import { Wall } from "../LavirintItems/Wall";
 
 export class LavirintDrawer implements IDrawable {
 
-    private backColor: string = "#ff0000";
-    private frontColor: string = "#ffffff";
-
     constructor(private lavirint: Lavirint) {
 
     }
 
     draw(parent: HTMLElement): HTMLElement {
         const gridCont: HTMLDivElement = Draw.div(parent, "grid-container");
+
+        let wallColor: string = "#ff0000";
+        let backColor: string = "#ffffff";
 
         this.lavirint.lavirintWidth$.subscribe(p => gridCont.style.width = p);
         this.lavirint.lavirintHeight$.subscribe(p => gridCont.style.height = p);
@@ -29,13 +29,8 @@ export class LavirintDrawer implements IDrawable {
             mergeMap(mat => mat)
         )
         .subscribe(gIt => {
-            let x = gIt.draw(gridCont);
-            if(gIt instanceof Wall) {
-                x.style.backgroundColor = this.frontColor;
-            }
-            else {
-                x.style.backgroundColor = this.backColor;
-            }
+            gIt.draw(gridCont);
+            gIt.chooseAndSetColor(wallColor, backColor);
         });
 
         let lavMatCount$ = this.lavirint.lavMatItem$.pipe(
@@ -46,12 +41,12 @@ export class LavirintDrawer implements IDrawable {
                     reduce((acc, curr) => acc + curr, 0),
                 )
             ),
-            share()
         );
 
         combineLatest([lavMatCount$, this.lavirint.wallWidth$])
         .subscribe(([lavItems, wallWidth]) => {
             wallWidth += "%";
+
             gridCont.style.gridTemplateRows = 
                 this.createGridTemplate((this.lavirint.lavMat.length - 1) / 2, wallWidth);
 
@@ -63,23 +58,15 @@ export class LavirintDrawer implements IDrawable {
         });
 
 
-        this.lavirint.wallColor$
-        .subscribe(wallColor => {
-            this.frontColor = wallColor;
-            gridCont
-            .querySelectorAll(".div-wall")
-            .forEach(wall => 
-                (<HTMLDivElement>wall).style.backgroundColor = wallColor
-            );
-        });
-
-        this.lavirint.backColor$
-        .subscribe(backColor => {
-            this.backColor = backColor;
-            gridCont
-            .querySelectorAll(".div-field, .div-no-wall")
-            .forEach(back => 
-                (<HTMLDivElement>back).style.backgroundColor = backColor
+        combineLatest([this.lavirint.wallColor$, this.lavirint.backColor$])
+        .subscribe(([wallC, backC]) => {
+            wallColor = wallC;
+            backColor = backC;
+            this.lavirint.lavMat
+            .forEach(row => 
+                row.forEach(it => {
+                    it.chooseAndSetColor(wallC, backC);
+                })
             );
         });
 

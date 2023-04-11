@@ -1,4 +1,4 @@
-import { tap, from, Observable, share, switchMap, map, mergeMap } from "rxjs";
+import { tap, from, Observable, share, switchMap, map, mergeMap, shareReplay } from "rxjs";
 import { fromFetch } from 'rxjs/fetch';
 import { Field } from "./LavirintItems/Field";
 import { LavirintItem } from "./LavirintItems/LavirintItem";
@@ -45,13 +45,18 @@ export class Level {
                 this.NoWall = lav.NoWall;
                 this.Field = lav.Field;
 
-                return lav.LevelMat.map(row => 
-                    row.map(num => 
-                        this.num2LavirintItem(num)
+                return lav.LevelMat.map(row => {
+                    let arr: Array<LavirintItem> = new Array<LavirintItem>();
+                    lavirintMat.push(arr);
+                    return row.map(num => {
+                        let x = this.num2LavirintItem(num);
+                        arr.push(x);
+                        return x;
+                    }
                     )
+                }
                 );
             }),
-            share()
         );
     }
 
