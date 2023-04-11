@@ -1,9 +1,7 @@
-import { count, combineLatest, first, tap, mergeMap, map, reduce, from, last, bufferCount, share } from "rxjs";
+import { combineLatest, tap, mergeMap, map, reduce, from, concatMap } from "rxjs";
 import { IDrawable } from "../IDrawable";
 import { Lavirint } from "./Lavirint";
 import { Draw } from "../Draw";
-import { LavirintConfigurator } from "./LavirintConfigurator";
-import { Wall } from "../LavirintItems/Wall";
 
 export class LavirintDrawer implements IDrawable {
 
@@ -25,8 +23,8 @@ export class LavirintDrawer implements IDrawable {
             tap(() => {
                 gridCont.innerHTML = "";
             }),
-            mergeMap(mat => mat),
-            mergeMap(mat => mat)
+            concatMap(mat => mat),
+            concatMap(mat => mat)
         )
         .subscribe(gIt => {
             gIt.draw(gridCont);
@@ -64,9 +62,9 @@ export class LavirintDrawer implements IDrawable {
             backColor = backC;
             this.lavirint.lavMat
             .forEach(row => 
-                row.forEach(it => {
-                    it.chooseAndSetColor(wallC, backC);
-                })
+                row.forEach(it => 
+                    it.chooseAndSetColor(wallC, backC)
+                )
             );
         });
 

@@ -1,4 +1,4 @@
-import { tap, from, Observable, share, switchMap, map, mergeMap, count, last, of, multicast, Subject, shareReplay } from "rxjs";
+import { Observable, switchMap, map, shareReplay } from "rxjs";
 import { Draw } from "../Draw";
 import { LavirintItem } from "../LavirintItems/LavirintItem";
 import { Level } from "../Level";
@@ -22,14 +22,13 @@ export class Lavirint implements IDrawable {
         this.lavirintDrawer = new LavirintDrawer(this);
         this.lavirintConfigurator = new LavirintConfigurator(this);
         this.level = new Level();
-
-
     }
 
     public draw(parent: HTMLElement): HTMLElement {
         this.root = Draw.div(parent, "div-lavirint");
 
         this.lavirintConfigurator.draw(this.root);
+
         this.lavMatItem$ = this.lavirintConfigurator.level$
         .pipe(
             map(l => +l),

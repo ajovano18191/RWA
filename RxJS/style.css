@@ -1,33 +1,33 @@
 .grid-container {
-    display: grid;
-    gap: 0px;
-    padding: 10px;
-    width: 90vh;
-    height: 90vh;
-  }
-  
-  .row-tmp {
-    grid-template-rows: 2% auto 2% auto 2% auto 2%;
-  }
+  display: grid;
+  gap: 0px;
+  padding: 10px;
+  width: 90vh;
+  height: 90vh;
+}
 
-  .col-tmp {
-    grid-template-columns: 2% auto 2% auto 2% auto 2%;
-  }
-  
-  .grid-container > div {
-    text-align: center;
-    padding: 0px;
-    font-size: 30px;
-  }
-  
-  .div-wall {
-    background-color: red;
-  }
-  
-  .div-no-wall {
-    background-color: white;
-  }
+.row-tmp {
+  grid-template-rows: 2% auto 2% auto 2% auto 2%;
+}
 
-  .div-item {
-    background-color: white;
-  }
+.col-tmp {
+  grid-template-columns: 2% auto 2% auto 2% auto 2%;
+}
+
+.grid-container > div {
+  text-align: center;
+  padding: 0px;
+  font-size: 30px;
+}
+
+.div-wall {
+  background-color: red;
+}
+
+.div-no-wall {
+  background-color: white;
+}
+
+.div-field {
+  background-color: white;
+}

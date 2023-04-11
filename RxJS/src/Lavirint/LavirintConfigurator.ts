@@ -1,4 +1,4 @@
-import { concat, fromEvent, map, Observable, of } from "rxjs";
+import { concat, fromEvent, map, Observable, of, startWith } from "rxjs";
 import { Draw } from "../Draw";
 import { IDrawable } from "../IDrawable";
 import { Lavirint } from "./Lavirint";
@@ -61,13 +61,11 @@ export class LavirintConfigurator implements IDrawable {
 
         const defaultLavirintWidth: string = "90";
 
-        this._lavirintWidth$ = concat(
-            of(defaultLavirintWidth), 
-            fromEvent(lavirintWidthPicker, "change").pipe(
-                map(
-                    (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
-                ),
-            )
+        this._lavirintWidth$ = fromEvent(lavirintWidthPicker, "change").pipe(
+            map(
+                (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
+            ),
+            startWith(defaultLavirintWidth),
         );
     }
 
@@ -77,14 +75,12 @@ export class LavirintConfigurator implements IDrawable {
 
         const defaultLavirintHeight: string = "90";
 
-        this._lavirintHeight$ = concat(
-            of(defaultLavirintHeight),
-            fromEvent(lavirintHeightPicker, "change").pipe(
-                map(
-                    (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
-                ),
-            )
-        );  
+        this._lavirintHeight$ = fromEvent(lavirintHeightPicker, "change").pipe(
+            map(
+                (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
+            ),
+            startWith(defaultLavirintHeight),
+        );
     }
 
     private drawWallColor() {
@@ -93,13 +89,11 @@ export class LavirintConfigurator implements IDrawable {
 
         const defaultWallColor: string = "#ff0000";
 
-        this._wallColor$ = concat(
-            of(defaultWallColor),
-            fromEvent(wallColorPicker, "change").pipe(
-                map(
-                    (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
-                ),
-            )
+        this._wallColor$ = fromEvent(wallColorPicker, "change").pipe(
+            map(
+                (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
+            ),
+            startWith(defaultWallColor),
         );
 
         wallColorPicker.value = defaultWallColor;
@@ -114,14 +108,13 @@ export class LavirintConfigurator implements IDrawable {
         wallWidthPicker.setAttribute("min", "0.5");
         wallWidthPicker.setAttribute("step", "0.5");
 
-        this._wallWidth$ = concat(
-            of(defaultWallWidth), 
-            fromEvent(wallWidthPicker, "change").pipe(
-                map(
-                    (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
-                ),
-            )
+        this._wallWidth$ = fromEvent(wallWidthPicker, "change").pipe(
+            map(
+                (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
+            ),
+            startWith(defaultWallWidth),
         );
+
         wallWidthPicker.value = defaultWallWidth;
     }
 
@@ -131,13 +124,11 @@ export class LavirintConfigurator implements IDrawable {
 
         const defaultBackColor: string = "#ffffff";
 
-        this._backColor$ = concat(
-            of(defaultBackColor),
-            fromEvent(backColorPicker, "change").pipe(
-                map(
-                    (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
-                ),
-            ) 
+        this._backColor$ = fromEvent(backColorPicker, "change").pipe(
+            map(
+                (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
+            ),
+            startWith(defaultBackColor),
         );
 
         backColorPicker.value = defaultBackColor;
@@ -152,13 +143,11 @@ export class LavirintConfigurator implements IDrawable {
 
         const defaultLevel = "0";
 
-        this._level$ = concat(
-            of(defaultLevel),
-            fromEvent(levelPicker, "change").pipe(
-                map(
-                    (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
-                ),
-            )
+        this._level$ = fromEvent(levelPicker, "change").pipe(
+            map(
+                (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
+            ),
+            startWith(defaultLevel),
         );
 
         levelPicker.value = defaultLevel;

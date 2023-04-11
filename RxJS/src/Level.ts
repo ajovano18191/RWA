@@ -1,4 +1,4 @@
-import { tap, from, Observable, share, switchMap, map, mergeMap, shareReplay } from "rxjs";
+import { Observable, switchMap, map } from "rxjs";
 import { fromFetch } from 'rxjs/fetch';
 import { Field } from "./LavirintItems/Field";
 import { LavirintItem } from "./LavirintItems/LavirintItem";
