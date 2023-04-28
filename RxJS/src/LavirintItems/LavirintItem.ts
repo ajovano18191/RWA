@@ -1,3 +1,4 @@
+import { ColorPair } from "../ColorPair";
 import { Draw } from "../Draw";
 import { IDrawable } from "../IDrawable";
 
@@ -14,5 +15,5 @@ export abstract class LavirintItem implements IDrawable {
         this.thisDiv.style.backgroundColor = color;
     }
 
-    public abstract chooseAndSetColor(foreColor: string, backColor: string): void;
+    public abstract chooseAndSetColor(colorPair: ColorPair): void;
 }

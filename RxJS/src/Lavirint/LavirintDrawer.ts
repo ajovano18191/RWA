@@ -2,6 +2,7 @@ import { combineLatest, tap, mergeMap, map, reduce, from, concatMap, withLatestF
 import { IDrawable } from "../IDrawable";
 import { Lavirint } from "./Lavirint";
 import { Draw } from "../Draw";
+import { ColorPair } from "../ColorPair";
 
 export class LavirintDrawer implements IDrawable {
 
@@ -14,23 +15,21 @@ export class LavirintDrawer implements IDrawable {
     draw(parent: HTMLElement): HTMLElement {
         this.gridCont = Draw.div(parent, "grid-container");
 
-        let wallColor: string = "#ff0000";
-        let backColor: string = "#ffffff";
-
         this.sub2Width();
         this.sub2Height();
         this.updateGridTemplate();
 
-        let color$ = combineLatest([this.lavirint.wallColor$, this.lavirint.backColor$]);
-        
-
-        
+        let colorPair$ = combineLatest([this.lavirint.wallColor$, this.lavirint.backColor$])
+        .pipe(
+            map(([wallColor, backColor]) => (<ColorPair>{
+                foreColor: wallColor,
+                backColor: backColor
+            }))
+        );
+        this.sub2ColorPairs(colorPair$);
+        this.drawItems(colorPair$);
 
         return this.gridCont;
-    }
-
-    private createGridTemplate(numsOfFields: number, wallSize: string): string {
-        return `${wallSize} auto `.repeat(numsOfFields).concat(`${wallSize}`);
     }
 
     private sub2Width(): void {
@@ -68,7 +67,11 @@ export class LavirintDrawer implements IDrawable {
 
     }
 
-    private drawItems(color$: Observable<[string, string]>): void {
+    private createGridTemplate(numsOfFields: number, wallSize: string): string {
+        return `${wallSize} auto `.repeat(numsOfFields).concat(`${wallSize}`);
+    }
+
+    private drawItems(colorPair$: Observable<ColorPair>): void {
         this.lavirint.lavMatItem$
         .pipe(
             tap(() => {
@@ -76,25 +79,27 @@ export class LavirintDrawer implements IDrawable {
             }),
             concatMap(mat => mat),
             concatMap(mat => mat),
-            withLatestFrom(color$),
+            withLatestFrom(colorPair$),
             map(p => ({
                 it: p[0],
-                wallColor: p[1][0],
-                backColor: p[1][1],
+                cp: p[1],
             }))
         )
         .subscribe(itemWithColors => {
             itemWithColors.it.draw(this.gridCont);
-            itemWithColors.it.chooseAndSetColor(itemWithColors.wallColor, itemWithColors.backColor);
+            itemWithColors.it.chooseAndSetColor({
+                foreColor: itemWithColors.cp.foreColor, 
+                backColor: itemWithColors.cp.backColor,
+            });
         });
     }
 
-    private sub2Colors(color$: Observable<[string, string]>): void {
-        color$.subscribe(([wallC, backC]) => {
+    private sub2ColorPairs(color$: Observable<ColorPair>): void {
+        color$.subscribe(cp => {
             this.lavirint.lavMat
             .forEach(row => 
                 row.forEach(it => 
-                    it.chooseAndSetColor(wallC, backC)
+                    it.chooseAndSetColor(cp)
                 )
             );
         });
