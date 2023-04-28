@@ -31,3 +31,10 @@
 .div-field {
   background-color: white;
 }
+
+.div-player {
+  background-color: blue;
+  margin: 10%;
+  width: 80%;
+  height: 80%;
+}

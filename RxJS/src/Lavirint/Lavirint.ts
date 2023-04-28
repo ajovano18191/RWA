@@ -5,6 +5,7 @@ import { Level } from "../Level";
 import { IDrawable } from "../IDrawable";
 import { LavirintDrawer } from "./LavirintDrawer";
 import { LavirintConfigurator } from "./LavirintConfigurator";
+import { Player } from "../Player";
 
 export class Lavirint implements IDrawable {
 
@@ -13,6 +14,7 @@ export class Lavirint implements IDrawable {
     private lavirintDrawer: LavirintDrawer;
     private lavirintConfigurator: LavirintConfigurator;
     private level: Level;
+    private player: Player;
 
     public lavMat: Array<Array<LavirintItem>> = new Array<Array<LavirintItem>>();
     
@@ -22,6 +24,7 @@ export class Lavirint implements IDrawable {
         this.lavirintDrawer = new LavirintDrawer(this);
         this.lavirintConfigurator = new LavirintConfigurator(this);
         this.level = new Level();
+        this.player = new Player(1, 1);
     }
 
     public draw(parent: HTMLElement): HTMLElement {
