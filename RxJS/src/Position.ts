@@ -1,3 +1,5 @@
+export type Direction = 'up' | 'down' | 'left' | 'right';
+
 export class Position {
 
     constructor(private x: number, private y: number) {
@@ -12,19 +14,45 @@ export class Position {
         return this.y;
     }
 
-    moveUp(): void {
-        this.y += 2;
+    check(direction: Direction): Position {
+        switch(direction) {
+            case 'up':
+                return new Position(this.X - 1, this.Y);
+            case 'down':
+                return new Position(this.X + 1, this.Y);
+            case 'left':
+                return new Position(this.X, this.Y - 1);
+            case 'right':
+                return new Position(this.X, this.Y + 1);
+        }
     }
 
-    moveDown(): void {
-        this.y -= 2;
+    move(direction: Direction): Position {
+        switch(direction) {
+            case 'up':
+                return new Position(this.X - 2, this.Y);
+            case 'down':
+                return new Position(this.X + 2, this.Y);
+            case 'left':
+                return new Position(this.X, this.Y - 2);
+            case 'right':
+                return new Position(this.X, this.Y + 2);
+        }
     }
 
-    moveLeft(): void {
-        this.x -= 2;
+    moveUp(): number {
+        return this.x -= 2;
     }
 
-    moveRight(): void {
-        this.x += 2;
+    moveDown(): number {
+        return this.x += 2;
+    }
+
+    moveLeft(): number {
+        return this.y -= 2;
+    }
+
+    moveRight(): number {
+        return this.y += 2;
     }
 }
