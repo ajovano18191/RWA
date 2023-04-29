@@ -1,4 +1,4 @@
-import { Observable, switchMap, map, shareReplay, last, fromEvent, filter, pairwise, startWith, scan, concat, of, merge, from, tap, take, withLatestFrom } from "rxjs";
+import { Observable, switchMap, map, shareReplay, fromEvent, filter, pairwise, scan, merge, from, withLatestFrom } from "rxjs";
 import { Draw } from "../Draw";
 import { LavirintItem } from "../LavirintItems/LavirintItem";
 import { Level } from "../Level";
@@ -47,11 +47,6 @@ export class Lavirint implements IDrawable {
 
         this.lavirintDrawer.draw(this.root);
 
-        this.lavMatItem$
-        .subscribe(p => {
-            //this.player.draw(p[1][1].thisDiv);
-        });
-
         this.sub2Positions();
 
         return this.root;
@@ -93,24 +88,33 @@ export class Lavirint implements IDrawable {
                     }),
                     scan((pos: Position, dir: Direction) => {
                         let checkPos: Position = pos.check(dir);
-                        if(lavMat[checkPos.X][checkPos.Y] instanceof Wall) {
+                        let movePos: Position = pos.move(dir);
+                        if(lavMat[movePos.X] === undefined || 
+                            lavMat[movePos.X][movePos.Y] === undefined || 
+                            lavMat[checkPos.X][checkPos.Y] instanceof Wall) {
+                                if(movePos.X === 5 && movePos.Y === 7) {
+                                    let inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
+                                    inLvl.value = (+inLvl.value + 1).toString();
+                                    inLvl.dispatchEvent(new Event("change"));
+                                    return movePos;
+                                }
                             return pos;
                         }
-                        return pos.move(dir);
+                        return movePos;
                     }, new Position(1, 1)),
                 );
             }),
             pairwise(),
             withLatestFrom(this.lavMatItem$),
-            map(p => ({
-                prevPos: p[0][0],
-                currPos: p[0][1],
-                lavMat: p[1],
+            map(positonsWithMat => ({
+                prevPos: positonsWithMat[0][0],
+                currPos: positonsWithMat[0][1],
+                lavMat: positonsWithMat[1],
             })),
         )
-        .subscribe(p => {
-            p.lavMat[p.prevPos.X][p.prevPos.Y].thisDiv.innerHTML = "";
-            this.player.draw(this.lavMat[p.currPos.X][p.currPos.Y].thisDiv);
+        .subscribe(positonsWithMat => {
+            positonsWithMat.lavMat[positonsWithMat.prevPos.X][positonsWithMat.prevPos.Y].thisDiv.innerHTML = "";
+            this.player.draw(this.lavMat[positonsWithMat.currPos.X][positonsWithMat.currPos.Y].thisDiv);
         });
     }
 
