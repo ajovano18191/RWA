@@ -1,8 +1,9 @@
-import { combineLatest, tap, mergeMap, map, reduce, from, concatMap, withLatestFrom, Observable } from "rxjs";
+import { combineLatest, tap, mergeMap, map, reduce, from, concatMap, withLatestFrom, Observable, switchMap } from "rxjs";
 import { IDrawable } from "../IDrawable";
 import { Lavirint } from "./Lavirint";
 import { Draw } from "../Draw";
 import { ColorPair } from "../ColorPair";
+import { LavirintItem } from "../LavirintItems/LavirintItem";
 
 export class LavirintDrawer implements IDrawable {
 
@@ -23,8 +24,8 @@ export class LavirintDrawer implements IDrawable {
         .pipe(
             map(([wallColor, backColor]) => (<ColorPair>{
                 foreColor: wallColor,
-                backColor: backColor
-            }))
+                backColor: backColor,
+            })),
         );
         this.sub2ColorPairs(colorPair$);
         this.drawItems(colorPair$);
@@ -41,30 +42,19 @@ export class LavirintDrawer implements IDrawable {
     }
 
     private updateGridTemplate(): void {
-        let lavMatCount$ = this.lavirint.lavMatItem$.pipe(
-            mergeMap(matrix => 
-                from(matrix)
-                .pipe(
-                    map(row => row.length),
-                    reduce((acc, curr) => acc + curr, 0),
-                )
-            ),
-        );
-
-        combineLatest([lavMatCount$, this.lavirint.wallWidth$])
-        .subscribe(([lavItems, wallWidth]) => {
+        combineLatest([this.lavirint.lavMat$, this.lavirint.wallWidth$])
+        .subscribe(([lavMat, wallWidth]) => {
             wallWidth += "%";
 
             this.gridCont.style.gridTemplateRows = 
-                this.createGridTemplate((this.lavirint.lavMat.length - 1) / 2, wallWidth);
+                this.createGridTemplate((lavMat.length - 1) / 2, wallWidth);
 
-            let numOfCols: number = Math.floor(lavItems / this.lavirint.lavMat.length);
+            let numOfCols: number = Math.floor(lavMat.numOfItems() / lavMat.length);
             numOfCols = Math.floor((numOfCols - 1) / 2);
 
             this.gridCont.style.gridTemplateColumns = 
                 this.createGridTemplate(numOfCols, wallWidth);
         });
-
     }
 
     private createGridTemplate(numsOfFields: number, wallSize: string): string {
@@ -72,18 +62,17 @@ export class LavirintDrawer implements IDrawable {
     }
 
     private drawItems(colorPair$: Observable<ColorPair>): void {
-        this.lavirint.lavMatItem$
+        this.lavirint.lavMat$
         .pipe(
             tap(() => {
                 this.gridCont.innerHTML = "";
             }),
-            concatMap(mat => mat),
-            concatMap(mat => mat),
+            concatMap(lavMat => lavMat.item$),
             withLatestFrom(colorPair$),
-            map(p => ({
-                it: p[0],
-                cp: p[1],
-            }))
+            map(itWithCp => (<LIandCP>{
+                it: itWithCp[0],
+                cp: itWithCp[1],
+            })),
         )
         .subscribe(itemWithColors => {
             itemWithColors.it.draw(this.gridCont);
@@ -95,13 +84,22 @@ export class LavirintDrawer implements IDrawable {
     }
 
     private sub2ColorPairs(color$: Observable<ColorPair>): void {
-        color$.subscribe(cp => {
-            this.lavirint.lavMat
-            .forEach(row => 
-                row.forEach(it => 
-                    it.chooseAndSetColor(cp)
+        color$.pipe(
+            withLatestFrom(this.lavirint.lavMat$),
+            switchMap(cpAndLavMat => cpAndLavMat[1].item$
+                .pipe(
+                    map(it => (<LIandCP>{
+                        it: it,
+                        cp: cpAndLavMat[0]
+                    }))
                 )
-            );
-        });
+            ),
+        )
+        .subscribe(p => p.it.chooseAndSetColor(p.cp));
     }
+}
+
+interface LIandCP {
+    it: LavirintItem;
+    cp: ColorPair;
 }

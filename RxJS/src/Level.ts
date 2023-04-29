@@ -1,19 +1,21 @@
-import { Observable, switchMap, map } from "rxjs";
+import { Observable, switchMap, map, tap } from "rxjs";
 import { fromFetch } from 'rxjs/fetch';
 import { Field } from "./LavirintItems/Field";
 import { LavirintItem } from "./LavirintItems/LavirintItem";
 import { NoWall } from "./LavirintItems/NoWall";
 import { Wall } from "./LavirintItems/Wall";
+import { IPosition, LavirintMatrix } from "./Lavirint/LavirintMatrix";
 
 interface ILevel {
     Wall: number;
     NoWall: number;
     Field: number;
     LevelMat: number[][];
+    StartPos: IPosition;
+    EndPos: IPosition;
 }
 
 export class Level {
-    private readonly baseURL: string = "http://localhost:3000/lavirint";
 
     private Wall: number;
     private NoWall: number;
@@ -23,39 +25,24 @@ export class Level {
 
     }
 
-    private fetchLevel(lvlID: number): Observable<ILevel> {
-        return fromFetch(this.baseURL + "/" + lvlID)
+    public getLevel(lvl: number): Observable<LavirintMatrix> {
+        return fetchLevel(lvl)
         .pipe(
-            switchMap(response => {
-                if(response.ok) {
-                    return response.json();
-                }
-                else {
-                    throw Error("Failed to fetch level");
-                }
-            })
-        );
-    }
-
-    public getLevel(lvl: number, lavirintMat: Array<Array<LavirintItem>>): Observable<LavirintItem[][]> {
-        return this.fetchLevel(lvl)
-        .pipe(
+            tap((lav) => {
+                this.Wall = lav.Wall !== undefined ? lav.Wall : this.Wall;
+                this.NoWall = lav.NoWall !== undefined ? lav.NoWall : this.NoWall;
+                this.Field = lav.Field !== undefined ? lav.Field : this.Field;
+            }),
             map(lav => {
-                this.Wall = lav.Wall;
-                this.NoWall = lav.NoWall;
-                this.Field = lav.Field;
-
-                return lav.LevelMat.map(row => {
-                    let arr: Array<LavirintItem> = new Array<LavirintItem>();
-                    lavirintMat.push(arr);
-                    return row.map(num => {
-                        let x = this.num2LavirintItem(num);
-                        arr.push(x);
-                        return x;
-                    }
-                    )
-                }
-                );
+                let lavirintMat = new LavirintMatrix(lav.StartPos, lav.EndPos);
+                lav.LevelMat.forEach(row => {
+                    let arr = lavirintMat.pushNewArr();
+                    row.forEach(num => {
+                        let it = this.num2LavirintItem(num);
+                        arr.push(it);
+                    })
+                });
+                return lavirintMat;
             }),
         );
     }
@@ -75,4 +62,20 @@ export class Level {
         }
         return it;
     }
+}
+
+const baseURL: string = "http://localhost:3000/lavirint";
+
+function fetchLevel(lvlID: number): Observable<ILevel> {
+    return fromFetch(baseURL + "/" + lvlID)
+    .pipe(
+        switchMap(response => {
+            if(response.ok) {
+                return response.json();
+            }
+            else {
+                throw Error("Failed to fetch level");
+            }
+        })
+    );
 }
