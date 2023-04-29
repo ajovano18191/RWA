@@ -65,16 +65,14 @@ export class Lavirint implements IDrawable {
                         let movePos: Position = pos.move(dir);
                         if(lavMat.getEl(movePos) === undefined || 
                             lavMat.getEl(checkPos) instanceof Wall) {
-                                if(movePos.X === 5 && movePos.Y === 7) {
-                                    let inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
-                                    inLvl.value = (+inLvl.value + 1).toString();
-                                    inLvl.dispatchEvent(new Event("change"));
-                                    return movePos;
-                                }
+                            if(movePos.equal(lavMat.endPos)) {
+                                nextLevel();
+                                return movePos;
+                            }
                             return pos;
                         }
                         return movePos;
-                    }, new Position(1, 1)),
+                    }, lavMat.startPos),
                 );
             }),
             pairwise(),
@@ -135,4 +133,10 @@ function key2Direction(key: string): Direction {
             break;
     }
     return dir;
+}
+
+function nextLevel(): void {
+    let inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
+    inLvl.value = (+inLvl.value + 1).toString();
+    inLvl.dispatchEvent(new Event("change"));
 }

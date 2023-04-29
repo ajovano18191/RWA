@@ -2,10 +2,19 @@ import { Observable, concatMap, from } from "rxjs";
 import { LavirintItem } from "../LavirintItems/LavirintItem";
 import { Position } from "../Position";
 
+export interface IPosition {
+    X: number;
+    Y: number;
+}
+
 export class LavirintMatrix {
     private mat: Array<Array<LavirintItem>>;
+    public startPos: Position;
+    public endPos: Position;
 
-    constructor(private startPos: Position, private endPos: Position) {
+    constructor(startPos: IPosition, endPos: IPosition) {
+        this.startPos = new Position(startPos.X, startPos.Y);
+        this.endPos = new Position(endPos.X, endPos.Y);
         this.mat = new Array<Array<LavirintItem>>();
     }
 

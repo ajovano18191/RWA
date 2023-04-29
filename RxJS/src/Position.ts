@@ -40,19 +40,7 @@ export class Position {
         }
     }
 
-    moveUp(): number {
-        return this.x -= 2;
-    }
-
-    moveDown(): number {
-        return this.x += 2;
-    }
-
-    moveLeft(): number {
-        return this.y -= 2;
-    }
-
-    moveRight(): number {
-        return this.y += 2;
+    public equal(pos: Position): boolean {
+        return this.X === pos.X && this.Y === pos.Y;
     }
 }
