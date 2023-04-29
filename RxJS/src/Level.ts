@@ -4,12 +4,16 @@ import { Field } from "./LavirintItems/Field";
 import { LavirintItem } from "./LavirintItems/LavirintItem";
 import { NoWall } from "./LavirintItems/NoWall";
 import { Wall } from "./LavirintItems/Wall";
+import { LavirintMatrix } from "./Lavirint/LavirintMatrix";
+import { Position } from "./Position";
 
 interface ILevel {
     Wall: number;
     NoWall: number;
     Field: number;
     LevelMat: number[][];
+    StartPos: Position;
+    EndPos: Position;
 }
 
 export class Level {
@@ -37,25 +41,24 @@ export class Level {
         );
     }
 
-    public getLevel(lvl: number, lavirintMat: Array<Array<LavirintItem>>): Observable<LavirintItem[][]> {
+    public getLevel(lvl: number): Observable<LavirintMatrix> {
         return this.fetchLevel(lvl)
         .pipe(
             map(lav => {
                 this.Wall = lav.Wall;
                 this.NoWall = lav.NoWall;
                 this.Field = lav.Field;
+        
+                let lavirintMat = new LavirintMatrix(lav.StartPos, lav.EndPos);
+                lav.LevelMat.forEach(row => {
+                    let arr = lavirintMat.pushNewArr();
+                    row.forEach(num => {
+                        let it = this.num2LavirintItem(num);
+                        arr.push(it);
+                    })
+                });
 
-                return lav.LevelMat.map(row => {
-                    let arr: Array<LavirintItem> = new Array<LavirintItem>();
-                    lavirintMat.push(arr);
-                    return row.map(num => {
-                        let x = this.num2LavirintItem(num);
-                        arr.push(x);
-                        return x;
-                    }
-                    )
-                }
-                );
+                return lavirintMat;
             }),
         );
     }
