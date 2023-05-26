@@ -41,6 +41,8 @@ export class Lavirint implements IDrawable {
 
         this.lavirintDrawer.draw(this.root);
 
+        this.player.sub2Colors(this.playerColor$);
+
         this.sub2Positions();
 
         return this.root;
@@ -50,16 +52,8 @@ export class Lavirint implements IDrawable {
         this.lavMat$
         .pipe(
             switchMap((lavMat) => {
-                return merge(
-                    from(["ArrowDown", "ArrowUp"]), 
-                    fromEvent(document, 'keyup')
-                    .pipe(
-                        map((event: KeyboardEvent) => event.key),
-                        filter(key => DirectionKeys.includes(key))
-                    ),
-                )
+                return startKeyPresse$()
                 .pipe(
-                    map(key => key2Direction(key)),
                     scan((pos: Position, dir: Direction) => {
                         let checkPos: Position = pos.check(dir);
                         let movePos: Position = pos.move(dir);
@@ -112,9 +106,34 @@ export class Lavirint implements IDrawable {
     get level$(): Observable<string> {
         return this.lavirintConfigurator.level$;
     }
+
+    get playerColor$(): Observable<string> {
+        return this.lavirintConfigurator.playerColor$;
+    }
+
 }
 
 const DirectionKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+
+function nextLevel(): void {
+    let inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
+    inLvl.value = (+inLvl.value + 1).toString();
+    inLvl.dispatchEvent(new Event("change"));
+}
+
+function startKeyPresse$(): Observable<Direction> {
+    return merge(
+        from(["ArrowDown", "ArrowUp"]), 
+        fromEvent(document, 'keyup')
+        .pipe(
+            map((event: KeyboardEvent) => event.key),
+            filter(key => DirectionKeys.includes(key)),
+        ),
+    )
+    .pipe(
+        map(key => key2Direction(key)),
+    );
+}
 
 function key2Direction(key: string): Direction {
     let dir: Direction;
@@ -133,10 +152,4 @@ function key2Direction(key: string): Direction {
             break;
     }
     return dir;
-}
-
-function nextLevel(): void {
-    let inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
-    inLvl.value = (+inLvl.value + 1).toString();
-    inLvl.dispatchEvent(new Event("change"));
 }

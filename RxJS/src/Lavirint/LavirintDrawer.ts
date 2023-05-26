@@ -34,11 +34,11 @@ export class LavirintDrawer implements IDrawable {
     }
 
     private sub2Width(): void {
-        this.lavirint.lavirintWidth$.subscribe(p => this.gridCont.style.width = p);
+        this.lavirint.lavirintWidth$.subscribe(p => this.gridCont.style.width = p + "vw");
     }
 
     private sub2Height(): void {
-        this.lavirint.lavirintHeight$.subscribe(p => this.gridCont.style.height = p);
+        this.lavirint.lavirintHeight$.subscribe(p => this.gridCont.style.height = p + "vh");
     }
 
     private updateGridTemplate(): void {
