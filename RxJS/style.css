@@ -16,8 +16,10 @@
 
 .grid-container > div {
   text-align: center;
-  padding: 0px;
-  font-size: 30px;
+  padding:  0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .div-wall {
@@ -30,4 +32,11 @@
 
 .div-field {
   background-color: white;
+}
+
+.div-player {
+  /* background-color: blue; */
+  margin: 0%;
+  width: 90%;
+  height: 90%;
 }

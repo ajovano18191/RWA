@@ -1,77 +1,105 @@
-import { combineLatest, tap, mergeMap, map, reduce, from, concatMap } from "rxjs";
+import { combineLatest, tap, mergeMap, map, reduce, from, concatMap, withLatestFrom, Observable, switchMap } from "rxjs";
 import { IDrawable } from "../IDrawable";
 import { Lavirint } from "./Lavirint";
 import { Draw } from "../Draw";
+import { ColorPair } from "../ColorPair";
+import { LavirintItem } from "../LavirintItems/LavirintItem";
 
 export class LavirintDrawer implements IDrawable {
+
+    private gridCont: HTMLDivElement;
 
     constructor(private lavirint: Lavirint) {
 
     }
 
     draw(parent: HTMLElement): HTMLElement {
-        const gridCont: HTMLDivElement = Draw.div(parent, "grid-container");
+        this.gridCont = Draw.div(parent, "grid-container");
 
-        let wallColor: string = "#ff0000";
-        let backColor: string = "#ffffff";
+        this.sub2Width();
+        this.sub2Height();
+        this.updateGridTemplate();
 
-        this.lavirint.lavirintWidth$.subscribe(p => gridCont.style.width = p);
-        this.lavirint.lavirintHeight$.subscribe(p => gridCont.style.height = p);
-        
-        this.lavirint.lavMatItem$
+        let colorPair$ = combineLatest([this.lavirint.wallColor$, this.lavirint.backColor$])
         .pipe(
-            tap(() => {
-                gridCont.innerHTML = "";
-            }),
-            concatMap(mat => mat),
-            concatMap(mat => mat)
-        )
-        .subscribe(gIt => {
-            gIt.draw(gridCont);
-            gIt.chooseAndSetColor(wallColor, backColor);
-        });
-
-        let lavMatCount$ = this.lavirint.lavMatItem$.pipe(
-            mergeMap(matrix => 
-                from(matrix)
-                .pipe(
-                    map(row => row.length),
-                    reduce((acc, curr) => acc + curr, 0),
-                )
-            ),
+            map(([wallColor, backColor]) => (<ColorPair>{
+                foreColor: wallColor,
+                backColor: backColor,
+            })),
         );
+        this.sub2ColorPairs(colorPair$);
+        this.drawItems(colorPair$);
 
-        combineLatest([lavMatCount$, this.lavirint.wallWidth$])
-        .subscribe(([lavItems, wallWidth]) => {
+        return this.gridCont;
+    }
+
+    private sub2Width(): void {
+        this.lavirint.lavirintWidth$.subscribe(p => this.gridCont.style.width = p + "vw");
+    }
+
+    private sub2Height(): void {
+        this.lavirint.lavirintHeight$.subscribe(p => this.gridCont.style.height = p + "vh");
+    }
+
+    private updateGridTemplate(): void {
+        combineLatest([this.lavirint.lavMat$, this.lavirint.wallWidth$])
+        .subscribe(([lavMat, wallWidth]) => {
             wallWidth += "%";
 
-            gridCont.style.gridTemplateRows = 
-                this.createGridTemplate((this.lavirint.lavMat.length - 1) / 2, wallWidth);
+            this.gridCont.style.gridTemplateRows = 
+                this.createGridTemplate((lavMat.length - 1) / 2, wallWidth);
 
-            let numOfCols: number = Math.floor(lavItems / this.lavirint.lavMat.length);
+            let numOfCols: number = Math.floor(lavMat.numOfItems() / lavMat.length);
             numOfCols = Math.floor((numOfCols - 1) / 2);
 
-            gridCont.style.gridTemplateColumns = 
+            this.gridCont.style.gridTemplateColumns = 
                 this.createGridTemplate(numOfCols, wallWidth);
         });
-
-
-        combineLatest([this.lavirint.wallColor$, this.lavirint.backColor$])
-        .subscribe(([wallC, backC]) => {
-            wallColor = wallC;
-            backColor = backC;
-            this.lavirint.lavMat
-            .forEach(row => 
-                row.forEach(it => 
-                    it.chooseAndSetColor(wallC, backC)
-                )
-            );
-        });
-
-        return gridCont;
     }
 
     private createGridTemplate(numsOfFields: number, wallSize: string): string {
         return `${wallSize} auto `.repeat(numsOfFields).concat(`${wallSize}`);
     }
+
+    private drawItems(colorPair$: Observable<ColorPair>): void {
+        this.lavirint.lavMat$
+        .pipe(
+            tap(() => {
+                this.gridCont.innerHTML = "";
+            }),
+            concatMap(lavMat => lavMat.item$),
+            withLatestFrom(colorPair$),
+            map(itWithCp => (<LIandCP>{
+                it: itWithCp[0],
+                cp: itWithCp[1],
+            })),
+        )
+        .subscribe(itemWithColors => {
+            itemWithColors.it.draw(this.gridCont);
+            itemWithColors.it.chooseAndSetColor({
+                foreColor: itemWithColors.cp.foreColor, 
+                backColor: itemWithColors.cp.backColor,
+            });
+        });
+    }
+
+    private sub2ColorPairs(color$: Observable<ColorPair>): void {
+        color$.pipe(
+            withLatestFrom(this.lavirint.lavMat$),
+            switchMap(cpAndLavMat => cpAndLavMat[1].item$
+                .pipe(
+                    map(it => (<LIandCP>{
+                        it: it,
+                        cp: cpAndLavMat[0]
+                    }))
+                )
+            ),
+        )
+        .subscribe(p => p.it.chooseAndSetColor(p.cp));
+    }
+}
+
+interface LIandCP {
+    it: LavirintItem;
+    cp: ColorPair;
 }

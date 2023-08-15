@@ -1,3 +1,4 @@
+import { ColorPair } from "../ColorPair";
 import { Draw } from "../Draw";
 import { LavirintItem } from "./LavirintItem";
 
@@ -12,7 +13,7 @@ export class Wall extends LavirintItem {
         return this.thisDiv;
     }
 
-    public chooseAndSetColor(foreColor: string, backColor: string): void {
-        this.setColor(foreColor);
+    public chooseAndSetColor(colorPair: ColorPair): void {
+        this.setColor(colorPair.foreColor);
     }
 }

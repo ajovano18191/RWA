@@ -13,6 +13,7 @@ export class LavirintConfigurator implements IDrawable {
     private _wallWidth$: Observable<string>;
     private _backColor$: Observable<string>;
     private _level$: Observable<string> = new Observable<string>();
+    private _playerColor$: Observable<string>;
 
     constructor(private lavirint: Lavirint) {
         
@@ -27,6 +28,7 @@ export class LavirintConfigurator implements IDrawable {
         this.drawWallWidth();
         this.drawBackColor();
         this.drawLevel();
+        this.drawPlayerColor();
 
         return this.root;
     }
@@ -55,6 +57,10 @@ export class LavirintConfigurator implements IDrawable {
         return this._level$;
     }
 
+    get playerColor$(): Observable<string> {
+        return this._playerColor$;
+    }
+
     private drawLavirintWidth() {
         const lavirintWidthLabel = Draw.label(this.root, "Sirina prozora: ", "lbl-lavirint-width");
         const lavirintWidthPicker = Draw.input(this.root, "number", "input-lavirint-width");
@@ -67,6 +73,8 @@ export class LavirintConfigurator implements IDrawable {
             ),
             startWith(defaultLavirintWidth),
         );
+
+        lavirintWidthPicker.value = defaultLavirintWidth;
     }
 
     private drawLavirintHeight() {
@@ -81,6 +89,8 @@ export class LavirintConfigurator implements IDrawable {
             ),
             startWith(defaultLavirintHeight),
         );
+
+        lavirintHeightPicker.value = defaultLavirintHeight;
     }
 
     private drawWallColor() {
@@ -151,5 +161,21 @@ export class LavirintConfigurator implements IDrawable {
         );
 
         levelPicker.value = defaultLevel;
+    }
+
+    private drawPlayerColor() {
+        const playerColorLabel = Draw.label(this.root, "Boja igraca: ", "lbl-player-color");
+        const playerColorPicker = Draw.input(this.root, "color", "input-player-picker");
+
+        const defaultPlayerColor: string = "#0000ff";
+
+        this._playerColor$ = fromEvent(playerColorPicker, "change").pipe(
+            map(
+                (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
+            ),
+            startWith(defaultPlayerColor),
+        );
+
+        playerColorPicker.value = defaultPlayerColor;
     }
 }
