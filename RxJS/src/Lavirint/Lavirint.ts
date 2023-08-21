@@ -83,12 +83,8 @@ export class Lavirint implements IDrawable {
         });
     }
 
-    get lavirintWidth$(): Observable<string> {
-        return this.lavirintConfigurator.lavirintWidth$;
-    }
-
-    get lavirintHeight$(): Observable<string> {
-        return this.lavirintConfigurator.lavirintHeight$;
+    get lavirintSize$(): Observable<string> {
+        return this.lavirintConfigurator.lavirintSize$;
     }
 
     get wallColor$(): Observable<string> {

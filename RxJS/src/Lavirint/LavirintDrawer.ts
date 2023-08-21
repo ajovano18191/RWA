@@ -1,4 +1,4 @@
-import { combineLatest, tap, mergeMap, map, reduce, from, concatMap, withLatestFrom, Observable, switchMap } from "rxjs";
+import { combineLatest, tap, mergeMap, map, reduce, from, concatMap, withLatestFrom, Observable, switchMap, min, fromEvent, sampleTime } from "rxjs";
 import { IDrawable } from "../IDrawable";
 import { Lavirint } from "./Lavirint";
 import { Draw } from "../Draw";
@@ -16,8 +16,7 @@ export class LavirintDrawer implements IDrawable {
     draw(parent: HTMLElement): HTMLElement {
         this.gridCont = Draw.div(parent, "grid-container");
 
-        this.sub2Width();
-        this.sub2Height();
+        this.sub2Size();
         this.updateGridTemplate();
 
         let colorPair$ = combineLatest([this.lavirint.wallColor$, this.lavirint.backColor$])
@@ -33,18 +32,35 @@ export class LavirintDrawer implements IDrawable {
         return this.gridCont;
     }
 
-    private sub2Width(): void {
-        this.lavirint.lavirintWidth$.subscribe(p => this.gridCont.style.width = p + "vw");
-    }
-
-    private sub2Height(): void {
-        this.lavirint.lavirintHeight$.subscribe(p => this.gridCont.style.height = p + "vh");
+    private sub2Size(): void {
+        combineLatest([
+            this.lavirint.lavirintSize$
+                .pipe(
+                    map(p => +p)
+                ),
+            fromEvent(window, "resize")
+                .pipe(
+                    sampleTime(100)
+                ),
+        ])
+        .pipe(
+            map(p => p[0]),
+            map(proc => {
+                let lavSize = Math.min(window.innerWidth, window.innerHeight)
+                lavSize = lavSize * proc / 100
+                return lavSize
+            })
+        )
+        .subscribe(lavSize => {
+            this.gridCont.style.width = `${lavSize}px`
+            this.gridCont.style.height = `${lavSize}px`
+        })
     }
 
     private updateGridTemplate(): void {
         combineLatest([this.lavirint.lavMat$, this.lavirint.wallWidth$])
         .subscribe(([lavMat, wallWidth]) => {
-            wallWidth += "%";
+            wallWidth = this.gridCont.offsetWidth * +wallWidth / 100 + "px";
 
             this.gridCont.style.gridTemplateRows = 
                 this.createGridTemplate((lavMat.length - 1) / 2, wallWidth);
