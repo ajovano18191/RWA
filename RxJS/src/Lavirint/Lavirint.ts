@@ -9,6 +9,7 @@ import { Player } from "../Player";
 import { Direction, Position } from "../Position";
 import { Wall } from "../LavirintItems/Wall";
 import { LavirintMatrix } from "./LavirintMatrix";
+import { Score, ScoreValues } from "../Score";
 
 export class Lavirint implements IDrawable {
 
@@ -18,6 +19,7 @@ export class Lavirint implements IDrawable {
     private lavirintConfigurator: LavirintConfigurator;
     private level: Level;
     private player: Player;
+    private score: Score;
     
     public root: HTMLDivElement;
 
@@ -26,10 +28,12 @@ export class Lavirint implements IDrawable {
         this.lavirintConfigurator = new LavirintConfigurator(this);
         this.level = new Level();
         this.player = new Player();
+        this.score = new Score(this);
     }
 
     public draw(parent: HTMLElement): HTMLElement {
         this.root = Draw.div(parent, "div-lavirint");
+        this.score.draw(this.root);
         this.lavirintConfigurator.draw(this.root);
 
         this.lavMat$ = this.lavirintConfigurator.level$
@@ -60,7 +64,7 @@ export class Lavirint implements IDrawable {
                         if(lavMat.getEl(movePos) === undefined || 
                             lavMat.getEl(checkPos) instanceof Wall) {
                             if(movePos.equal(lavMat.endPos)) {
-                                nextLevel();
+                                this.nextLevel();
                                 return movePos;
                             }
                             return pos;
@@ -107,15 +111,22 @@ export class Lavirint implements IDrawable {
         return this.lavirintConfigurator.playerColor$;
     }
 
+    private nextLevel(): void {
+        const inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
+        inLvl.value = (+inLvl.value + 1).toString();
+        inLvl.dispatchEvent(new Event("change"));
+        
+        this.score.increase(ScoreValues.nextLevel);
+    }
+
+    resetGame(): void {
+        const inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
+        inLvl.value = (0).toString();
+        inLvl.dispatchEvent(new Event("change"));
+    }
 }
 
 const DirectionKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
-
-function nextLevel(): void {
-    let inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
-    inLvl.value = (+inLvl.value + 1).toString();
-    inLvl.dispatchEvent(new Event("change"));
-}
 
 function startKeyPresse$(): Observable<Direction> {
     return merge(
