@@ -7,8 +7,7 @@ export class LavirintConfigurator implements IDrawable {
 
     private root: HTMLDivElement;
 
-    private _lavirintWidth$: Observable<string>;
-    private _lavirintHeight$: Observable<string>;
+    private _lavirintSize$: Observable<string>;
     private _wallColor$: Observable<string>;
     private _wallWidth$: Observable<string>;
     private _backColor$: Observable<string>;
@@ -22,8 +21,7 @@ export class LavirintConfigurator implements IDrawable {
     public draw(parent: HTMLElement): HTMLElement {
         this.root = Draw.div(parent, "div-lavirint-config");
         
-        this.drawLavirintWidth();
-        this.drawLavirintHeight();
+        this.drawLavirintSize();
         this.drawWallColor();
         this.drawWallWidth();
         this.drawBackColor();
@@ -33,12 +31,8 @@ export class LavirintConfigurator implements IDrawable {
         return this.root;
     }
 
-    get lavirintWidth$(): Observable<string> {
-        return this._lavirintWidth$;
-    }
-
-    get lavirintHeight$(): Observable<string> {
-        return this._lavirintHeight$;
+    get lavirintSize$(): Observable<string> {
+        return this._lavirintSize$;
     }
 
     get wallColor$(): Observable<string> {
@@ -61,36 +55,20 @@ export class LavirintConfigurator implements IDrawable {
         return this._playerColor$;
     }
 
-    private drawLavirintWidth() {
-        const lavirintWidthLabel = Draw.label(this.root, "Sirina prozora: ", "lbl-lavirint-width");
-        const lavirintWidthPicker = Draw.input(this.root, "number", "input-lavirint-width");
+    private drawLavirintSize() {
+        const lavirintSizeLabel = Draw.label(this.root, "Velicina prozora: ", "lbl-lavirint-size");
+        const lavirintSizePicker = Draw.input(this.root, "number", "input-lavirint-size");
 
-        const defaultLavirintWidth: string = "90";
+        const defaultLavirintSize: string = "90";
 
-        this._lavirintWidth$ = fromEvent(lavirintWidthPicker, "change").pipe(
+        this._lavirintSize$ = fromEvent(lavirintSizePicker, "change").pipe(
             map(
                 (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
             ),
-            startWith(defaultLavirintWidth),
+            startWith(defaultLavirintSize),
         );
 
-        lavirintWidthPicker.value = defaultLavirintWidth;
-    }
-
-    private drawLavirintHeight() {
-        const lavirintHeightLabel = Draw.label(this.root, "Visina prozora: ", "lbl-lavirint-height");
-        const lavirintHeightPicker = Draw.input(this.root, "number", "input-lavirint-height");
-
-        const defaultLavirintHeight: string = "90";
-
-        this._lavirintHeight$ = fromEvent(lavirintHeightPicker, "change").pipe(
-            map(
-                (inputEvent: InputEvent) => (<HTMLInputElement>inputEvent.target).value
-            ),
-            startWith(defaultLavirintHeight),
-        );
-
-        lavirintHeightPicker.value = defaultLavirintHeight;
+        lavirintSizePicker.value = defaultLavirintSize;
     }
 
     private drawWallColor() {
