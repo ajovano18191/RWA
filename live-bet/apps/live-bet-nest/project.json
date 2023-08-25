@@ -1,0 +1,50 @@
+{
+  "name": "live-bet-nest",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/live-bet-nest/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/live-bet-nest",
+        "main": "apps/live-bet-nest/src/main.ts",
+        "tsConfig": "apps/live-bet-nest/tsconfig.app.json",
+        "assets": ["apps/live-bet-nest/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/live-bet-nest/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "live-bet-nest:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "live-bet-nest:build:development"
+        },
+        "production": {
+          "buildTarget": "live-bet-nest:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/live-bet-nest/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
