@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { BrowserModule} from '@angular/platform-browser';
+import { CommonModule } from '@angular/common'
 
 @Component({
   standalone: true,
-  imports: [NxWelcomeComponent, RouterModule],
+  imports: [CommonModule, RouterModule, ],
   selector: 'live-bet-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
