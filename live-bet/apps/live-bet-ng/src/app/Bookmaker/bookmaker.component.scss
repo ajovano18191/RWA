@@ -1,8 +1,29 @@
 mat-panel-title {
     color: rgba(0, 0, 0, 0.54);
-    flex: 0 0 4em;
+    flex: 0 0 5%;
+    min-width: 4em;
 }
 
 mat-panel-description {
     color: black;
+}
+
+.sport-name {
+    display: flex;
+    align-content: flex-start;
+    align-items: center;
+}
+
+.sport-name-text {
+    padding-top: 16px;
+    padding-left: 16px;
+}
+
+.sport-name-button {
+    margin-left: 8px;
+    height: 36px;
+}
+
+.button-icon {
+    margin-right: 4px !important;
 }
