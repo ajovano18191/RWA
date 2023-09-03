@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import Match from './match';
 import { GameComponent } from './game.component';
+import Offer from './offer';
 
 @Component({
   selector: 'bookmaker-match',
@@ -21,7 +22,7 @@ import { GameComponent } from './game.component';
         </mat-panel-description>        
       </mat-expansion-panel-header>
       <div class="games">
-        <bookmaker-game *ngFor="let game of match.sport.games" [game]="game"/>
+        <bookmaker-game *ngFor="let game of match.sport.games" [game]="game" (oddChangeEvent)="changeOdd($event)"/>
         <button mat-fab extended color="green" class="send-tips-button" (click)="sendTips(match)">
           <mat-icon class="button-icon">send</mat-icon>
           Send
@@ -37,7 +38,7 @@ import { GameComponent } from './game.component';
     ".send-tips-button .button-icon { margin-left: 0.2em; margin-right: 0px; }",
   ],
 })
-export class MatchComponent {
+export class MatchComponent implements OnInit {
   @Input() match: Match = {
     id: 0,
     home: '',
@@ -51,7 +52,22 @@ export class MatchComponent {
     },
   }
 
-  public sendTips(match: Match) {
+  matchOffer: Map<number, number> = new Map<number, number>();
 
+  ngOnInit(): void {
+    for(let subgame of this.match.sport.games.map(p => (p.subgames)).flat()) {
+      this.matchOffer.set(subgame.id, 1.00);
+    }
+  }
+
+  changeOdd(offer: Offer) {
+    this.matchOffer.set(offer.subgameId, offer.odd);
+  }
+
+  public sendTips(match: Match) {
+    console.log({
+      matchId: this.match.id,
+      matchOffer: this.matchOffer
+    })
   }
 }
