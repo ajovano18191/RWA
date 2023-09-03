@@ -5,13 +5,13 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angu
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Match } from './bookmaker.component';
+import Match from './match';
 
 @Component({
   selector: 'live-bet-add-match-dialog',
-  styles: [
-    ".mat-mdc-dialog-actions { justify-content: flex-end; }"
-  ],
+  standalone: true,
+  imports: [MatDialogModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule],
+  providers: [MatDialog],
   template: `
     <div mat-dialog-content>
       <h1><b>Add match</b></h1>
@@ -35,9 +35,9 @@ import { Match } from './bookmaker.component';
       <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
     </div>
   `,
-  standalone: true,
-  imports: [MatDialogModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule],
-  providers: [MatDialog]
+  styles: [
+    ".mat-mdc-dialog-actions { justify-content: flex-end; }"
+  ],
 })
 export class AddMatchDialogComponent {
   constructor(
