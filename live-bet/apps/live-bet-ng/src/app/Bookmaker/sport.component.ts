@@ -21,22 +21,24 @@ import { MatchComponent } from './match.component';
     <div class="sport">
       <div class="sport-header">
         <h1  class="sport-header-text">{{ sport.name }}</h1>
-        <button mat-fab extended color="primary" class="sport-header-button" (click)="openAddMatchDialog(sport.id)">
-          <mat-icon class="button-icon">add</mat-icon>
-          Add match
-        </button>
-        <button mat-fab extended color="primary" class="sport-header-button" (click)="openAddGameDialog(sport.id)">
-          <mat-icon class="button-icon">add</mat-icon>
-          Add game
-        </button>
+        <div class="sport-header-buttons-container">
+          <button mat-fab extended color="primary" class="sport-header-button" (click)="openAddMatchDialog(sport.id)">
+            <mat-icon class="button-icon">add</mat-icon>
+            Add match
+          </button>
+          <button mat-fab extended color="primary" class="sport-header-button" (click)="openAddGameDialog(sport.id)">
+            <mat-icon class="button-icon">add</mat-icon>
+            Add game
+          </button>
+        </div>
       </div>
         <bookmaker-match *ngFor="let match of sport.matches" [match]="match" />
     </div>
   `,
   styles: [
-    ".sport-header { display: flex; align-content: flex-start; align-items: center; }",
+    ".sport-header { display: flex; flex-wrap: wrap; align-content: flex-start; align-items: center; }",
     ".sport-header-text { padding-top: 16px; padding-left: 16px; width: fit-content; }",
-    ".sport-header-button { margin-left: 8px; height: 30px; font-size: smaller; }",
+    ".sport-header-button { flex: 1; margin-left: 8px; height: 30px; font-size: smaller; }",
     ".button-icon { margin-right: 4px !important; }",
   ],
   providers: [SportComponent],

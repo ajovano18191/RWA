@@ -26,6 +26,6 @@ $primary: mat-palette($mat-indigo);
 
 .subgames { 
     display: flex; 
-    flex-flow: row wrap; 
+    flex-flow: row nowrap; 
     justify-content: space-around; 
 }

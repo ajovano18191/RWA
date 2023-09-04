@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import Subgame from './subgame';
+import Offer from './offer';
 
 @Component({
   selector: 'bookmaker-subgame',
@@ -11,7 +12,7 @@ import Subgame from './subgame';
   template: `
     <mat-form-field class="subgame">
       <mat-label>{{ subgame.name }}</mat-label>
-        <input matInput type="number">
+        <input matInput type="number" [(ngModel)]="odd" (change)="changeOdd()">
     </mat-form-field>
   `,
   styles: [
@@ -24,5 +25,15 @@ export class SubgameComponent {
   @Input() subgame: Subgame = {
     id: 0,
     name: '',
+  }
+
+  @Output() oddChangeEvent = new EventEmitter<Offer>();
+  odd: number = 1;
+
+  changeOdd() {
+    this.oddChangeEvent.emit({
+      subgameId: this.subgame.id,
+      odd: this.odd,
+    });
   }
 }
