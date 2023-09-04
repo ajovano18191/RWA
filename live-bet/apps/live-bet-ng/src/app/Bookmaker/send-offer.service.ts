@@ -24,4 +24,10 @@ export class SendOfferService {
     }
     return arr;
   }
+
+  public endMatch(matchId: number) {
+    this.socket.emit('endGame', {
+      matchId: matchId,
+    });
+  }
 }
