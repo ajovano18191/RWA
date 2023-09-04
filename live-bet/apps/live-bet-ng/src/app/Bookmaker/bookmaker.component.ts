@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import Sport from './sport';
 import { SportComponent } from './sport.component';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'live-bet-bookmaker',
@@ -16,7 +17,17 @@ import { SportComponent } from './sport.component';
     </mat-accordion>
   `,
 })
-export class BookmakerComponent {
+export class BookmakerComponent implements OnInit {
+
+  socket = inject(Socket);
+
+  ngOnInit(): void {
+      this.socket.emit('completeOffer');
+      this.socket.on('completeOffer', (data: any) => console.log(data));
+
+      this.socket.emit('sub2Offers');
+      this.socket.fromEvent('offer').subscribe(p => console.log(p));
+    }
 
   public SPORTS: Map<number, Sport> = new Map<number, Sport>();
   

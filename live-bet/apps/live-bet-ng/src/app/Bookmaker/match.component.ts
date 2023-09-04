@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,11 +6,13 @@ import { MatButtonModule } from '@angular/material/button';
 import Match from './match';
 import { GameComponent } from './game.component';
 import Offer from './offer';
+import { SocketIoModule, SocketIoConfig, Socket } from 'ngx-socket-io';
+
 
 @Component({
   selector: 'bookmaker-match',
   standalone: true,
-  imports: [MatExpansionModule, CommonModule, MatButtonModule, MatIconModule, GameComponent, ],
+  imports: [MatExpansionModule, CommonModule, MatButtonModule, MatIconModule, GameComponent, SocketIoModule, ],
   template: `
     <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header>
@@ -26,6 +28,10 @@ import Offer from './offer';
         <button mat-fab extended color="green" class="send-tips-button" (click)="sendTips(match)">
           <mat-icon class="button-icon">send</mat-icon>
           Send
+        </button>
+        <button mat-fab extended color="green" class="send-tips-button" (click)="recvTips()">
+          <mat-icon class="button-icon">send</mat-icon>
+          Recv
         </button>
       </div>
     </mat-expansion-panel>
@@ -64,10 +70,24 @@ export class MatchComponent implements OnInit {
     this.matchOffer.set(offer.subgameId, offer.odd);
   }
 
+
+  socket = inject(Socket);
+
   public sendTips(match: Match) {
-    console.log({
+    let x = [];
+    for(const kvp of this.matchOffer.entries()) {
+      x.push([...kvp]);
+    }
+
+    this.socket.emit('sendOffer', {
       matchId: this.match.id,
-      matchOffer: this.matchOffer
-    })
+      offer: x
+    });
+    
+  }
+
+  public recvTips() {
+    this.socket.emit('recv');
+    this.socket.fromEvent('recv').subscribe(p => console.log(p));
   }
 }
