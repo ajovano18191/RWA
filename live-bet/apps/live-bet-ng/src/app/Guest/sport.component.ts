@@ -46,10 +46,10 @@ export interface Sport {
 
 export interface Match {
   id: number,
+  sportId: number,
   home: string,
   guest: string,
   league: string,
-  oddses: Odds[],
 }
 
 export interface Game {
@@ -63,9 +63,8 @@ export interface Subgame {
   name: string,
 }
 
-export interface Odds {
+export interface OddsKey {
   id: number,
-  value: number,
   sportId: number,
   matchId: number,
   subgameId: number,
