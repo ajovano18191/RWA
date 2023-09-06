@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SocketIoModule.forRoot(config)),
     provideStore(),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    importProvidersFrom(StoreModule.forRoot({ oddses: oddsReducer })),
+    importProvidersFrom(StoreModule.forRoot({ odds: oddsReducer })),
     importProvidersFrom(StoreDevtoolsModule.instrument()),
 ],
 };

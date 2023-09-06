@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SportComponent } from './sport.component';
 import Sport from './sport.model';
+import { Store } from '@ngrx/store';
+import { OddsActions } from './odds-store/odds.actions';
 
 @Component({
   selector: 'guest-complete-offer-view',
@@ -11,12 +13,31 @@ import Sport from './sport.model';
     <div class="sports">
       <guest-sport *ngFor="let sport of SPORTS" [sport]="sport" />
     </div>
+    <button (click)="onClick()">Dodaj kvotu</button>
   `,
   styles: [
     ":host > * { background-color: rgba(255, 255, 255, 0.8); text-align: center; padding: 20px 0; font-size: 30px; border: 1px solid black; }",
   ],
 })
 export class CompleteOfferViewComponent {
+  private store = inject(Store);
+
+  onClick(): void {
+    // for(let i = 0; i < 5; i++) {
+      let x = {
+        id: Math.floor(Math.random() * 100),
+        sportId: 1,//Math.floor(Math.random() * 2) + 1,
+        matchId: Math.floor(Math.random() * 5) + 1,
+        subgameId: Math.floor(Math.random() * 9),
+      };
+
+      this.store.dispatch(OddsActions.setOdds({
+        oddsKey: x,
+        value: Math.random(),
+      }))
+    // }
+  }
+
   public SPORTS: Sport[] = [];
 
   constructor() {
