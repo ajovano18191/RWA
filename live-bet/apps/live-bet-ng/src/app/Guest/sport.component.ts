@@ -12,7 +12,7 @@ import { MatchComponent } from './match.component';
       <div class="sport-name">{{ sport.name }}</div>
       <guest-game *ngFor="let game of sport.games" [game]="game"/>
       <div class="match-id">MatchID</div>
-      <div class="league">League</div>
+      <div class="league">Leagueee</div>
       <div class="home-guest">Home - Guest</div>
       <guest-subgame *ngFor="let subgame of getSubgames" [subgame]="subgame" />
       <guest-match *ngFor="let match of sport.matches" [match]="match" />
@@ -49,7 +49,7 @@ export interface Match {
   home: string,
   guest: string,
   league: string,
-  tips: number[],
+  oddses: Odds[],
 }
 
 export interface Game {
@@ -61,6 +61,14 @@ export interface Game {
 export interface Subgame {
   id: number,
   name: string,
+}
+
+export interface Odds {
+  id: number,
+  value: number,
+  sportId: number,
+  matchId: number,
+  subgameId: number,
 }
 
 //     ":host > * { background-color: rgba(255, 255, 255, 0.8); text-align: center; padding: 20px 0; font-size: 30px; border: 1px solid black; }",
