@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Match } from './sport.component';
+import Match from './match.model';
 
 @Component({
   selector: 'guest-match',
@@ -13,7 +13,7 @@ import { Match } from './sport.component';
       {{ match.home }} <br> {{ match.guest }}
     </div>
     <ng-container>
-      <div class="tip" *ngFor="let tip of match.tips">{{ tip | number:'1.2-2' }}</div>
+      <!-- <div class="tip" *ngFor="let tip of match.tips">{{ tip | number:'1.2-2' }}</div> -->
     </ng-container>
   `,
   styles: [
@@ -26,9 +26,9 @@ import { Match } from './sport.component';
 export class MatchComponent {
   @Input() match: Match = {
     id: 0,
+    sportId: 0,
     home: '',
     guest: '',
     league: '',
-    tips: [],
   }
 }

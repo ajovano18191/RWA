@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { GameComponent } from './game.component';
 import { SubgameComponent } from './subgame.component';
 import { MatchComponent } from './match.component';
+import { Subgame } from './subgame.model';
+import Sport from './sport.model';
 
 @Component({
   selector: 'guest-sport',
@@ -35,32 +37,6 @@ export class SportComponent {
   get getSubgames(): Subgame[] {
     return this.sport.games.map(p => p.subgames).flat();
   }
-}
-
-export interface Sport {
-  id: number,
-  name: string,
-  matches: Match[],
-  games: Game[],
-}
-
-export interface Match {
-  id: number,
-  home: string,
-  guest: string,
-  league: string,
-  tips: number[],
-}
-
-export interface Game {
-  id: number,
-  name: string,
-  subgames: Subgame[],
-}
-
-export interface Subgame {
-  id: number,
-  name: string,
 }
 
 //     ":host > * { background-color: rgba(255, 255, 255, 0.8); text-align: center; padding: 20px 0; font-size: 30px; border: 1px solid black; }",

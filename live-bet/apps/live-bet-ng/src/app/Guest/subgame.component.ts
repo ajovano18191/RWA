@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subgame } from './sport.component';
+import { Subgame } from './subgame.model';
 
 @Component({
   selector: 'guest-subgame',
