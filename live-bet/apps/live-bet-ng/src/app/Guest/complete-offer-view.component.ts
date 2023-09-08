@@ -4,6 +4,7 @@ import { SportComponent } from './sport.component';
 import Sport from './sport.model';
 import { Store } from '@ngrx/store';
 import { OddsActions } from './odds-store/odds.actions';
+import { RecieveOfferService } from './recieve-offer.service';
 
 @Component({
   selector: 'guest-complete-offer-view',
@@ -37,6 +38,8 @@ export class CompleteOfferViewComponent {
       }))
     // }
   }
+
+  private recieveOfferService = inject(RecieveOfferService);
 
   public SPORTS: Sport[] = [];
 

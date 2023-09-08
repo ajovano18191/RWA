@@ -81,7 +81,7 @@ export class MatchComponent implements OnInit {
   private sendOfferService = inject(SendOfferService);
 
   public sendTips() {
-    this.sendOfferService.sendOffer(this.match.id, this.matchOffer);
+    this.sendOfferService.sendOffer(this.match.id, this.match.sport.id, this.matchOffer);
   }
 
   public endMatch() {

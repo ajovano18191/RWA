@@ -10,9 +10,10 @@ export class SendOfferService {
 
   constructor() { }
 
-  public sendOffer(matchId: number, matchOffer: Map<number, number>) {
+  public sendOffer(matchId: number, sportId: number, matchOffer: Map<number, number>) {
     this.socket.emit('sendOffer', {
       matchId: matchId,
+      sportId: sportId,
       matchOffer: this.map2Array(matchOffer),
     });
   }
