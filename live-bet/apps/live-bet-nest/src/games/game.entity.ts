@@ -11,7 +11,9 @@ export class Game implements IGame {
     @Column()
     name: string;
 
-    @OneToMany(() => Subgame, (subgame) => subgame.game)
+    @OneToMany(() => Subgame, (subgame) => subgame.game, {
+        cascade: true,
+    })
     subgames: Subgame[];
 
     @ManyToOne(() => Sport, (sport) => sport.games)

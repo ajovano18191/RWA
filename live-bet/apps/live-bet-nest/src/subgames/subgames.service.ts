@@ -25,14 +25,14 @@ export class SubgamesService {
     async create(subgameDTO: SubgameDTO): Promise<Subgame> {
         const subgame: Subgame = this.subgamesRepository.create();
         subgame.name = subgameDTO.name;
-        subgame.game = await this.gamesService.findOne(subgameDTO.gameId);
+        // subgame.game = await this.gamesService.findOne(subgameDTO.gameId);
         return this.subgamesRepository.save(subgame);
     }
 
     async update(id: number, subgameDTO: SubgameDTO): Promise<Subgame> {
         const subgame: Subgame = await this.subgamesRepository.findOneBy({ id });
         subgame.name = subgameDTO.name;
-        subgame.game = await this.gamesService.findOne(subgameDTO.gameId);
+        // subgame.game = await this.gamesService.findOne(subgameDTO.gameId);
         return this.subgamesRepository.save(subgame);
     }
 

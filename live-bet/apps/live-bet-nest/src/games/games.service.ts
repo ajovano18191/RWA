@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { GameDTO } from 'libs/dto/src';
 import { SportsService } from '../sports/sports.service';
 import { Game } from './game.entity';
+import { Subgame } from '../subgames/subgame.entity';
 
 @Injectable()
 export class GamesService {
@@ -26,14 +27,21 @@ export class GamesService {
         const game: Game = this.gamesRepository.create();
         game.name = gameDTO.name;
         game.sport = await this.sportsService.findOne(gameDTO.sportId);
-        return this.gamesRepository.save(game);
+        game.subgames = gameDTO.subgames.map(p => new Subgame(p.name, game));
+        const newGame = await this.gamesRepository.save(game);
+        newGame.subgames.forEach(subgame => subgame.game = undefined);
+        return newGame;
     }
 
     async update(id: number, gameDTO: GameDTO): Promise<Game> {
         const game: Game = await this.findOne(id);
         game.name = gameDTO.name;
         game.sport = await this.sportsService.findOne(gameDTO.sportId);
-        return this.gamesRepository.save(game);
+        game.subgames = gameDTO.subgames.map(p => new Subgame(p.name, game));
+        const newGame = await this.gamesRepository.save(game);
+        newGame.subgames.forEach(subgame => subgame.game = undefined);
+        return newGame;
+        
     }
 
     async remove(id: number): Promise<void> {
