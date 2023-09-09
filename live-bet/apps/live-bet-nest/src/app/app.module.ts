@@ -6,6 +6,7 @@ import { OfferGateway } from './offer.gateway';
 import { SportsModule } from '../sports/sports.module';
 import { GamesModule } from '../games/games.module';
 import { SubgamesModule } from '../subgames/subgames.module';
+import { MatchesModule } from '../matches/matches.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { SubgamesModule } from '../subgames/subgames.module';
     }),
     SportsModule,
     GamesModule,
-    SubgamesModule
+    SubgamesModule,
+    MatchesModule,
   ],
   controllers: [AppController],
   providers: [AppService, OfferGateway, ],

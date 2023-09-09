@@ -16,6 +16,7 @@ export class SportsService {
                 games: {
                     subgames: true,
                 },
+                matches: true,
             }
         });
     }

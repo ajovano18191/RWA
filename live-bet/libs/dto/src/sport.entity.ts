@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Game } from "libs/dto/src";
+import { Game, Match } from "libs/dto/src";
 
 @Entity()
 export class Sport {
@@ -11,4 +11,7 @@ export class Sport {
 
     @OneToMany(() => Game, (game) => game.sport)
     games: Game[];
+
+    @OneToMany(() => Match, (match) => match.sport)
+    matches: Match[];
 }
