@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import Sport from './sport.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Sport, SportDTO } from 'libs/dto/src';
 
 @Injectable()
 export class SportsService {
@@ -11,22 +11,33 @@ export class SportsService {
     ) {}
 
     findAll(): Promise<Sport[]> {
-        return this.sportsRepository.find();
+        return this.sportsRepository.find({
+            relations: {
+                games: {
+                    subgames: true,
+                },
+            }
+        });
     }
 
     findOne(id: number): Promise<Sport | null> {
         return this.sportsRepository.findOneBy({ id });
     } 
 
-    create(sport: Sport): Promise<Sport> {
+    create(sportDTO: SportDTO): Promise<Sport> {
+        const sport: Sport = this.sportsRepository.create();
+        sport.name = sportDTO.name;
         return this.sportsRepository.save(sport);
     }
 
-    async update(id: number, sport: Sport): Promise<Sport> {
+    async update(id: number, sportDTO: SportDTO): Promise<Sport> {
+        const sport: Sport = await this.sportsRepository.findOneBy({ id });
+        sport.name = sportDTO.name;
         return this.sportsRepository.save(sport);
     }
 
     async remove(id: number): Promise<void> {
-        await this.sportsRepository.delete(id);
+        const sport: Sport = await this.sportsRepository.findOneBy({ id });
+        await this.sportsRepository.remove(sport);
     }
 }

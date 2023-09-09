@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Game from './game.model';
 import { Repository } from 'typeorm';
+import { Game, GameDTO } from 'libs/dto/src';
+import { SportsService } from '../sports/sports.service';
 
 @Injectable()
 export class GamesService {
     constructor(
         @InjectRepository(Game)
         private gamesRepository: Repository<Game>,
+        @Inject(SportsService)
+        private sportsService: SportsService,
     ) {}
 
     findAll(): Promise<Game[]> {
@@ -18,15 +21,22 @@ export class GamesService {
         return this.gamesRepository.findOneBy({ id });
     } 
 
-    create(game: Game): Promise<Game> {
+    async create(gameDTO: GameDTO): Promise<Game> {
+        const game: Game = this.gamesRepository.create();
+        game.name = gameDTO.name;
+        game.sport = await this.sportsService.findOne(gameDTO.sportId);
         return this.gamesRepository.save(game);
     }
 
-    async update(id: number, game: Game): Promise<Game> {
+    async update(id: number, gameDTO: GameDTO): Promise<Game> {
+        const game: Game = await this.findOne(id);
+        game.name = gameDTO.name;
+        game.sport = await this.sportsService.findOne(gameDTO.sportId);
         return this.gamesRepository.save(game);
     }
 
     async remove(id: number): Promise<void> {
-        await this.gamesRepository.delete(id);
+        const game: Game = await this.findOne(id);
+        await this.gamesRepository.remove(game);
     }
 }

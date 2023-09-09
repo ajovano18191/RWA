@@ -1,9 +1,8 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import Subgame from "../subgames/subgame.model";
-import Sport from "../sports/sport.model";
+import { Sport, Subgame } from "libs/dto/src";
 
 @Entity()
-export default class Game {
+export class Game {
     @PrimaryGeneratedColumn()
     id: number;
 

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { SubgamesService } from './subgames.service';
-import Subgame from './subgame.model';
+import { Subgame, SubgameDTO } from 'libs/dto/src';
 
 @Controller('subgames')
 export class SubgamesController {
@@ -18,12 +18,12 @@ export class SubgamesController {
     }
 
     @Post()
-    create(@Body() subgame: Subgame): Promise<Subgame> {
+    create(@Body() subgame: SubgameDTO): Promise<Subgame> {
         return this.subgamesService.create(subgame);
     }
 
     @Put(':id')
-    update(@Param('id', new ParseIntPipe()) id: number, @Body() subgame: Subgame): Promise<Subgame> {
+    update(@Param('id', new ParseIntPipe()) id: number, @Body() subgame: SubgameDTO): Promise<Subgame> {
         return this.subgamesService.update(id, subgame);
     }
 

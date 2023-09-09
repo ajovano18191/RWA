@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Subgame from './subgame.model';
+import { Subgame, SubgameDTO } from 'libs/dto/src';
 import { Repository } from 'typeorm';
+import { GamesService } from '../games/games.service';
 
 @Injectable()
 export class SubgamesService {
     constructor(
         @InjectRepository(Subgame)
         private subgamesRepository: Repository<Subgame>,
+        @Inject(GamesService)
+        private gamesService: GamesService,
     ) {}
 
     findAll(): Promise<Subgame[]> {
@@ -18,15 +21,22 @@ export class SubgamesService {
         return this.subgamesRepository.findOneBy({ id });
     } 
 
-    create(subgame: Subgame): Promise<Subgame> {
+    async create(subgameDTO: SubgameDTO): Promise<Subgame> {
+        const subgame: Subgame = this.subgamesRepository.create();
+        subgame.name = subgameDTO.name;
+        subgame.game = await this.gamesService.findOne(subgameDTO.gameId);
         return this.subgamesRepository.save(subgame);
     }
 
-    async update(id: number, subgame: Subgame): Promise<Subgame> {
+    async update(id: number, subgameDTO: SubgameDTO): Promise<Subgame> {
+        const subgame: Subgame = await this.subgamesRepository.findOneBy({ id });
+        subgame.name = subgameDTO.name;
+        subgame.game = await this.gamesService.findOne(subgameDTO.gameId);
         return this.subgamesRepository.save(subgame);
     }
 
     async remove(id: number): Promise<void> {
-        await this.subgamesRepository.delete(id);
+        const subgame: Subgame = await this.subgamesRepository.findOneBy({ id });
+        await this.subgamesRepository.remove(subgame);
     }
 }
