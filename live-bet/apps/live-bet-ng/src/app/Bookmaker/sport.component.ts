@@ -10,8 +10,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { filter } from 'rxjs';
 import { AddMatchDialogComponent } from './add-match-dialog.component';
 import { AddGameDialogComponent } from './add-game-dialog.component';
-import Sport from './sport';
 import { MatchComponent } from './match.component';
+import { ISport } from 'libs/dto/src';
 
 @Component({
   selector: 'bookmaker-sport',
@@ -32,7 +32,7 @@ import { MatchComponent } from './match.component';
           </button>
         </div>
       </div>
-        <bookmaker-match *ngFor="let match of sport.matches" [match]="match" />
+        <bookmaker-match *ngFor="let match of sport?.matches" [match]="match" />
     </div>
   `,
   styles: [
@@ -44,7 +44,7 @@ import { MatchComponent } from './match.component';
   providers: [SportComponent],
 })
 export class SportComponent {
-  @Input() sport: Sport = {
+  @Input() sport: ISport = {
     id: 0,
     name: '',
     matches: [],

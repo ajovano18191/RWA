@@ -5,8 +5,7 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angu
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import Game from './game';
-import Subgame from './subgame';
+import { IGame, ISubgame } from 'libs/dto/src';
 
 @Component({
   selector: 'live-bet-add-game-dialog',
@@ -52,12 +51,12 @@ import Subgame from './subgame';
 export class AddGameDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<AddGameDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Game,
+    @Inject(MAT_DIALOG_DATA) public data: IGame,
   ) {
-    data.subgames = Array<Subgame>(
-      { id: 1, name: '' },
-      { id: 2, name: '' },
-      { id: 3, name: '' },
+    data.subgames = Array<ISubgame>(
+      { id: 1, name: '', game: data, },
+      { id: 2, name: '', game: data, },
+      { id: 3, name: '', game: data, },
     );
   }
 

@@ -1,11 +1,11 @@
+export { ISport } from "./isport"
 export { SportDTO } from './sport.dto';
-export { Sport } from './sport.entity';
 
+export { IGame } from "./igame"
 export { GameDTO } from './game.dto';
-export { Game } from './game.entity';
 
+export { ISubgame } from "./isubgame"
 export { SubgameDTO } from './subgame.dto';
-export { Subgame } from './subgame.entity';
 
+export { IMatch } from "./imatch"
 export { MatchDTO } from './match.dto';
-export { Match } from './match.entity';

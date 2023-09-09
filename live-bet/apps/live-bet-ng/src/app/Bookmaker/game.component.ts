@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import Game from './game';
 import { SubgameComponent } from './subgame.component';
 import Offer from './offer';
+import { IGame } from 'libs/dto/src';
 
 @Component({
   selector: 'bookmaker-game',
@@ -19,11 +19,17 @@ import Offer from './offer';
   styleUrls: ['./game.component.scss'],
 })
 export class GameComponent {
-  @Input() game: Game = {
+  @Input() game: IGame = {
     id: 0,
     name: '',
     subgames: [],
-  }
+    sport: {
+      id: 0,
+      name: '',
+      games: [],
+      matches: [],
+    },
+  };
 
   @Output() oddChangeEvent = new EventEmitter<Offer>();
 

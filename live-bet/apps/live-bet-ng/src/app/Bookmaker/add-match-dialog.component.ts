@@ -5,7 +5,7 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angu
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import Match from './match';
+import { IMatch } from 'libs/dto/src';
 
 @Component({
   selector: 'live-bet-add-match-dialog',
@@ -42,7 +42,7 @@ import Match from './match';
 export class AddMatchDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<AddMatchDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Match,
+    @Inject(MAT_DIALOG_DATA) public data: IMatch,
   ) {}
 
   onNoClick(): void {

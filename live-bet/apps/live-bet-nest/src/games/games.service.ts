@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Game, GameDTO } from 'libs/dto/src';
+import { GameDTO } from 'libs/dto/src';
 import { SportsService } from '../sports/sports.service';
+import { Game } from './game.entity';
 
 @Injectable()
 export class GamesService {

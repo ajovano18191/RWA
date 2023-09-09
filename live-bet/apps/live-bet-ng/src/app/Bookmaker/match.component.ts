@@ -3,10 +3,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import Match from './match';
 import { GameComponent } from './game.component';
 import Offer from './offer';
 import { SendOfferService } from './send-offer.service';
+import { IMatch } from 'libs/dto/src';
 
 @Component({
   selector: 'bookmaker-match',
@@ -53,7 +53,7 @@ import { SendOfferService } from './send-offer.service';
   ],
 })
 export class MatchComponent implements OnInit {
-  @Input() match: Match = {
+  @Input() match: IMatch = {
     id: 0,
     home: '',
     guest: '',
@@ -61,8 +61,8 @@ export class MatchComponent implements OnInit {
     sport: {
       id: 0,
       name: '',
-      matches: [],
       games: [],
+      matches: [],
     },
   }
 

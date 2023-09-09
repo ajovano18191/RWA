@@ -8,5 +8,5 @@
     "target": "es2021"
   },
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
-  "include": ["src/**/*.ts", "../../libs/dto/src/sport.entity.ts", "../../libs/dto/src/subgame.entity.ts", "../../libs/dto/src/game.entity.ts", "../../libs/dto/src/match.entity.ts"]
+  "include": ["src/**/*.ts", "src/sports/sport.entity.ts", "src/subgames/subgame.entity.ts", "src/games/game.entity.ts", "src/matches/match.entity.ts"]
 }

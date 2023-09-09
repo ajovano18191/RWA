@@ -2,8 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import Subgame from './subgame';
 import Offer from './offer';
+import { ISubgame } from 'libs/dto/src';
 
 @Component({
   selector: 'bookmaker-subgame',
@@ -22,9 +22,20 @@ import Offer from './offer';
   ],
 })
 export class SubgameComponent {
-  @Input() subgame: Subgame = {
+  @Input() subgame: ISubgame = {
     id: 0,
     name: '',
+    game: {
+      id: 0,
+      name: '',
+      subgames: [],
+      sport: {
+        id: 0,
+        name: '',
+        games: [],
+        matches: [],
+      },
+    },
   }
 
   @Output() oddChangeEvent = new EventEmitter<Offer>();
@@ -32,7 +43,7 @@ export class SubgameComponent {
 
   changeOdd() {
     this.oddChangeEvent.emit({
-      subgameId: this.subgame.id,
+      subgameId: this.subgame?.id ? this.subgame!.id : 0,
       odd: this.odd,
     });
   }

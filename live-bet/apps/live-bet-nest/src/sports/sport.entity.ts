@@ -1,8 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Game, Match } from "libs/dto/src";
+import { ISport } from "libs/dto/src";
+import { Game } from "../games/game.entity";
+import { Match } from "../matches/match.entity";
 
 @Entity()
-export class Sport {
+export class Sport implements ISport {
     @PrimaryGeneratedColumn()
     id: number;
     

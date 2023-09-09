@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { SportsService } from './sports.service';
-import { Sport, SportDTO } from 'libs/dto/src';
+import { SportDTO } from 'libs/dto/src';
+import { Sport } from './sport.entity';
 
 @Controller('sports')
 export class SportsController {

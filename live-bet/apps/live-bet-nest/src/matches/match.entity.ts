@@ -1,8 +1,9 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Sport } from "libs/dto/src";
+import { IMatch } from "libs/dto/src";
+import { Sport } from "../sports/sport.entity";
 
 @Entity()
-export class Match {
+export class Match implements IMatch {
     @PrimaryGeneratedColumn()
     id: number;
 

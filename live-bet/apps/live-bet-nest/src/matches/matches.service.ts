@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Match, MatchDTO } from 'libs/dto/src';
+import { MatchDTO } from 'libs/dto/src';
 import { Repository } from 'typeorm';
 import { SportsService } from '../sports/sports.service';
+import { Match } from './match.entity';
 
 @Injectable()
 export class MatchesService {

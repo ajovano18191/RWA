@@ -1,8 +1,10 @@
+import { IGame } from "libs/dto/src";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Sport, Subgame } from "libs/dto/src";
+import { Subgame } from "../subgames/subgame.entity";
+import { Sport } from "../sports/sport.entity";
 
 @Entity()
-export class Game {
+export class Game implements IGame {
     @PrimaryGeneratedColumn()
     id: number;
 
