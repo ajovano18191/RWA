@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+ live-bet_db:
+   container_name: live-bet_db
+   image: postgres
+   restart: always
+   environment:
+     POSTGRES_DB: live-bet
+     POSTGRES_USER: live-bet-nest
+     POSTGRES_PASSWORD: live-bet-nest
+     PGDATA: /var/lib/postgresql/data
+   ports:
+     - "5432:5432"
+   volumes:
+     - db-data:/var/lib/postgresql/data
+
+ live-bet_pgadmin4:
+   container_name: live-bet_pgadmin4
+   image: dpage/pgadmin4
+   restart: always
+   environment:
+     PGADMIN_DEFAULT_EMAIL: aleksa.jovanovicc@elfak.rs
+     PGADMIN_DEFAULT_PASSWORD: arilje031
+     PGADMIN_LISTEN_PORT: 80
+   ports:
+     - "8080:80"
+   volumes:
+     - pgadmin-data:/var/lib/pgadmin
+volumes:
+ db-data:
+ pgadmin-data:
