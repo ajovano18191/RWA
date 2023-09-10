@@ -12,7 +12,7 @@ import { AddMatchDialogComponent } from './add-match-dialog.component';
 import { AddGameDialogComponent } from './add-game-dialog.component';
 import { MatchComponent } from './match.component';
 import { GameDTO, ISport, MatchDTO } from 'libs/dto/src';
-import { SportsService } from './sports.service';
+import { SportsService } from '../sports.service';
 
 @Component({
   selector: 'bookmaker-sport',

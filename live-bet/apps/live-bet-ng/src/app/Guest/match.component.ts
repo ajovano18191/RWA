@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import Match from './match.model';
 import { OddsComponent } from './odds.component';
+import { IMatch, ISubgame } from 'libs/dto/src';
 
 @Component({
   selector: 'guest-match',
@@ -13,7 +13,7 @@ import { OddsComponent } from './odds.component';
     <div class="home-guest-match">
       {{ match.home }} <br> {{ match.guest }}
     </div>
-    <guest-odds *ngFor="let subgameId of [0, 1, 2, 3, 4, 5, 6, 7, 8]" [odds]="{ sportId: this.match.sportId, matchId: this.match.id, subgameId: subgameId }"/>
+    <guest-odds *ngFor="let subgame of getSubgames" [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }"/>
   `,
   styles: [
     ":host { display: contents; }",
@@ -23,11 +23,20 @@ import { OddsComponent } from './odds.component';
   ],
 })
 export class MatchComponent {
-  @Input() match: Match = {
+  @Input() match: IMatch = {
     id: 0,
-    sportId: 0,
     home: '',
     guest: '',
     league: '',
+    sport: {
+      id: 0,
+      name: '',
+      games: [],
+      matches: [],
+    }
+  };
+
+  get getSubgames(): ISubgame[] {
+    return this.match.sport.games.map(p => p.subgames).flat();
   }
 }

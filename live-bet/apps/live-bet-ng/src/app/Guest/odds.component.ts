@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import OddsKey from './odds-key.model';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription, delay, filter, map, merge, pairwise, share, tap } from 'rxjs';
+import { Observable, delay, filter, map, merge, pairwise, share } from 'rxjs';
 import { selectOdds } from './odds-store/odds.selectors';
 
 @Component({
@@ -10,7 +10,7 @@ import { selectOdds } from './odds-store/odds.selectors';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="odds-value" [ngStyle]="{'color': textColor$ | async, 'grid-column-start': odds.subgameId + 6,}">
+    <div class="odds-value" [ngStyle]="{'color': textColor$ | async}">
       {{ oddse$ | async | number:'1.2-2' }}
     </div>
   `,
