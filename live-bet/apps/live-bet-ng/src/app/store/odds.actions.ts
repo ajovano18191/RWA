@@ -1,9 +1,10 @@
 import { createActionGroup, props } from '@ngrx/store';
-import OddsKey from '../odds-key.model';
+import { Odds } from '../odds.model';
  
 export const OddsActions = createActionGroup({
   source: 'odds',
   events: {
-    'Set Odds': props<{ oddsKey: OddsKey, value: number, }>(),
+    'Set Odds': props<Odds>(),
+    'Load Odds': props<any>(),
   },
 });

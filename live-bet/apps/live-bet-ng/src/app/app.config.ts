@@ -8,8 +8,10 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { StoreModule, provideStore } from '@ngrx/store';
 import { StoreDevtoolsModule, provideStoreDevtools } from '@ngrx/store-devtools';
-import { oddsReducer } from './Guest/odds-store/odds.reducer';
+import { oddsReducer } from './store/odds.reducer';
 import { provideHttpClient } from '@angular/common/http';
+import { provideEffects } from '@ngrx/effects';
+import * as offerEffects from './store/offers.effects';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -23,5 +25,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(StoreModule.forRoot({ odds: oddsReducer })),
     importProvidersFrom(StoreDevtoolsModule.instrument()),
     provideHttpClient(),
-  ],
+    provideEffects(offerEffects),
+],
 };

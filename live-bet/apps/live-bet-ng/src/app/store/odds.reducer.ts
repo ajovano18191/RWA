@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { OddsActions } from './odds.actions';
-import { MatchMap, OfferMap, SportMap } from '../types';
+import { MatchMap, OfferMap, SportMap } from './types';
 
 const initialState: OfferMap = new Map<number, SportMap>();
 

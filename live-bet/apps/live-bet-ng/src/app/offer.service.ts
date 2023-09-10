@@ -1,22 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Socket } from 'ngx-socket-io';
-import { concatMap, from, map, merge } from 'rxjs';
-import { OddsActions } from './odds-store/odds.actions';
+import { Observable, concatMap, from, map, merge } from 'rxjs';
+import { Odds } from './odds.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RecieveOfferService {
+export class OfferService {
 
   private socket = inject(Socket);
   private store = inject(Store);
 
-  constructor() { 
-    this.startSubscription();
-  }
-
-  startSubscription(): void {
+  getOdds(): Observable<Odds> {
     this.socket.emit('completeOffer');
     const x = this.socket.fromEvent('completeOffer')
     .pipe(
@@ -29,21 +25,20 @@ export class RecieveOfferService {
     .pipe(
       map(p => p as Send),
     );
-
-    merge(x, y)
-    .subscribe(p => {
-      p.matchOffer.forEach(q => {
-        const offer = {
+    
+    return merge(x, y).pipe(
+      map(send => send.matchOffer.map(p => ({
           oddsKey: {
-            sportId: p.sportId,
-            matchId: p.matchId,
-            subgameId: q[0],
+            sportId: send.sportId,
+            matchId: send.matchId,
+            subgameId: p[0],
           },
-          value: q[1],
-        };
-        this.store.dispatch(OddsActions.setOdds(offer));
-      });
-    });
+          value: p[1],
+        }))
+      ),
+      concatMap(p => from(p)),
+      map(p => p as Odds),
+    );
   }
 }
 

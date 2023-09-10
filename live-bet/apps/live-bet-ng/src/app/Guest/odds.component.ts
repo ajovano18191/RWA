@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import OddsKey from './odds-key.model';
+import OddsKey from '../odds-key.model';
 import { Store } from '@ngrx/store';
 import { Observable, delay, filter, map, merge, pairwise, share } from 'rxjs';
-import { selectOdds } from './odds-store/odds.selectors';
+import { selectOdds } from '../store/odds.selectors';
 
 @Component({
   selector: 'guest-odds',

@@ -1,9 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SportComponent } from './sport.component';
 import { Store } from '@ngrx/store';
-import { OddsActions } from './odds-store/odds.actions';
-import { RecieveOfferService } from './recieve-offer.service';
+import { OddsActions } from '../store/odds.actions';
 import { ISport } from 'libs/dto/src';
 import { SportsService } from '../sports.service';
 import { Observable, tap } from 'rxjs';
@@ -11,7 +10,7 @@ import { Observable, tap } from 'rxjs';
 @Component({
   selector: 'guest-complete-offer-view',
   standalone: true,
-  imports: [CommonModule, SportComponent],
+  imports: [CommonModule, SportComponent,],
   template: `
     <div class="sports">
       <guest-sport *ngFor="let sport of sports$ | async" [sport]="sport" />
@@ -22,7 +21,7 @@ import { Observable, tap } from 'rxjs';
     ":host > * { background-color: rgba(255, 255, 255, 0.8); text-align: center; padding: 20px 0; font-size: 30px; border: 1px solid black; }",
   ],
 })
-export class CompleteOfferViewComponent {
+export class CompleteOfferViewComponent implements OnInit {
   private store = inject(Store);
 
   onClick(): void {
@@ -41,7 +40,7 @@ export class CompleteOfferViewComponent {
     // }
   }
 
-  private recieveOfferService = inject(RecieveOfferService);
+  //private recieveOfferService = inject(RecieveOfferService);
 
   private sportsService: SportsService = inject(SportsService);
   sports$: Observable<ISport[]> = 
@@ -51,4 +50,10 @@ export class CompleteOfferViewComponent {
         q.games = q.games.slice(0, 3);
       })),
     );
+  
+  ngOnInit(): void {
+      // this.store.dispatch({
+      //   type: 'Load Odds',
+      // });
+  }
 }
