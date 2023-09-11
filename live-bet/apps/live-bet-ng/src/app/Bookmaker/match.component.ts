@@ -24,7 +24,7 @@ import { IMatch } from 'libs/dto/src';
       </mat-expansion-panel-header>
       <div class="mat-expansion-panel-content">
         <div class="games">
-          <bookmaker-game *ngFor="let game of match.sport.games" [game]="game" (oddChangeEvent)="changeOdd($event)"/>
+          <bookmaker-game *ngFor="let game of match.sport.games" [matchId]="match.id" [game]="game" (oddChangeEvent)="changeOdd($event)"/>
         </div>
         <div class="buttons-container">
             <button mat-fab extended color="primary" class="send-offer-button" (click)="sendTips()">

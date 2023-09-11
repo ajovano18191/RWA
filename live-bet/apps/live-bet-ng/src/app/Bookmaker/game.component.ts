@@ -12,7 +12,7 @@ import { IGame } from 'libs/dto/src';
     <div class="game">
       <div class="game-title">{{ game.name }}</div>
       <div class="subgames">
-        <bookmaker-subgame *ngFor="let subgame of game.subgames" [subgame]="subgame" (oddChangeEvent)="changeOdd($event)"/>
+        <bookmaker-subgame *ngFor="let subgame of game.subgames" [matchId]="matchId" [subgame]="subgame" (oddChangeEvent)="changeOdd($event)"/>
       </div>
     </div>
   `,
@@ -30,6 +30,8 @@ export class GameComponent {
       matches: [],
     },
   };
+
+  @Input() matchId: number = 0;
 
   @Output() oddChangeEvent = new EventEmitter<Offer>();
 
