@@ -1,4 +1,4 @@
-import { IGame } from "libs/dto/src"
+import { IGame } from "@live-bet/dto"
 
 export interface ISubgame {
     id: number;

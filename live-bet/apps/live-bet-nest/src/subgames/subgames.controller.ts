@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { SubgamesService } from './subgames.service';
-import { SubgameDTO } from 'libs/dto/src';
+import { SubgameDTO } from '@live-bet/dto';
 import { Subgame } from './subgame.entity';
 
 @Controller('subgames')

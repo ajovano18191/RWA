@@ -1,4 +1,4 @@
-import { ISport } from "libs/dto/src";
+import { ISport } from "@live-bet/dto";
 
 export interface IMatch {
     id: number;

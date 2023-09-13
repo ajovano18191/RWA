@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GameComponent } from './game.component';
 import { SubgameComponent } from './subgame.component';
 import { MatchComponent } from './match.component';
-import { ISport, ISubgame } from 'libs/dto/src';
+import { ISport, ISubgame } from '@live-bet/dto';
 
 @Component({
   selector: 'guest-sport',

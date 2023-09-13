@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { GameComponent } from './game.component';
 import Offer from './offer';
 import { SendOfferService } from './send-offer.service';
-import { IMatch } from 'libs/dto/src';
+import { IMatch } from '@live-bet/dto';
 import { MatchesService } from './matches.service';
 
 @Component({

@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SubgameComponent } from './subgame.component';
 import Offer from './offer';
-import { IGame } from 'libs/dto/src';
+import { IGame } from '@live-bet/dto';
 
 @Component({
   selector: 'bookmaker-game',

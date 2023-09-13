@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OddsComponent } from './odds.component';
-import { IMatch, ISubgame } from 'libs/dto/src';
+import { IMatch, ISubgame } from '@live-bet/dto';
 
 @Component({
   selector: 'guest-match',

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { MatchesService } from './matches.service';
-import { MatchDTO } from 'libs/dto/src';
+import { MatchDTO } from '@live-bet/dto';
 import { Match } from './match.entity';
 
 @Controller('matches')

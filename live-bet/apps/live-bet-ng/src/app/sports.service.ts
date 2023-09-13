@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { GameDTO, ISport, MatchDTO } from "libs/dto/src";
+import { GameDTO, ISport, MatchDTO } from "@live-bet/dto";
 import { BehaviorSubject, Observable, exhaustMap, map, shareReplay, tap } from "rxjs";
 
 @Injectable({

@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Game } from "../games/game.entity";
-import { ISubgame } from "libs/dto/src";
+import { ISubgame } from "@live-bet/dto";
 
 @Entity()
 export class Subgame implements ISubgame {

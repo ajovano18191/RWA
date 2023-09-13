@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SportComponent } from './sport.component';
 import { Store } from '@ngrx/store';
 import { OddsActions } from '../store/odds.actions';
-import { ISport } from 'libs/dto/src';
+import { ISport } from '@live-bet/dto';
 import { SportsService } from '../sports.service';
 import { Observable, tap } from 'rxjs';
 

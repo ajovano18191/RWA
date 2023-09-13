@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IGame } from 'libs/dto/src';
+import { IGame } from '@live-bet/dto';
 
 @Component({
   selector: 'guest-game',

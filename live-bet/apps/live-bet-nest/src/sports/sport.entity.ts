@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ISport } from "libs/dto/src";
+import { ISport } from "@live-bet/dto";
 import { Game } from "../games/game.entity";
 import { Match } from "../matches/match.entity";
 

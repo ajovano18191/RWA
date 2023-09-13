@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import Offer from './offer';
-import { ISubgame } from 'libs/dto/src';
+import { ISubgame } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
 import { Subscription, filter, map } from 'rxjs';
 import { selectOdds } from '../store/odds.selectors';

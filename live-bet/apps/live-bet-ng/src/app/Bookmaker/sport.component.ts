@@ -11,7 +11,7 @@ import { filter, map } from 'rxjs';
 import { AddMatchDialogComponent } from './add-match-dialog.component';
 import { AddGameDialogComponent } from './add-game-dialog.component';
 import { MatchComponent } from './match.component';
-import { GameDTO, ISport, MatchDTO } from 'libs/dto/src';
+import { GameDTO, ISport, MatchDTO } from '@live-bet/dto';
 import { SportsService } from '../sports.service';
 
 @Component({

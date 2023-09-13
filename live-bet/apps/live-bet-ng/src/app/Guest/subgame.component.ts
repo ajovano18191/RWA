@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ISubgame } from 'libs/dto/src';
+import { ISubgame } from '@live-bet/dto';
 
 @Component({
   selector: 'guest-subgame',

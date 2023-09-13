@@ -4,7 +4,7 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angu
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { GameDTO, SubgameDTO } from 'libs/dto/src';
+import { GameDTO, SubgameDTO } from '@live-bet/dto';
 
 @Component({
   selector: 'live-bet-add-game-dialog',

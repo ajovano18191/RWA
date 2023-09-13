@@ -4,7 +4,7 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angu
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatchDTO } from 'libs/dto/src';
+import { MatchDTO } from '@live-bet/dto';
 
 @Component({
   selector: 'live-bet-add-match-dialog',

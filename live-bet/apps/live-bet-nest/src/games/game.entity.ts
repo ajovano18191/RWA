@@ -1,4 +1,4 @@
-import { IGame } from "libs/dto/src";
+import { IGame } from "@live-bet/dto";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Subgame } from "../subgames/subgame.entity";
 import { Sport } from "../sports/sport.entity";

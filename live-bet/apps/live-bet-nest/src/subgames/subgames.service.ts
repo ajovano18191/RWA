@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SubgameDTO } from 'libs/dto/src';
+import { SubgameDTO } from '@live-bet/dto';
 import { Repository } from 'typeorm';
 import { GamesService } from '../games/games.service';
 import { Subgame } from './subgame.entity';

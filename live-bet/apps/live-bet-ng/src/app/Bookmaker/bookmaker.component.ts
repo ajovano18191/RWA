@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SportComponent } from './sport.component';
 import { SportsService } from '../sports.service';
 import { HttpClientModule } from '@angular/common/http';
-import { ISport } from 'libs/dto/src';
+import { ISport } from '@live-bet/dto';
 import { Observable } from 'rxjs';
 
 @Component({
