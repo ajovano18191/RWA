@@ -22,5 +22,5 @@ import { Observable } from 'rxjs';
 export class BookmakerComponent {
 
   private sportsService: SportsService = inject(SportsService);
-  sports$: Observable<ISport[]> = this.sportsService.getAllSports();
+  sports$: Observable<ISport[]> = this.sportsService.getAllSports('all');
 }

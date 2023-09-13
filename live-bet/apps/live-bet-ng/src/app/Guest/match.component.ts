@@ -28,6 +28,7 @@ export class MatchComponent {
     home: '',
     guest: '',
     league: '',
+    status: 'live',
     sport: {
       id: 0,
       name: '',

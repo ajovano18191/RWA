@@ -26,8 +26,14 @@ export class SendOfferService {
     return arr;
   }
 
+  public startMatch(matchId: number) {
+    this.socket.emit('startMatch', {
+      matchId: matchId,
+    });
+  }
+
   public endMatch(matchId: number) {
-    this.socket.emit('endGame', {
+    this.socket.emit('endMatch', {
       matchId: matchId,
     });
   }

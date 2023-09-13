@@ -44,4 +44,18 @@ export class MatchesService {
         const match: Match = await this.findOne(id);
         await this.matchesRepository.remove(match);
     }
+
+    async startMatch(id: number): Promise<void> {
+        await this.changeLiveStatus(id, 'live');
+    }
+
+    async endMatch(id: number): Promise<void> {
+        await this.changeLiveStatus(id, 'finished');
+    }
+
+    private async changeLiveStatus(id: number, status: string): Promise<void> {
+        const match: Match = await this.findOne(id);
+        match.status = status;
+        await this.matchesRepository.save(match);
+    }
 }

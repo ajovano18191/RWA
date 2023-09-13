@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { SportDTO } from 'libs/dto/src';
 import { Sport } from './sport.entity';
 
@@ -11,14 +11,31 @@ export class SportsService {
         private sportsRepository: Repository<Sport>,
     ) {}
 
-    findAll(): Promise<Sport[]> {
+    findAll(offerType: string): Promise<Sport[]> {
+        let arr: string[] = [];
+        switch(offerType) {
+            case 'not-started': 
+                arr = ['not-started'];
+                break;
+            case 'live':
+                arr = ['live'];
+                break;
+            case 'all':
+                arr = ['not-started', 'live'];
+                break;
+        }
         return this.sportsRepository.find({
             relations: {
                 games: {
                     subgames: true,
                 },
                 matches: true,
-            }
+            },
+            where: {
+                matches: {
+                    status: In(arr),
+                },
+            },
         });
     }
 

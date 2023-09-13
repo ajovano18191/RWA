@@ -16,6 +16,9 @@ export class Match implements IMatch {
     @Column()
     guest: string;
 
+    @Column({default: 'not-started'})
+    status: string;
+
     @ManyToOne(() => Sport, (sport) => sport.matches)
     sport: Sport;
 }

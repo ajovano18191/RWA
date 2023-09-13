@@ -12,11 +12,15 @@ export class SportsService {
 
     private getResponse$ = new BehaviorSubject<ISport[]>([]);
 
-    getAllSports(): Observable<ISport[]> {
+    getAllSports(offerType: string): Observable<ISport[]> {
         return this.getResponse$.pipe(
             exhaustMap(() => 
                 this.httpClient
-                .get(`${this.baseURL}/sports`)
+                .get(`${this.baseURL}/sports`, {
+                    params: {
+                        offerType: offerType,
+                    },
+                })
                 .pipe(
                     map(p => <ISport[]>p),
                     tap(sports => {
@@ -38,10 +42,14 @@ export class SportsService {
     }
 
     postGame(gameDTO: GameDTO) {
-        this.httpClient.post(`${this.baseURL}/games`, gameDTO).subscribe(() => this.getResponse$.next([]));
+        this.httpClient.post(`${this.baseURL}/games`, gameDTO).subscribe(() => this.refresh());
     }
 
     postMatch(matchDTO: MatchDTO) {
-        this.httpClient.post(`${this.baseURL}/matches`, matchDTO).subscribe(() => this.getResponse$.next([]));
+        this.httpClient.post(`${this.baseURL}/matches`, matchDTO).subscribe(() => this.refresh());
+    }
+
+    refresh(): void {
+        this.getResponse$.next([]);
     }
 }

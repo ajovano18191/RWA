@@ -5,5 +5,6 @@ export interface IMatch {
     league: string;
     home: string;
     guest: string;
+    status: string;
     sport: ISport;
 }

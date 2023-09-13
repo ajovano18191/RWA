@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { SportsService } from './sports.service';
 import { SportDTO } from 'libs/dto/src';
 import { Sport } from './sport.entity';
@@ -9,8 +9,8 @@ export class SportsController {
     sportsService: SportsService;
 
     @Get()
-    findAll(): Promise<Sport[]> {
-        return this.sportsService.findAll();
+    findAll(@Query('offerType') offerType: string): Promise<Sport[]> {
+        return this.sportsService.findAll(offerType);
     }
 
     @Get(':id')

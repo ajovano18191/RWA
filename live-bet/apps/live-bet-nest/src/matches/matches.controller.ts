@@ -28,6 +28,16 @@ export class MatchesController {
         return this.matchesService.update(id, game);
     }
 
+    @Get(':id/start')
+    startMatch(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
+        return this.matchesService.startMatch(id);
+    }
+
+    @Get(':id/end')
+    endMatch(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
+        return this.matchesService.endMatch(id);
+    }
+
     @Delete(':id')
     remove(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
         return this.matchesService.remove(id);

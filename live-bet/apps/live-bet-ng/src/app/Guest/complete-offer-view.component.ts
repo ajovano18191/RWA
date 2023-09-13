@@ -44,7 +44,7 @@ export class CompleteOfferViewComponent implements OnInit {
 
   private sportsService: SportsService = inject(SportsService);
   sports$: Observable<ISport[]> = 
-    this.sportsService.getAllSports()
+    this.sportsService.getAllSports('live')
     .pipe(
       tap(p => p.forEach(q => {
         q.games = q.games.slice(0, 3);

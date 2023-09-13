@@ -7,6 +7,7 @@ import { GameComponent } from './game.component';
 import Offer from './offer';
 import { SendOfferService } from './send-offer.service';
 import { IMatch } from 'libs/dto/src';
+import { MatchesService } from './matches.service';
 
 @Component({
   selector: 'bookmaker-match',
@@ -31,7 +32,11 @@ import { IMatch } from 'libs/dto/src';
               <mat-icon class="button-icon">send</mat-icon>
               Send
             </button>
-            <button mat-fab extended class="end-match-button" (click)="endMatch()">
+            <button mat-fab extended *ngIf="match.status === 'not-started'" class="start-match-button" (click)="start()">
+              <mat-icon class="button-icon">not_started</mat-icon>
+              Start
+            </button>
+            <button mat-fab extended class="end-match-button" (click)="end()">
               <mat-icon class="button-icon">done</mat-icon>
               End
             </button>
@@ -48,7 +53,8 @@ import { IMatch } from 'libs/dto/src';
     ".buttons-container {  display: flex; flex-direction: column; align-items: stretch; justify-content: space-around;  }",
     "button { font-weight: bold; display: flex; flex-direction: row-reverse; margin-block: 8px; }",
     ".send-offer-button { color: white; }",
-    ".end-match-button { background-color: limegreen; color: white; }",
+    ".start-match-button { background-color: limegreen; color: white; }",
+    ".end-match-button { background-color: red; color: white; }",
     ".button-icon { margin-left: 0.2em; margin-right: 0px; }",
   ],
 })
@@ -58,6 +64,7 @@ export class MatchComponent implements OnInit {
     home: '',
     guest: '',
     league: '',
+    status: 'not-started',
     sport: {
       id: 0,
       name: '',
@@ -84,7 +91,14 @@ export class MatchComponent implements OnInit {
     this.sendOfferService.sendOffer(this.match.id, this.match.sport.id, this.matchOffer);
   }
 
-  public endMatch() {
-    this.sendOfferService.endMatch(this.match.id);
+  private matchesService: MatchesService = inject(MatchesService);
+
+  start() {
+    this.sendOfferService.sendOffer(this.match.id, this.match.sport.id, this.matchOffer);
+    this.matchesService.start(this.match.id);
+  }
+
+  end() {
+    this.matchesService.end(this.match.id);
   }
 }
