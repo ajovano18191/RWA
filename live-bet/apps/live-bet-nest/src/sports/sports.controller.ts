@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, 
 import { SportsService } from './sports.service';
 import { SportDTO } from '@live-bet/dto';
 import { Sport } from './sport.entity';
+import { OfferType } from '@live-bet/enums';
 
 @Controller('sports')
 export class SportsController {
@@ -9,7 +10,7 @@ export class SportsController {
     sportsService: SportsService;
 
     @Get()
-    findAll(@Query('offerType') offerType: string): Promise<Sport[]> {
+    findAll(@Query('offerType') offerType: OfferType): Promise<Sport[]> {
         return this.sportsService.findAll(offerType);
     }
 

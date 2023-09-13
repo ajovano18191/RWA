@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { Socket } from 'ngx-socket-io';
 import { Observable, concatMap, from, map, merge } from 'rxjs';
 import { Odds } from './odds.model';
+import { WsMessages } from '@live-bet/enums';
+import { MatchOfferDTO } from '@live-bet/dto';
 
 @Injectable({
   providedIn: 'root'
@@ -10,27 +11,26 @@ import { Odds } from './odds.model';
 export class OfferService {
 
   private socket = inject(Socket);
-  private store = inject(Store);
 
   getOdds(): Observable<Odds> {
-    this.socket.emit('completeOffer');
-    const x = this.socket.fromEvent('completeOffer')
+    this.socket.emit(WsMessages.completeOffer);
+    const x = this.socket.fromEvent(WsMessages.completeOffer)
     .pipe(
-      map(p => p as Send[]),      
+      map(p => p as MatchOfferDTO[]),      
       concatMap(p => from(p)),
     );
 
-    this.socket.emit('sub2Offers');
-    const y = this.socket.fromEvent('offer')
+    this.socket.emit(WsMessages.sub2Offers);
+    const y = this.socket.fromEvent(WsMessages.oneOffer)
     .pipe(
-      map(p => p as Send),
+      map(p => p as MatchOfferDTO),
     );
     
     return merge(x, y).pipe(
-      map(send => send.matchOffer.map(p => ({
+      map(matchOffer => matchOffer.offers.map(p => ({
           oddsKey: {
-            sportId: send.sportId,
-            matchId: send.matchId,
+            sportId: matchOffer.sportId,
+            matchId: matchOffer.matchId,
             subgameId: p[0],
           },
           value: p[1],
@@ -40,10 +40,4 @@ export class OfferService {
       map(p => p as Odds),
     );
   }
-}
-
-interface Send {
-  sportId: number,
-  matchId: number,
-  matchOffer: number[][],
 }

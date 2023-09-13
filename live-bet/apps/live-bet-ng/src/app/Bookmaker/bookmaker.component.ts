@@ -6,6 +6,7 @@ import { SportsService } from '../sports.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ISport } from '@live-bet/dto';
 import { Observable } from 'rxjs';
+import { OfferType } from '@live-bet/enums';
 
 @Component({
   selector: 'live-bet-bookmaker',
@@ -22,5 +23,5 @@ import { Observable } from 'rxjs';
 export class BookmakerComponent {
 
   private sportsService: SportsService = inject(SportsService);
-  sports$: Observable<ISport[]> = this.sportsService.getAllSports('all');
+  sports$: Observable<ISport[]> = this.sportsService.getAllSports(OfferType.all);
 }

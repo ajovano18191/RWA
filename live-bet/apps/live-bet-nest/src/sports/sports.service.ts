@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { SportDTO } from '@live-bet/dto';
 import { Sport } from './sport.entity';
+import { MatchStatus, OfferType } from '@live-bet/enums';
 
 @Injectable()
 export class SportsService {
@@ -11,19 +12,7 @@ export class SportsService {
         private sportsRepository: Repository<Sport>,
     ) {}
 
-    findAll(offerType: string): Promise<Sport[]> {
-        let arr: string[] = [];
-        switch(offerType) {
-            case 'not-started': 
-                arr = ['not-started'];
-                break;
-            case 'live':
-                arr = ['live'];
-                break;
-            case 'all':
-                arr = ['not-started', 'live'];
-                break;
-        }
+    findAll(offerType: OfferType): Promise<Sport[]> {
         return this.sportsRepository.find({
             relations: {
                 games: {
@@ -33,10 +22,26 @@ export class SportsService {
             },
             where: {
                 matches: {
-                    status: In(arr),
+                    status: In(this.offerType2MatchStatuses(offerType)),
                 },
             },
         });
+    }
+
+    private offerType2MatchStatuses(offerType: OfferType) {
+        let statuses: string[] = [];
+        switch(offerType) {
+            case OfferType.noLive: 
+                statuses = [MatchStatus.notStarted];
+                break;
+            case OfferType.live:
+                statuses = [MatchStatus.live];
+                break;
+            case OfferType.all:
+                statuses = [MatchStatus.notStarted, MatchStatus.live];
+                break;
+        }
+        return statuses;
     }
 
     findOne(id: number): Promise<Sport | null> {

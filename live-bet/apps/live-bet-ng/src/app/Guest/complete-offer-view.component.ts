@@ -6,6 +6,7 @@ import { OddsActions } from '../store/odds.actions';
 import { ISport } from '@live-bet/dto';
 import { SportsService } from '../sports.service';
 import { Observable, tap } from 'rxjs';
+import { OfferType } from '@live-bet/enums';
 
 @Component({
   selector: 'guest-complete-offer-view',
@@ -44,7 +45,7 @@ export class CompleteOfferViewComponent implements OnInit {
 
   private sportsService: SportsService = inject(SportsService);
   sports$: Observable<ISport[]> = 
-    this.sportsService.getAllSports('live')
+    this.sportsService.getAllSports(OfferType.live)
     .pipe(
       tap(p => p.forEach(q => {
         q.games = q.games.slice(0, 3);

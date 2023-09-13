@@ -8,6 +8,7 @@ import Offer from './offer';
 import { SendOfferService } from './send-offer.service';
 import { IMatch } from '@live-bet/dto';
 import { MatchesService } from './matches.service';
+import { MatchStatus } from '@live-bet/enums';
 
 @Component({
   selector: 'bookmaker-match',
@@ -25,14 +26,14 @@ import { MatchesService } from './matches.service';
       </mat-expansion-panel-header>
       <div class="mat-expansion-panel-content">
         <div class="games">
-          <bookmaker-game *ngFor="let game of match.sport.games" [matchId]="match.id" [game]="game" (oddChangeEvent)="changeOdd($event)"/>
+          <bookmaker-game *ngFor="let game of match.sport.games" [matchId]="match.id" [game]="game" (oddChangeEvent)="changeOffer($event)"/>
         </div>
         <div class="buttons-container">
-            <button mat-fab extended color="primary" class="send-offer-button" (click)="sendTips()">
+            <button mat-fab extended color="primary" class="send-offer-button" (click)="sendMatchOffer()">
               <mat-icon class="button-icon">send</mat-icon>
               Send
             </button>
-            <button mat-fab extended *ngIf="match.status === 'not-started'" class="start-match-button" (click)="start()">
+            <button mat-fab extended *ngIf="isStartButtonEnabled()" class="start-match-button" (click)="start()">
               <mat-icon class="button-icon">not_started</mat-icon>
               Start
             </button>
@@ -73,7 +74,7 @@ export class MatchComponent implements OnInit {
     },
   }
 
-  matchOffer: Map<number, number> = new Map<number, number>();
+  private matchOffer: Map<number, number> = new Map<number, number>();
 
   ngOnInit(): void {
     for(let subgame of this.match.sport.games.map(p => (p.subgames)).flat()) {
@@ -81,20 +82,32 @@ export class MatchComponent implements OnInit {
     }
   }
 
-  changeOdd(offer: Offer) {
+  isStartButtonEnabled(): boolean {
+    return this.match.status === MatchStatus.notStarted;
+  }
+
+  changeOffer(offer: Offer) {
     this.matchOffer.set(offer.subgameId, offer.odd);
   }
 
   private sendOfferService = inject(SendOfferService);
 
-  public sendTips() {
-    this.sendOfferService.sendOffer(this.match.id, this.match.sport.id, this.matchOffer);
+  public sendMatchOffer() {
+    this.sendOfferService.sendMatchOffer({
+      sportId: this.match.sport.id,
+      matchId: this.match.id,
+      offers: this.sendOfferService.map2Array(this.matchOffer),
+    });
   }
 
   private matchesService: MatchesService = inject(MatchesService);
 
   start() {
-    this.sendOfferService.sendOffer(this.match.id, this.match.sport.id, this.matchOffer);
+    this.sendOfferService.sendMatchOffer({
+      sportId: this.match.sport.id,
+      matchId: this.match.id,
+      offers: this.sendOfferService.map2Array(this.matchOffer),
+    });
     this.matchesService.start(this.match.id);
   }
 

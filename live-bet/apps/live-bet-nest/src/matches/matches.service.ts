@@ -4,6 +4,7 @@ import { MatchDTO } from '@live-bet/dto';
 import { Repository } from 'typeorm';
 import { SportsService } from '../sports/sports.service';
 import { Match } from './match.entity';
+import { MatchStatus } from '@live-bet/enums';
 
 @Injectable()
 export class MatchesService {
@@ -46,14 +47,14 @@ export class MatchesService {
     }
 
     async startMatch(id: number): Promise<void> {
-        await this.changeLiveStatus(id, 'live');
+        await this.changeLiveStatus(id, MatchStatus.live);
     }
 
     async endMatch(id: number): Promise<void> {
-        await this.changeLiveStatus(id, 'finished');
+        await this.changeLiveStatus(id, MatchStatus.finished);
     }
 
-    private async changeLiveStatus(id: number, status: string): Promise<void> {
+    private async changeLiveStatus(id: number, status: MatchStatus): Promise<void> {
         const match: Match = await this.findOne(id);
         match.status = status;
         await this.matchesRepository.save(match);

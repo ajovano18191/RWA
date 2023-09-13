@@ -1,4 +1,6 @@
 import { Injectable, inject } from '@angular/core';
+import { MatchOfferDTO } from '@live-bet/dto';
+import { WsMessages } from '@live-bet/enums';
 import { Socket } from 'ngx-socket-io';
 
 @Injectable({
@@ -10,31 +12,23 @@ export class SendOfferService {
 
   constructor() { }
 
-  public sendOffer(matchId: number, sportId: number, matchOffer: Map<number, number>) {
-    this.socket.emit('sendOffer', {
-      matchId: matchId,
-      sportId: sportId,
-      matchOffer: this.map2Array(matchOffer),
-    });
+  public sendMatchOffer(matchOffer: MatchOfferDTO) {
+    this.socket.emit(WsMessages.sendOffer, matchOffer);
   }
 
-  private map2Array(matchOffer: Map<number, number>): number[][] {
+  public startMatch(matchId: number) {
+
+  }
+
+  public endMatch(matchId: number) {
+
+  }
+
+  map2Array(matchOffer: Map<number, number>): number[][] {
     const arr: number[][] = [];
     for(const keyValuePair of matchOffer) {
       arr.push([keyValuePair[0], keyValuePair[1]])
     }
     return arr;
-  }
-
-  public startMatch(matchId: number) {
-    this.socket.emit('startMatch', {
-      matchId: matchId,
-    });
-  }
-
-  public endMatch(matchId: number) {
-    this.socket.emit('endMatch', {
-      matchId: matchId,
-    });
   }
 }

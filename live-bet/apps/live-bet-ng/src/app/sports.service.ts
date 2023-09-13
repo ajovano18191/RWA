@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { GameDTO, ISport, MatchDTO } from "@live-bet/dto";
+import { OfferType } from "@live-bet/enums";
 import { BehaviorSubject, Observable, exhaustMap, map, shareReplay, tap } from "rxjs";
 
 @Injectable({
@@ -12,7 +13,7 @@ export class SportsService {
 
     private getResponse$ = new BehaviorSubject<ISport[]>([]);
 
-    getAllSports(offerType: string): Observable<ISport[]> {
+    getAllSports(offerType: OfferType): Observable<ISport[]> {
         return this.getResponse$.pipe(
             exhaustMap(() => 
                 this.httpClient

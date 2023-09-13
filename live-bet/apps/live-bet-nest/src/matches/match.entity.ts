@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IMatch } from "@live-bet/dto";
 import { Sport } from "../sports/sport.entity";
+import { MatchStatus } from "@live-bet/enums";
 
 @Entity()
 export class Match implements IMatch {
@@ -16,7 +17,7 @@ export class Match implements IMatch {
     @Column()
     guest: string;
 
-    @Column({default: 'not-started'})
+    @Column({default: MatchStatus.notStarted})
     status: string;
 
     @ManyToOne(() => Sport, (sport) => sport.matches)
