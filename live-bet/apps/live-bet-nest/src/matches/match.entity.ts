@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IMatch } from "@live-bet/dto";
-import { Sport } from "../sports/sport.entity";
 import { MatchStatus } from "@live-bet/enums";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Sport } from "../sports/sport.entity";
+import { Odds } from "./odds.entity";
 
 @Entity()
 export class Match implements IMatch {
@@ -20,6 +21,16 @@ export class Match implements IMatch {
     @Column({default: MatchStatus.notStarted})
     status: string;
 
+    @Column()
+    sportId: number;
+
     @ManyToOne(() => Sport, (sport) => sport.matches)
+    @JoinColumn({ name: "sportId" })
     sport: Sport;
+
+    @OneToMany(() => Odds, (odds) => odds.match, {
+        orphanedRowAction: "delete",
+        cascade: true,
+    })
+    oddses: Odds[];
 }

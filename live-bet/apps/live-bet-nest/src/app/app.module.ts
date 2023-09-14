@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GamesModule } from '../games/games.module';
+import { LiveModule } from '../live/live.module';
+import { MatchesModule } from '../matches/matches.module';
+import { SportsModule } from '../sports/sports.module';
+import { SubgamesModule } from '../subgames/subgames.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { OfferGateway } from './offer.gateway';
-import { SportsModule } from '../sports/sports.module';
-import { GamesModule } from '../games/games.module';
-import { SubgamesModule } from '../subgames/subgames.module';
-import { MatchesModule } from '../matches/matches.module';
 
 @Module({
   imports: [
@@ -26,8 +26,9 @@ import { MatchesModule } from '../matches/matches.module';
     GamesModule,
     SubgamesModule,
     MatchesModule,
+    LiveModule,
   ],
   controllers: [AppController],
-  providers: [AppService, OfferGateway, ],
+  providers: [AppService, ],
 })
 export class AppModule {}

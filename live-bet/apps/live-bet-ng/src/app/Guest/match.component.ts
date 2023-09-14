@@ -1,19 +1,23 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OddsComponent } from './odds.component';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { IMatch, ISubgame } from '@live-bet/dto';
+import { filter } from 'rxjs';
+import { OfferService } from '../offer.service';
+import { OddsComponent } from './odds.component';
 
 @Component({
   selector: 'guest-match',
   standalone: true,
   imports: [CommonModule, OddsComponent,],
   template: `
-    <div class="match-id">{{ match.id }}</div>
-    <div class="league">{{ match.league }}</div>
-    <div class="home-guest-match">
-      {{ match.home }} <br> {{ match.guest }}
-    </div>
-    <guest-odds *ngFor="let subgame of getSubgames" [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }"/>
+    <ng-container *ngIf="isShown">
+      <div class="match-id">{{ match.id }}</div>
+      <div class="league">{{ match.league }}</div>
+      <div class="home-guest-match">
+        {{ match.home }} <br> {{ match.guest }}
+      </div>
+      <guest-odds *ngFor="let subgame of getSubgames" [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }"/>
+    <ng-container>
   `,
   styles: [
     ":host { display: contents; }",
@@ -22,7 +26,7 @@ import { IMatch, ISubgame } from '@live-bet/dto';
     ".match-id { grid-column-start: 1; }",
   ],
 })
-export class MatchComponent {
+export class MatchComponent implements OnInit {
   @Input() match: IMatch = {
     id: 0,
     home: '',
@@ -36,6 +40,20 @@ export class MatchComponent {
       matches: [],
     }
   };
+
+  isShown: boolean = true;
+
+  offerService: OfferService = inject(OfferService);
+
+  ngOnInit(): void {
+    this.offerService.endMatche$
+    .pipe(
+      filter(p => p === this.match.id),
+    )
+    .subscribe(p => {
+        this.isShown = false;
+    });
+  }
 
   get getSubgames(): ISubgame[] {
     return this.match.sport.games.map(p => p.subgames).flat();

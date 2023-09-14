@@ -1,7 +1,7 @@
+import { MatchDTO, MatchOfferDTO } from '@live-bet/dto';
 import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { MatchesService } from './matches.service';
-import { MatchDTO } from '@live-bet/dto';
 import { Match } from './match.entity';
+import { MatchesService } from './matches.service';
 
 @Controller('matches')
 export class MatchesController {
@@ -28,15 +28,15 @@ export class MatchesController {
         return this.matchesService.update(id, game);
     }
 
-    @Get(':id/start')
-    startMatch(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
-        return this.matchesService.startMatch(id);
+    @Put(':id/offer')
+    async updateOffer(@Body() matchOfferDTO: MatchOfferDTO): Promise<Match> {
+        return await this.matchesService.updateOffer(matchOfferDTO);
     }
 
-    @Get(':id/end')
-    endMatch(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
-        return this.matchesService.endMatch(id);
-    }
+    // @Get(':id/start')
+    // startMatch(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
+    //     return this.matchesService.startMatch(id);
+    // }
 
     @Delete(':id')
     remove(@Param('id', new ParseIntPipe()) id: number): Promise<void> {

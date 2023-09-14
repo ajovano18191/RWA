@@ -1,14 +1,14 @@
-import { Component, Input, Output, EventEmitter, OnInit, inject, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import Offer from './offer';
+import { MatInputModule } from '@angular/material/input';
 import { ISubgame } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
 import { Subscription, filter, map } from 'rxjs';
-import { selectOdds } from '../store/odds.selectors';
-import { OddsActions } from '../store/odds.actions';
 import OddsKey from '../odds-key.model';
+import { OddsActions } from '../store/odds.actions';
+import { selectOdds } from '../store/odds.selectors';
+import Offer from './offer';
 
 @Component({
   selector: 'bookmaker-subgame',
@@ -60,6 +60,10 @@ export class SubgameComponent implements OnInit, OnDestroy {
       )
       .subscribe(p => {
         this.odd = p;
+        this.oddChangeEvent.emit({
+          subgameId: this.subgame.id,
+          odd: this.odd,
+        })
       });
   }
 

@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GameComponent } from './game.component';
-import { SubgameComponent } from './subgame.component';
-import { MatchComponent } from './match.component';
+import { Component, Input } from '@angular/core';
 import { ISport, ISubgame } from '@live-bet/dto';
+import { GameComponent } from './game.component';
+import { MatchComponent } from './match.component';
+import { SubgameComponent } from './subgame.component';
 
 @Component({
   selector: 'guest-sport',
@@ -33,7 +33,6 @@ export class SportComponent {
     matches: [],
     games: [],
   };
-
 
   get getSubgames(): ISubgame[] {
     return this.sport.games.map(p => p.subgames).flat();

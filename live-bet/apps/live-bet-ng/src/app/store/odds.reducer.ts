@@ -7,21 +7,26 @@ const initialState: OfferMap = new Map<number, SportMap>();
 export const oddsReducer = createReducer(
   initialState,
   on(OddsActions.setOdds, (state, { oddsKey, value }) => {
-    const newMap: OfferMap = new Map<number, SportMap> (state.entries())
+    const newMap: OfferMap = new Map<number, SportMap> (state.entries());
 
-    let sports = newMap.get(oddsKey.sportId)//?.get(odds.matchId)?.set(odds.subgameId, odds);
-    if(sports === undefined) {
-      sports = new Map<number, MatchMap>();
-      newMap.set(oddsKey.sportId, sports);
+    let sport = newMap.get(oddsKey.sportId)//?.get(odds.matchId)?.set(odds.subgameId, odds);
+    if(sport === undefined) {
+      sport = new Map<number, MatchMap>();
+      newMap.set(oddsKey.sportId, sport);
     }
 
-    let matches = sports.get(oddsKey.matchId);
-    if(matches === undefined) {
-      matches = new Map<number, number>();
-      sports.set(oddsKey.matchId, matches);
+    let match = sport.get(oddsKey.matchId);
+    if(match === undefined) {
+      match = new Map<number, number>();
+      sport.set(oddsKey.matchId, match);
     }
 
-    matches.set(oddsKey.subgameId, value);
+    match.set(oddsKey.subgameId, value);
+    return newMap;
+  }),
+  on(OddsActions.removeMatch, (state, { sportId, matchId }) => {
+    const newMap: OfferMap = new Map<number, SportMap> (state.entries());
+    newMap.get(sportId)?.delete(matchId);
     return newMap;
   })
 );

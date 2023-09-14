@@ -1,30 +1,47 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { MatchOfferDTO } from '@live-bet/dto';
-import { WsMessages } from '@live-bet/enums';
+import { IMatch, MatchOfferDTO } from '@live-bet/dto';
+import { MatchStatus, WsMessages } from '@live-bet/enums';
 import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SendOfferService {
-
+  private readonly baseURL = "http://localhost:3000/api";
   private socket = inject(Socket);
+  private httpClient: HttpClient = inject(HttpClient);
 
   constructor() { }
 
-  public sendMatchOffer(matchOffer: MatchOfferDTO) {
-    this.socket.emit(WsMessages.sendOffer, matchOffer);
+  public sendMatchOffer(match: IMatch, mapMatchOffer: Map<number, number>) {
+    const matchOfferDTO: MatchOfferDTO = {
+      sportId: match.sport.id,
+      matchId: match.id,
+      offers: this.map2Array(mapMatchOffer),
+    }
+    if(match.status === MatchStatus.live) {
+      this.socket.emit(WsMessages.sendOffer, matchOfferDTO);
+    }
+    else {
+      this.httpClient.put(`${this.baseURL}/matches/${match.id}/offer`, matchOfferDTO).subscribe(p => p);
+    }
   }
 
-  public startMatch(matchId: number) {
-
+  public startMatch(match: IMatch, mapMatchOffer: Map<number, number>) {
+    const matchOfferDTO: MatchOfferDTO = {
+      sportId: match.sport.id,
+      matchId: match.id,
+      offers: this.map2Array(mapMatchOffer),
+    }
+    this.socket.emit(WsMessages.startMatch, matchOfferDTO);
   }
 
   public endMatch(matchId: number) {
-
+    this.socket.emit(WsMessages.endMatch, matchId);
   }
 
-  map2Array(matchOffer: Map<number, number>): number[][] {
+  private map2Array(matchOffer: Map<number, number>): number[][] {
     const arr: number[][] = [];
     for(const keyValuePair of matchOffer) {
       arr.push([keyValuePair[0], keyValuePair[1]])

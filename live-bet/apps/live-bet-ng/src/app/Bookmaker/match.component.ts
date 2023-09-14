@@ -1,49 +1,52 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { IMatch } from '@live-bet/dto';
+import { MatchStatus } from '@live-bet/enums';
+import { filter } from 'rxjs';
+import { OfferService } from '../offer.service';
 import { GameComponent } from './game.component';
 import Offer from './offer';
 import { SendOfferService } from './send-offer.service';
-import { IMatch } from '@live-bet/dto';
-import { MatchesService } from './matches.service';
-import { MatchStatus } from '@live-bet/enums';
 
 @Component({
   selector: 'bookmaker-match',
   standalone: true,
   imports: [MatExpansionModule, CommonModule, MatButtonModule, MatIconModule, GameComponent, ],
   template: `
-    <mat-expansion-panel hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ match.league }}
-        </mat-panel-title>
-        <mat-panel-description>
-          {{ match.home }} <br> {{ match.guest }}
-        </mat-panel-description>        
-      </mat-expansion-panel-header>
-      <div class="mat-expansion-panel-content">
-        <div class="games">
-          <bookmaker-game *ngFor="let game of match.sport.games" [matchId]="match.id" [game]="game" (oddChangeEvent)="changeOffer($event)"/>
-        </div>
-        <div class="buttons-container">
-            <button mat-fab extended color="primary" class="send-offer-button" (click)="sendMatchOffer()">
-              <mat-icon class="button-icon">send</mat-icon>
-              Send
-            </button>
-            <button mat-fab extended *ngIf="isStartButtonEnabled()" class="start-match-button" (click)="start()">
-              <mat-icon class="button-icon">not_started</mat-icon>
-              Start
-            </button>
-            <button mat-fab extended class="end-match-button" (click)="end()">
-              <mat-icon class="button-icon">done</mat-icon>
-              End
-            </button>
+    <ng-container *ngIf="isShown">
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ match.league }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ match.home }} <br> {{ match.guest }}
+          </mat-panel-description>        
+        </mat-expansion-panel-header>
+        <div class="mat-expansion-panel-content">
+          <div class="games">
+            <bookmaker-game *ngFor="let game of match.sport.games" [matchId]="match.id" [game]="game" (oddChangeEvent)="changeOffer($event)"/>
           </div>
-      </div>
-    </mat-expansion-panel>
+          <div class="buttons-container">
+              <button mat-fab extended color="primary" class="send-offer-button" (click)="sendMatchOffer()">
+                <mat-icon class="button-icon">send</mat-icon>
+                Send
+              </button>
+              <button mat-fab extended *ngIf="isStartButtonEnabled()" class="start-match-button" (click)="start()">
+                <mat-icon class="button-icon">not_started</mat-icon>
+                Start
+              </button>
+              <button mat-fab extended class="end-match-button" (click)="end()">
+                <mat-icon class="button-icon">done</mat-icon>
+                End
+              </button>
+            </div>
+        </div>
+      </mat-expansion-panel>
+    <ng-container>
   `,
   styles: [
     "mat-panel-title { color: rgba(0, 0, 0, 0.54); flex: 0 0 5%; min-width: 4em; }",
@@ -76,10 +79,21 @@ export class MatchComponent implements OnInit {
 
   private matchOffer: Map<number, number> = new Map<number, number>();
 
+  isShown: boolean = true;
+  offerService: OfferService = inject(OfferService);
+
   ngOnInit(): void {
     for(let subgame of this.match.sport.games.map(p => (p.subgames)).flat()) {
       this.matchOffer.set(subgame.id, 1.00);
     }
+    
+    this.offerService.endMatche$
+    .pipe(
+      filter(p => p === this.match.id),
+    )
+    .subscribe(p => {
+        this.isShown = false;
+    });
   }
 
   isStartButtonEnabled(): boolean {
@@ -93,25 +107,14 @@ export class MatchComponent implements OnInit {
   private sendOfferService = inject(SendOfferService);
 
   public sendMatchOffer() {
-    this.sendOfferService.sendMatchOffer({
-      sportId: this.match.sport.id,
-      matchId: this.match.id,
-      offers: this.sendOfferService.map2Array(this.matchOffer),
-    });
+    this.sendOfferService.sendMatchOffer(this.match, this.matchOffer);
   }
 
-  private matchesService: MatchesService = inject(MatchesService);
-
   start() {
-    this.sendOfferService.sendMatchOffer({
-      sportId: this.match.sport.id,
-      matchId: this.match.id,
-      offers: this.sendOfferService.map2Array(this.matchOffer),
-    });
-    this.matchesService.start(this.match.id);
+    this.sendOfferService.startMatch(this.match, this.matchOffer);
   }
 
   end() {
-    this.matchesService.end(this.match.id);
+    this.sendOfferService.endMatch(this.match.id);
   }
 }

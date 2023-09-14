@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import OddsKey from '../odds-key.model';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, delay, filter, map, merge, pairwise, share } from 'rxjs';
+import { Observable, delay, filter, map, merge, pairwise, share, tap } from 'rxjs';
+import OddsKey from '../odds-key.model';
 import { selectOdds } from '../store/odds.selectors';
 
 @Component({
@@ -36,6 +36,7 @@ export class OddsComponent implements OnInit {
       filter(p => p !== undefined),
       map(p => p!),
       share(),
+      tap(p => console.log(p)),
     );
 
     this.textColor$ = this.sub2TextColors(this.oddse$);

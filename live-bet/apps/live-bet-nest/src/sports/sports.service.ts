@@ -1,9 +1,9 @@
+import { SportDTO } from '@live-bet/dto';
+import { MatchStatus, OfferType } from '@live-bet/enums';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
-import { SportDTO } from '@live-bet/dto';
+import { Repository } from 'typeorm';
 import { Sport } from './sport.entity';
-import { MatchStatus, OfferType } from '@live-bet/enums';
 
 @Injectable()
 export class SportsService {
@@ -12,20 +12,13 @@ export class SportsService {
         private sportsRepository: Repository<Sport>,
     ) {}
 
-    findAll(offerType: OfferType): Promise<Sport[]> {
-        return this.sportsRepository.find({
-            relations: {
-                games: {
-                    subgames: true,
-                },
-                matches: true,
-            },
-            where: {
-                matches: {
-                    status: In(this.offerType2MatchStatuses(offerType)),
-                },
-            },
-        });
+    async findAll(offerType: OfferType): Promise<Sport[]> {
+        return await this.sportsRepository
+        .createQueryBuilder("sport")
+        .leftJoinAndSelect("sport.matches", "match", `match.status IN (:...statuses)`, { statuses: this.offerType2MatchStatuses(offerType), })
+        .leftJoinAndSelect("sport.games", "game")
+        .leftJoinAndSelect("game.subgames", "subgame")
+        .getMany();
     }
 
     private offerType2MatchStatuses(offerType: OfferType) {
