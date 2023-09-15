@@ -1,23 +1,22 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OddsComponent } from './odds.component';
+import { Component, Input, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { IMatch, ISubgame } from '@live-bet/dto';
-import { OfferService } from '../offer.service';
-import { filter } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { MatchActions } from '../store/match.actions';
+import { OddsComponent } from './odds.component';
 
 @Component({
   selector: 'guest-match',
   standalone: true,
   imports: [CommonModule, OddsComponent,],
   template: `
-    <ng-container *ngIf="isShown">
-      <div class="match-id">{{ match.id }}</div>
-      <div class="league">{{ match.league }}</div>
-      <div class="home-guest-match">
-        {{ match.home }} <br> {{ match.guest }}
-      </div>
-      <guest-odds *ngFor="let subgame of getSubgames" [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }"/>
-    <ng-container>
+    <div class="match-id">{{ match.id }}</div>
+    <div class="league">{{ match.league }}</div>
+    <div class="home-guest-match" (click)="go2MatchDetails()">
+      {{ match.home }} <br> {{ match.guest }}
+    </div>
+    <guest-odds *ngFor="let subgame of getSubgames" [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }"/>
   `,
   styles: [
     ":host { display: contents; }",
@@ -26,7 +25,7 @@ import { filter } from 'rxjs';
     ".match-id { grid-column-start: 1; }",
   ],
 })
-export class MatchComponent implements OnInit {
+export class MatchComponent {
   @Input() match: IMatch = {
     id: 0,
     home: '',
@@ -41,21 +40,15 @@ export class MatchComponent implements OnInit {
     }
   };
 
-  isShown: boolean = true;
-
-  offerService: OfferService = inject(OfferService);
-
-  ngOnInit(): void {
-    // this.offerService.endMatche$
-    // .pipe(
-    //   filter(p => p === this.match.id),
-    // )
-    // .subscribe(p => {
-    //     this.isShown = false;
-    // });
-  }
-
   get getSubgames(): ISubgame[] {
     return this.match.sport.games.map(p => p.subgames).flat();
+  }
+
+  private store = inject(Store);
+  private router = inject(Router);
+
+  go2MatchDetails() {
+    this.store.dispatch(MatchActions.setMatch(this.match));
+    this.router.navigate(['match-details']);
   }
 }
