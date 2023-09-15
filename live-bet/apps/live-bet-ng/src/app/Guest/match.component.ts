@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { IMatch, ISubgame } from '@live-bet/dto';
-import { filter } from 'rxjs';
-import { OfferService } from '../offer.service';
+import { CommonModule } from '@angular/common';
 import { OddsComponent } from './odds.component';
+import { IMatch, ISubgame } from '@live-bet/dto';
+import { OfferService } from '../offer.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'guest-match',
@@ -46,13 +46,13 @@ export class MatchComponent implements OnInit {
   offerService: OfferService = inject(OfferService);
 
   ngOnInit(): void {
-    this.offerService.endMatche$
-    .pipe(
-      filter(p => p === this.match.id),
-    )
-    .subscribe(p => {
-        this.isShown = false;
-    });
+    // this.offerService.endMatche$
+    // .pipe(
+    //   filter(p => p === this.match.id),
+    // )
+    // .subscribe(p => {
+    //     this.isShown = false;
+    // });
   }
 
   get getSubgames(): ISubgame[] {

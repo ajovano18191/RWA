@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, delay, filter, map, merge, pairwise, share, tap } from 'rxjs';
+import { Observable, delay, filter, map, merge, pairwise, share } from 'rxjs';
 import OddsKey from '../odds-key.model';
-import { selectOdds } from '../store/odds.selectors';
+import { OfferService } from '../offer.service';
 
 @Component({
   selector: 'guest-odds',
@@ -29,21 +29,17 @@ export class OddsComponent implements OnInit {
   private store = inject(Store);
   oddse$ = new Observable<number>();
   textColor$: Observable<string> = new Observable<string>();
+  private offerService: OfferService = inject(OfferService);
 
   ngOnInit(): void {
-    this.oddse$ = this.store.select(selectOdds(this.odds))
-    .pipe(
-      filter(p => p !== undefined),
-      map(p => p!),
-      share(),
-      tap(p => console.log(p)),
-    );
+    this.oddse$ = this.offerService.oddsSelector(this.odds);
 
     this.textColor$ = this.sub2TextColors(this.oddse$);
   }
 
+
   private sub2TextColors(oddse$: Observable<number>): Observable<string> {
-    const changeColor$ = this.oddse$
+    const changeColor$ = oddse$
     .pipe(
       pairwise(),
       filter(p => p[1] !== p[0]),

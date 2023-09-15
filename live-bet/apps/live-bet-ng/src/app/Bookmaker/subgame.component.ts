@@ -3,11 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ISubgame } from '@live-bet/dto';
-import { Store } from '@ngrx/store';
-import { Subscription, filter, map } from 'rxjs';
+import { Subscription } from 'rxjs';
 import OddsKey from '../odds-key.model';
+import { OfferService } from '../offer.service';
 import { OddsActions } from '../store/odds.actions';
-import { selectOdds } from '../store/odds.selectors';
 import Offer from './offer';
 
 @Component({
@@ -48,22 +47,17 @@ export class SubgameComponent implements OnInit, OnDestroy {
   @Output() oddChangeEvent = new EventEmitter<Offer>();
   odd: number = 1;
 
-  private store = inject(Store);
+  private offerService: OfferService = inject(OfferService);
   private oddsSubscription: Subscription = new Subscription();
 
   ngOnInit(): void {
-    this.oddsSubscription = 
-      this.store.select(selectOdds(this.getOddsKey()))
-      .pipe(
-        filter(p => p !== undefined),
-        map(p => p!),
-      )
+    this.oddsSubscription = this.offerService.oddsSelector(this.getOddsKey())
       .subscribe(p => {
         this.odd = p;
         this.oddChangeEvent.emit({
           subgameId: this.subgame.id,
           odd: this.odd,
-        })
+        });
       });
   }
 
