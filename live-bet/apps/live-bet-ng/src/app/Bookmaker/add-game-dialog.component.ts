@@ -1,12 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import Game from './game';
-import Subgame from './subgame';
+import { GameDTO, SubgameDTO } from '@live-bet/dto';
 
 @Component({
   selector: 'live-bet-add-game-dialog',
@@ -18,26 +16,26 @@ import Subgame from './subgame';
       <h1><b>Add game</b></h1>
       <mat-form-field class="game-name">
         <mat-label>Game</mat-label>
-        <input matInput [(ngModel)]="data.name">
+        <input matInput [(ngModel)]="gameDTO!.name">
       </mat-form-field>
       <div class="subgames">
         <mat-form-field>
           <mat-label>Subgame 1</mat-label>
-          <input matInput [(ngModel)]="data.subgames[0].name">
+          <input matInput [(ngModel)]="gameDTO!.subgames[0].name">
         </mat-form-field>
         <mat-form-field>
           <mat-label>Subgame 2</mat-label>
-          <input matInput [(ngModel)]="data.subgames[1].name">
+          <input matInput [(ngModel)]="gameDTO!.subgames[1].name">
         </mat-form-field>
         <mat-form-field>
           <mat-label>Subgame 3</mat-label>
-          <input matInput [(ngModel)]="data.subgames[2].name">
+          <input matInput [(ngModel)]="gameDTO!.subgames[2].name">
         </mat-form-field>
       </div>
     </div>
     <div mat-dialog-actions>
       <button mat-button (click)="onNoClick()">Cancel</button>
-      <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+      <button mat-button [mat-dialog-close]="gameDTO" cdkFocusInitial>Ok</button>
     </div>
   `,
   styles: [
@@ -50,18 +48,21 @@ import Subgame from './subgame';
   ],
 })
 export class AddGameDialogComponent {
+
+  public gameDTO: GameDTO | undefined = inject(MAT_DIALOG_DATA);
+
   constructor(
     public dialogRef: MatDialogRef<AddGameDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Game,
   ) {
-    data.subgames = Array<Subgame>(
-      { id: 1, name: '' },
-      { id: 2, name: '' },
-      { id: 3, name: '' },
+    this.gameDTO!.subgames = Array<SubgameDTO>(
+      { name: '' },
+      { name: '' },
+      { name: '' },
     );
   }
 
   onNoClick(): void {
+    this.gameDTO = undefined;
     this.dialogRef.close();
   }
 }

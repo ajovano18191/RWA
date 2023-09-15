@@ -1,16 +1,16 @@
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import OddsKey from './odds-key.model';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription, delay, filter, map, merge, pairwise, share, tap } from 'rxjs';
-import { selectOdds } from './odds-store/odds.selectors';
+import { Observable, delay, filter, map, merge, pairwise, share } from 'rxjs';
+import OddsKey from '../odds-key.model';
+import { OfferService } from '../offer.service';
 
 @Component({
   selector: 'guest-odds',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="odds-value" [ngStyle]="{'color': textColor$ | async, 'grid-column-start': odds.subgameId + 6,}">
+    <div class="odds-value" [ngStyle]="{'color': textColor$ | async}">
       {{ oddse$ | async | number:'1.2-2' }}
     </div>
   `,
@@ -29,20 +29,17 @@ export class OddsComponent implements OnInit {
   private store = inject(Store);
   oddse$ = new Observable<number>();
   textColor$: Observable<string> = new Observable<string>();
+  private offerService: OfferService = inject(OfferService);
 
   ngOnInit(): void {
-    this.oddse$ = this.store.select(selectOdds(this.odds))
-    .pipe(
-      filter(p => p !== undefined),
-      map(p => p!),
-      share(),
-    );
+    this.oddse$ = this.offerService.oddsSelector(this.odds);
 
     this.textColor$ = this.sub2TextColors(this.oddse$);
   }
 
+
   private sub2TextColors(oddse$: Observable<number>): Observable<string> {
-    const changeColor$ = this.oddse$
+    const changeColor$ = oddse$
     .pipe(
       pairwise(),
       filter(p => p[1] !== p[0]),

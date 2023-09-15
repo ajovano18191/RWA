@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@live-bet/dto": ["libs/dto/src/index.ts"],
+      "@live-bet/enums": ["libs/enums/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

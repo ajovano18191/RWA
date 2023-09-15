@@ -3,15 +3,16 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { filter } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { AddMatchDialogComponent } from './add-match-dialog.component';
 import { AddGameDialogComponent } from './add-game-dialog.component';
-import Sport from './sport';
 import { MatchComponent } from './match.component';
+import { GameDTO, ISport, MatchDTO } from '@live-bet/dto';
+import { SportsService } from '../sports.service';
 
 @Component({
   selector: 'bookmaker-sport',
@@ -22,17 +23,17 @@ import { MatchComponent } from './match.component';
       <div class="sport-header">
         <h1  class="sport-header-text">{{ sport.name }}</h1>
         <div class="sport-header-buttons-container">
-          <button mat-fab extended color="primary" class="sport-header-button" (click)="openAddMatchDialog(sport.id)">
+          <button mat-fab extended color="primary" class="sport-header-button" (click)="openAddMatchDialog()">
             <mat-icon class="button-icon">add</mat-icon>
             Add match
           </button>
-          <button mat-fab extended color="primary" class="sport-header-button" (click)="openAddGameDialog(sport.id)">
+          <button mat-fab extended color="primary" class="sport-header-button" (click)="openAddGameDialog()">
             <mat-icon class="button-icon">add</mat-icon>
             Add game
           </button>
         </div>
       </div>
-        <bookmaker-match *ngFor="let match of sport.matches" [match]="match" />
+        <bookmaker-match *ngFor="let match of sport?.matches" [match]="match" />
     </div>
   `,
   styles: [
@@ -44,7 +45,7 @@ import { MatchComponent } from './match.component';
   providers: [SportComponent],
 })
 export class SportComponent {
-  @Input() sport: Sport = {
+  @Input() sport: ISport = {
     id: 0,
     name: '',
     matches: [],
@@ -52,33 +53,45 @@ export class SportComponent {
   };
 
   public dialog: MatDialog = inject(MatDialog);
+  private sportsService: SportsService = inject(SportsService);
 
-  public openAddMatchDialog(sportId: number) {
+  public openAddMatchDialog() {
     const dialogRef = this.dialog.open(AddMatchDialogComponent, {
-      data: {},
+      data: {
+        league: '',
+        home: '',
+        guest: '',
+        sportId: this.sport.id,
+      },
     });
 
     dialogRef.afterClosed()
     .pipe(
-      filter(result => result),
+      filter(p => p !== undefined),
+      map(p => p as MatchDTO),
     )
     .subscribe(result => {
-      console.log(result);
+      this.sportsService.postMatch(result);
     });
   }
 
-  public openAddGameDialog(sportId: number) {
+  public openAddGameDialog() {
     const dialogRef = this.dialog.open(AddGameDialogComponent, {
       panelClass: 'disable-horizontal-scroll',
-      data: {},
+      data: {
+        name: '',
+        subgames: [],
+        sportId: this.sport.id,
+      },
     });
 
     dialogRef.afterClosed()
     .pipe(
-      filter(result => result),
+      filter(p => p !== undefined),
+      map(p => p as GameDTO),
     )
     .subscribe(result => {
-      console.log(result);
+      this.sportsService.postGame(result);
     });
   }
 }

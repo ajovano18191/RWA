@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import Game from './game';
 import { SubgameComponent } from './subgame.component';
 import Offer from './offer';
+import { IGame } from '@live-bet/dto';
 
 @Component({
   selector: 'bookmaker-game',
@@ -12,18 +12,26 @@ import Offer from './offer';
     <div class="game">
       <div class="game-title">{{ game.name }}</div>
       <div class="subgames">
-        <bookmaker-subgame *ngFor="let subgame of game.subgames" [subgame]="subgame" (oddChangeEvent)="changeOdd($event)"/>
+        <bookmaker-subgame *ngFor="let subgame of game.subgames" [matchId]="matchId" [subgame]="subgame" (oddChangeEvent)="changeOdd($event)"/>
       </div>
     </div>
   `,
   styleUrls: ['./game.component.scss'],
 })
 export class GameComponent {
-  @Input() game: Game = {
+  @Input() game: IGame = {
     id: 0,
     name: '',
     subgames: [],
-  }
+    sport: {
+      id: 0,
+      name: '',
+      games: [],
+      matches: [],
+    },
+  };
+
+  @Input() matchId: number = 0;
 
   @Output() oddChangeEvent = new EventEmitter<Offer>();
 
