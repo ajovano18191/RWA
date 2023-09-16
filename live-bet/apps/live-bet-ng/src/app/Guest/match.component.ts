@@ -3,7 +3,9 @@ import { Component, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IMatch, ISubgame } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
+import IEvent from '../ievent.model';
 import { MatchActions } from '../store/match.actions';
+import { setEvent } from '../store/ticket.actions';
 import { OddsComponent } from './odds.component';
 
 @Component({
@@ -16,7 +18,7 @@ import { OddsComponent } from './odds.component';
     <div class="home-guest-match grey-white grey-white-hover" (click)="go2MatchDetails()">
       {{ match.home }} <br> {{ match.guest }}
     </div>
-    <div class="odds-container grey-white grey-white-hover" *ngFor="let subgame of getSubgames">
+    <div class="odds-container grey-white grey-white-hover" *ngFor="let subgame of getSubgames" (click)="add2Ticket(subgame)" >
       <guest-odds  [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }" class="grey-white grey-white-hover"/>
     </div>
   `,
@@ -40,7 +42,7 @@ export class MatchComponent {
       name: '',
       games: [],
       matches: [],
-    }
+    },
   };
 
   get getSubgames(): ISubgame[] {
@@ -53,5 +55,21 @@ export class MatchComponent {
   go2MatchDetails() {
     this.store.dispatch(MatchActions.setMatch(this.match));
     this.router.navigate(['match-details']);
+  }
+
+  add2Ticket(subgame: ISubgame) {
+    const event: IEvent = {
+      home: this.match.home,
+      guest: this.match.guest,
+      gameId: subgame.game.id,
+      gameName: subgame.game.name,
+      subgameName: subgame.name,
+      oddsKey: {
+        sportId: this.match.sport.id,
+        matchId: this.match.id,
+        subgameId: subgame.id,
+      }
+    }
+    this.store.dispatch(setEvent({ event }));
   }
 }

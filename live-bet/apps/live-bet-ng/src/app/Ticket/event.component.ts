@@ -1,22 +1,29 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import IEvent from '../ievent.model';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { Store } from '@ngrx/store';
 import { OddsComponent } from '../Guest/odds.component';
+import IEvent from '../ievent.model';
+import { Odds } from '../odds.model';
+import { deleteEvent } from '../store/ticket.actions';
 
 @Component({
   selector: 'ticket-event',
   standalone: true,
-  imports: [CommonModule, OddsComponent,],
+  imports: [CommonModule, OddsComponent, MatButtonModule, MatIconModule],
   template: `
     <div class="row">
       <div class="match-id">{{ event.oddsKey.matchId }}</div>
       <div class="teams">{{ event.home }} - {{ event.guest }}</div>
-      <div class="x">X</div>
+      <button mat-mini-fab color="warn" aria-label="Delete event" (click)="deleteEvent()">
+          <mat-icon>close</mat-icon>
+        </button>
     </div>
     <div class="row">
       <div class="game-name">{{ event.gameName }}</div>
       <div class="subgame-name">{{ event.subgameName }}</div>
-      <guest-odds [odds]="event.oddsKey" />
+      <guest-odds [odds]="event.oddsKey" (oddChangeEvent)="oddChangeEvent.emit($event)" />
     </div>
   `,
   styles: [
@@ -37,4 +44,12 @@ export class EventComponent {
       subgameId: 0,
     },
   };
+
+  @Output() oddChangeEvent = new EventEmitter<Odds>();
+
+  private store = inject(Store);
+
+  deleteEvent() {
+    this.store.dispatch(deleteEvent({ matchId: this.event.oddsKey.matchId }));
+  }
 }
