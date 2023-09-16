@@ -1,16 +1,15 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { ISubgame } from '@live-bet/dto';
 
 @Component({
   selector: 'guest-subgame',
   standalone: true,
   imports: [CommonModule],
-  template: `<div class="subgame-name">{{ subgame.name }}</div>`,
+  template: `<div class="subgame-name grey-white">{{ subgame.name }}</div>`,
   styles: [
     ":host { display: contents; }",
-    ":host > *:hover {background-color: red; }",
-    ":host > * { background-color: rgba(255, 255, 255, 0.8); text-align: center; padding: 20px 0; font-size: 30px; border: 1px solid black; } ",
+    ":host > * { text-align: center; padding: 20px 0; font-size: 30px; } ",
   ],
 })
 export class SubgameComponent {

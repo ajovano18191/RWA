@@ -1,4 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: grey; color: white; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: white; color: white; }
+
+.grey-white {
+    background-color: rgb(100, 100, 100);
+    color: white;
+}
+
+.grey-white-hover:hover {
+    background-color: rgb(200, 200, 200);
+}
+
+.white-grey {
+    background-color: white;
+    color: rgb(100, 100, 100);
+}
+
+.white-grey-hover:hover {
+    background-color: rgb(200, 200, 200);
+}

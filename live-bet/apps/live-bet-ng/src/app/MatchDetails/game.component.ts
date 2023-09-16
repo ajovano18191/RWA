@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { IGame } from '@live-bet/dto';
 import { SubgameComponent } from './subgame.component';
 
@@ -9,7 +9,7 @@ import { SubgameComponent } from './subgame.component';
   imports: [CommonModule, SubgameComponent],
   template: `
     <h1 class="game-name">{{ game.name }}</h1>
-    <match-details-subgame *ngFor="let subgame of game.subgames" [subgame]="subgame" />
+    <match-details-subgame *ngFor="let subgame of game.subgames" [subgame]="subgame" class="white-grey white-grey-hover" />
   `,
   styles: [
     ":host { display: contents; }",

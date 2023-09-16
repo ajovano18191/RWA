@@ -11,18 +11,21 @@ import { OddsComponent } from './odds.component';
   standalone: true,
   imports: [CommonModule, OddsComponent,],
   template: `
-    <div class="match-id">{{ match.id }}</div>
-    <div class="league">{{ match.league }}</div>
-    <div class="home-guest-match" (click)="go2MatchDetails()">
+    <div class="match-id grey-white">{{ match.id }}</div>
+    <div class="league grey-white">{{ match.league }}</div>
+    <div class="home-guest-match grey-white grey-white-hover" (click)="go2MatchDetails()">
       {{ match.home }} <br> {{ match.guest }}
     </div>
-    <guest-odds *ngFor="let subgame of getSubgames" [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }"/>
+    <div class="odds-container grey-white grey-white-hover" *ngFor="let subgame of getSubgames">
+      <guest-odds  [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }" class="grey-white grey-white-hover"/>
+    </div>
   `,
   styles: [
     ":host { display: contents; }",
-    ":host > * { background-color: rgba(255, 255, 255, 0.8); text-align: center; padding: 20px 0; font-size: 30px; border: 1px solid black; } ",
-    ".home-guest-match { grid-column: span 3; }",
+    ":host > div { display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px 0; font-size: 30px; } ",
+    ".home-guest-match { grid-column: span 3; line-height: 1.2em; }",
     ".match-id { grid-column-start: 1; }",
+    ".odds-container > * { width: 100%; height: 100%; }",
   ],
 })
 export class MatchComponent {
@@ -41,7 +44,7 @@ export class MatchComponent {
   };
 
   get getSubgames(): ISubgame[] {
-    return this.match.sport.games.map(p => p.subgames).flat();
+    return this.match.sport.games.slice(0, 3).map(p => p.subgames).flat();
   }
 
   private store = inject(Store);

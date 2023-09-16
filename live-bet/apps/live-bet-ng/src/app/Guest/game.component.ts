@@ -1,15 +1,15 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { IGame } from '@live-bet/dto';
 
 @Component({
   selector: 'guest-game',
   standalone: true,
   imports: [CommonModule],
-  template:  `<div class="game-name">{{ game.name }}</div>`,
+  template:  `<div class="game-name grey-white">{{ game.name }}</div>`,
   styles: [
     ":host { display: contents; }",
-    ":host > * { background-color: rgba(255, 255, 255, 0.8); text-align: center; padding: 20px 0; font-size: 30px; border: 1px solid black; } ",
+    ":host > * { text-align: center; padding: 20px 0; font-size: 30px; }",
     ".game-name { grid-column: span 3; }"
   ],
 })
