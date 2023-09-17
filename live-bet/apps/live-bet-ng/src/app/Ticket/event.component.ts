@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { Odds } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
 import { OddsComponent } from '../Guest/odds.component';
 import IEvent from '../ievent.model';
-import { Odds } from '../odds.model';
 import { deleteEvent } from '../store/ticket.actions';
 
 @Component({

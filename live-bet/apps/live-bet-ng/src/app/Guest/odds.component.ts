@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Odds, OddsKey } from '@live-bet/dto';
 import { Observable, delay, filter, map, merge, pairwise, share, tap } from 'rxjs';
-import OddsKey from '../odds-key.model';
-import { Odds } from '../odds.model';
 import { OfferService } from '../offer.service';
 
 @Component({

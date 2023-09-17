@@ -1,11 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { MatchOfferDTO } from '@live-bet/dto';
+import { MatchOfferDTO, Odds, OddsKey } from '@live-bet/dto';
 import { WsMessages } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Socket } from 'ngx-socket-io';
 import { Observable, concatMap, filter, from, map, merge, share, take, tap } from 'rxjs';
-import OddsKey from './odds-key.model';
-import { Odds } from './odds.model';
 import { SportsService } from './sports.service';
 import { OddsActions } from './store/odds.actions';
 import { selectOdds } from './store/odds.selectors';

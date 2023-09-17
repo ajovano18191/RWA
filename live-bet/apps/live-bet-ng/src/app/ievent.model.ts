@@ -1,4 +1,4 @@
-import OddsKey from "./odds-key.model";
+import { OddsKey } from "@live-bet/dto";
 
 export default interface IEvent {
     home: string,

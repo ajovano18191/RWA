@@ -1,5 +1,5 @@
+import { OddsKey } from "@live-bet/dto";
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import OddsKey from "../odds-key.model";
 import { OfferMap } from "./types";
 
 const selectOddsWithoutParams = createFeatureSelector<OfferMap>('odds');

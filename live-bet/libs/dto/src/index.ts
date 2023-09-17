@@ -7,3 +7,6 @@ export * from "./lib/match.dto";
 export * from "./lib/sport.dto";
 export * from "./lib/subgame.dto";
 export * from "./lib/match-offer.dto";
+export * from "./lib/odds-key.dto";
+export * from "./lib/odds.dto";
+export * from "./lib/ticket.dto";

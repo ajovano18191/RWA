@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,23 +13,30 @@ import { selectEventTotal } from '../store/ticket.selectors';
   standalone: true,
   imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, FormsModule,],
   template: `
-    <div class="row">
-      <div class="events-number">Events: {{ eventTotal$ | async }}</div>
-      <div class="odds">Odds: {{ summaryOdds | number:'1.2-2' }}</div>
-    </div>
-    <div class="row">
-      <mat-form-field class="stake">
-        <mat-label>Stake (RSD):</mat-label>
-        <input matInput type="number" [(ngModel)]="stake">
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <button mat-raised-button color="primary" class="place-bet-button" (click)="placeBet()">PLACE BET</button>
-    </div>
-    <div class="row">
-      <div class="payout-label">Payout (RSD):</div>
-      <div class="payout-value">{{ summaryOdds * stake }}</div>
-    </div>
+    <ng-container *ngIf="(eventTotal$ | async); else emptyTicket">
+      <div class="row">
+        <div class="events-number">Events: {{ eventTotal$ | async }}</div>
+        <div class="odds">Odds: {{ summaryOdds | number:'1.2-2' }}</div>
+      </div>
+      <div class="row">
+        <mat-form-field class="stake">
+          <mat-label>Stake (RSD):</mat-label>
+          <input matInput type="number" [(ngModel)]="stake">
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <button mat-raised-button color="primary" class="place-bet-button" (click)="placeBet.emit(stake)">PLACE BET</button>
+      </div>
+      <div class="row">
+        <div class="payout-label">Payout (RSD):</div>
+        <div class="payout-value">{{ summaryOdds * stake }}</div>
+      </div>
+    </ng-container>
+    <ng-template #emptyTicket>
+      Your ticket is empty.
+      <br>
+      Make your bets, please.
+    </ng-template>
   `,
   styles: [
     ".row { display: flex; justify-content: space-between; margin-block: 12px; }",
@@ -48,11 +55,9 @@ export class SummaryComponent implements OnInit {
   
   @Input() summaryOdds: number = 1;
 
+  @Output() placeBet: EventEmitter<number> = new EventEmitter<number>();
+
   ngOnInit(): void {
     this.eventTotal$ = this.store.select(selectEventTotal);
-  }
-
-  placeBet() {
-
   }
 }
