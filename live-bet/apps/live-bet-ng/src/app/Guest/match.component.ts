@@ -54,7 +54,7 @@ export class MatchComponent {
 
   go2MatchDetails() {
     this.store.dispatch(MatchActions.setMatch(this.match));
-    this.router.navigate(['match-details']);
+    this.router.navigate(['guest', 'match-details']);
   }
 
   add2Ticket(subgame: ISubgame) {
