@@ -13,6 +13,8 @@ export class MatchesService {
     constructor(
         @InjectRepository(Match)
         private matchesRepository: Repository<Match>,
+        @InjectRepository(Odds)
+        private oddsesRepository: Repository<Odds>,
         @Inject(SportsService)
         private sportsService: SportsService,
         @Inject(SubgamesService)
@@ -83,7 +85,8 @@ export class MatchesService {
     }
 
     async remove(id: number): Promise<void> {
-        const match: Match = await this.findOne(id);
+        await this.oddsesRepository.delete({ matchId: id });
+        const match = await this.findOne(id);
         await this.matchesRepository.remove(match);
     }
 

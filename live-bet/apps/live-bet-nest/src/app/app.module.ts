@@ -5,6 +5,7 @@ import { LiveModule } from '../live/live.module';
 import { MatchesModule } from '../matches/matches.module';
 import { SportsModule } from '../sports/sports.module';
 import { SubgamesModule } from '../subgames/subgames.module';
+import { TicketsModule } from '../tickets/tickets.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -27,6 +28,7 @@ import { AppService } from './app.service';
     SubgamesModule,
     MatchesModule,
     LiveModule,
+    TicketsModule,
   ],
   controllers: [AppController],
   providers: [AppService, ],

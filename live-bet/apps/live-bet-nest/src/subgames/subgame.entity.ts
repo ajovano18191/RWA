@@ -2,6 +2,7 @@ import { ISubgame } from "@live-bet/dto";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Game } from "../games/game.entity";
 import { Odds } from "../matches/odds.entity";
+import { Event } from "../tickets/event.entity";
 
 @Entity()
 export class Subgame implements ISubgame {
@@ -16,6 +17,9 @@ export class Subgame implements ISubgame {
 
     @OneToMany(() => Odds, (odds) => odds.subgame)
     oddses: Odds[];
+
+    @OneToMany(() => Event, (event) => event.subgame)
+    events: Event[];
 
     constructor(name: string, game: Game) {
         this.name = name;

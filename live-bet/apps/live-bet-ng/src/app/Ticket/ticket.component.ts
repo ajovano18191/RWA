@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { Odds } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
-import { Observable, take } from 'rxjs';
+import { Observable } from 'rxjs';
 import IEvent from '../ievent.model';
 import { clearEvents } from '../store/ticket.actions';
 import { selectAllEvents } from '../store/ticket.selectors';
-import { TicketService } from '../ticket.service';
 import { EventComponent } from './event.component';
 import { SummaryComponent } from './summary.component';
 
@@ -20,7 +19,7 @@ import { SummaryComponent } from './summary.component';
       <button mat-raised-button color="primary" (click)="clearEvents()">CLEAR</button>
     </div>
     <ticket-event *ngFor="let event of (event$ | async)" [event]="event" (oddChangeEvent)="onOddChange($event)" />
-    <ticket-summary [summaryOdds]="summaryOdds" (placeBet)="onPlaceBet($event)" />
+    <ticket-summary [summaryOdds]="summaryOdds"/>
   `,
   styles: [
     ":host { display: flex; flex-direction: column; padding: 12px; }",
@@ -42,20 +41,6 @@ export class TicketComponent implements OnInit {
   onOddChange(odds: Odds) {
     this.ticketMap.set(odds.oddsKey.matchId, odds.value);
     this.summaryOdds = Array.from(this.ticketMap.values()).reduce((previousValue, currentValue) => previousValue *= currentValue, 1);
-  }
-
-  private ticketService: TicketService = inject(TicketService);
-
-  onPlaceBet(stake: number) {
-    this.event$.pipe(
-      take(1),
-    )
-    .subscribe(events => {
-      this.ticketService.placeBet({
-        stake: stake,
-        events: events.map(event => event.oddsKey),
-      });
-    });
   }
 
   clearEvents(): void {
