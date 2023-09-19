@@ -8,6 +8,7 @@ import { SubgamesModule } from '../subgames/subgames.module';
 import { TicketsModule } from '../tickets/tickets.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AppService } from './app.service';
     MatchesModule,
     LiveModule,
     TicketsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, ],
