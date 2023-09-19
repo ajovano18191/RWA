@@ -16,7 +16,7 @@ import { deleteEvent } from '../store/ticket.actions';
     <div class="row">
       <div class="match-id">{{ event.oddsKey.matchId }}</div>
       <div class="teams">{{ event.home }} - {{ event.guest }}</div>
-      <button mat-mini-fab color="warn" aria-label="Delete event" (click)="deleteEvent()">
+      <button mat-mini-fab [ngStyle]="{transform: 'scale(0.6)'}" class="delete-button" aria-label="Delete event" (click)="deleteEvent()">
           <mat-icon>close</mat-icon>
         </button>
     </div>
@@ -27,8 +27,9 @@ import { deleteEvent } from '../store/ticket.actions';
     </div>
   `,
   styles: [
-    ":host { display: flex; flex-direction: column; border: 1px solid black; margin-block: 12px; padding: 8px; }",
-    ".row { display: flex; justify-content: space-between; }",
+    ":host { display: flex; flex-direction: column; border: 2px solid white; border-radius: 16px; margin-block: 8px; padding-inline: 12px; }",
+    ".row { display: flex; justify-content: space-between; margin-block: 8px; }",
+    ".delete-button { margin-top: -12px; margin-right: -16px; background-color: rgb(100, 100, 100) !important; color: white !important; border: 2px solid white; }",
   ],
 })
 export class EventComponent {

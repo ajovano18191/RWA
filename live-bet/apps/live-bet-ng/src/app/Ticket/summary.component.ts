@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TicketType } from '@live-bet/enums';
@@ -10,7 +11,6 @@ import { Observable, exhaustMap, take } from 'rxjs';
 import IEvent from '../ievent.model';
 import { selectAllEvents, selectEventTotal } from '../store/ticket.selectors';
 import { TicketService } from '../ticket.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TicketIdDialogComponent } from './ticket-id-dialog.component';
 
 @Component({
@@ -30,26 +30,29 @@ import { TicketIdDialogComponent } from './ticket-id-dialog.component';
         </mat-form-field>
       </div>
       <div class="row">
-        <button mat-raised-button color="primary" class="place-bet-button" (click)="placeBet()">PLACE BET</button>
+        <button mat-raised-button class="place-bet-button" (click)="placeBet()">PLACE BET</button>
       </div>
       <div class="row">
         <div class="payout-label">Payout (RSD):</div>
-        <div class="payout-value">{{ summaryOdds * stake | number:'1.2-2' }}</div>
+        <div class="payout-value"><b>{{ summaryOdds * stake | number:'1.2-2' }}</b></div>
       </div>
     </ng-container>
     <ng-template #emptyTicket>
-      Your ticket is empty.
-      <br>
-      Make your bets, please.
+      <p class="empty-ticket">
+        Your ticket is empty.
+        <br>
+        Make your bets, please.
+      <p>
     </ng-template>
   `,
   styles: [
-    ".row { display: flex; justify-content: space-between; margin-block: 12px; }",
+    ".row { display: flex; justify-content: space-between; margin-block: 16px; }",
     ".stake { width: 100%; }",
     "input { text-align: right; }",
     "input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }",
     "input[type=number] { -moz-appearance: textfield; }",
-    ".place-bet-button { width: 100%; margin-top: -12px; }",
+    ".place-bet-button { width: 100%; margin-top: -12px; background-color: rgb(100, 100, 100) !important; color: white !important; border: 2px solid white; }",
+    ".empty-ticket {text-align: center; }",
   ],
 })
 export class SummaryComponent implements OnInit {

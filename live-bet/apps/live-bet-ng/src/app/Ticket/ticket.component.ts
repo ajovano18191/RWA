@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { Odds } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -12,18 +13,21 @@ import { SummaryComponent } from './summary.component';
 @Component({
   selector: 'ticket',
   standalone: true,
-  imports: [CommonModule, EventComponent, SummaryComponent, ],
+  imports: [CommonModule, EventComponent, SummaryComponent, MatButtonModule,],
   template: `
     <div class="header">
-      <div class="title">Ticket</div>
-      <button mat-raised-button color="primary" (click)="clearEvents()">CLEAR</button>
+      <h1 class="title">TICKET</h1>
+      <button mat-raised-button class="clear-button"  (click)="clearEvents()">CLEAR</button>
     </div>
     <ticket-event *ngFor="let event of (event$ | async)" [event]="event" (oddChangeEvent)="onOddChange($event)" />
     <ticket-summary [summaryOdds]="summaryOdds"/>
   `,
   styles: [
-    ":host { display: flex; flex-direction: column; padding: 12px; }",
-    ".header { display: flex; justify-content: space-between; margin-block: 12px; }",
+    ":host { display: flex; flex-direction: column; padding: 16px; }",
+    ":host > * { font-size: 24px; }",
+    ".header { display: flex; justify-content: space-between; margin-block: 16px; }",
+    ".title { font-size: 30px; }",
+    ".clear-button { background-color: rgb(100, 100, 100) !important; color: white !important; border: 2px solid white; }",
   ],
 })
 export class TicketComponent implements OnInit {
