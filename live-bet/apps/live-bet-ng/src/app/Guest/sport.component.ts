@@ -12,7 +12,7 @@ import { SubgameComponent } from './subgame.component';
   template: `
       <div class="sport-name grey-white">{{ sport.name }}</div>
       <guest-game *ngFor="let game of getGames" [game]="game"/>
-      <div class="match-id grey-white">MatchIdddD</div>
+      <div class="match-id grey-white">ID</div>
       <div class="league grey-white">League</div>
       <div class="home-guest grey-white">Home - Guest</div>
       <guest-subgame *ngFor="let subgame of getSubgames" [subgame]="subgame" />

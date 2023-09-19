@@ -2,9 +2,8 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } fro
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ISubgame } from '@live-bet/dto';
+import { ISubgame, OddsKey } from '@live-bet/dto';
 import { Subscription } from 'rxjs';
-import OddsKey from '../odds-key.model';
 import { OfferService } from '../offer.service';
 import { OddsActions } from '../store/odds.actions';
 import Offer from './offer';

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
-import { Observable, delay, filter, map, merge, pairwise, share } from 'rxjs';
-import OddsKey from '../odds-key.model';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Odds, OddsKey } from '@live-bet/dto';
+import { Observable, delay, filter, map, merge, pairwise, share, tap } from 'rxjs';
 import { OfferService } from '../offer.service';
 
 @Component({
@@ -18,22 +18,31 @@ import { OfferService } from '../offer.service';
     ".odds-value { transition: color 1s; padding-right: 5px; }",
   ],
 })
-export class OddsComponent implements OnInit {
+export class OddsComponent implements OnInit, OnDestroy {
   @Input() odds: OddsKey = {
     sportId: 0,
     matchId: 0,
     subgameId: 0,
   }
 
+  @Output() oddChangeEvent = new EventEmitter<Odds>();
+
   oddse$ = new Observable<number>();
   textColor$: Observable<string> = new Observable<string>();
   private offerService: OfferService = inject(OfferService);
 
   ngOnInit(): void {
-    this.oddse$ = this.offerService.oddsSelector(this.odds);
+    this.oddse$ = this.offerService.oddsSelector(this.odds)
+    .pipe(
+      tap(p => 
+        this.oddChangeEvent.emit({
+          oddsKey: this.odds,
+          value: p,
+        })
+      ),
+    );
     this.textColor$ = this.sub2TextColors(this.oddse$);
   }
-
 
   private sub2TextColors(oddse$: Observable<number>): Observable<string> {
     const changeColor$ = oddse$
@@ -57,5 +66,12 @@ export class OddsComponent implements OnInit {
     );
 
     return merge(changeColor$, restoreColor$);
+  }
+
+  ngOnDestroy(): void {
+    this.oddChangeEvent.emit({
+      oddsKey: this.odds,
+      value: 1,
+    })
   }
 }

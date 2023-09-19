@@ -1,4 +1,4 @@
-import { MatchOfferDTO } from '@live-bet/dto';
+import { MatchOfferDTO, OddsKey } from '@live-bet/dto';
 import { WsMessages } from '@live-bet/enums';
 import { Inject, Injectable } from '@nestjs/common';
 import { WsResponse } from '@nestjs/websockets';
@@ -59,5 +59,9 @@ export class LiveService {
         matchId: match.id,
         offers: [],
       } });
+    }
+
+    getOdds(oddsKey: OddsKey): number {
+      return this.completeOffer.get(oddsKey.matchId).offers.find(p => p[0] === oddsKey.subgameId)[1];
     }
 }

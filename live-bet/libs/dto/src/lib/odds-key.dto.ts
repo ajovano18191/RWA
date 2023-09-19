@@ -1,4 +1,4 @@
-export default interface OddsKey {
+export interface OddsKey {
     sportId: number,
     matchId: number,
     subgameId: number,

@@ -1,6 +1,5 @@
-import { MatchOfferDTO } from '@live-bet/dto';
+import { MatchOfferDTO, Odds } from '@live-bet/dto';
 import { createActionGroup, props } from '@ngrx/store';
-import { Odds } from '../odds.model';
  
 export const OddsActions = createActionGroup({
   source: 'odds',
