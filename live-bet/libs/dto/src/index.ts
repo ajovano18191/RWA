@@ -11,3 +11,4 @@ export * from "./lib/odds.dto";
 export * from "./lib/sport.dto";
 export * from "./lib/subgame.dto";
 export * from "./lib/ticket.dto";
+export * from "./lib/user.dto";

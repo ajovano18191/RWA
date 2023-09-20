@@ -14,6 +14,7 @@ import { matchReducer } from './store/match.reducer';
 import { oddsReducer } from './store/odds.reducer';
 import * as offerEffects from './store/offers.effects';
 import { ticketReducer } from './store/ticket.reducer';
+import { userReducer } from './store/user.reducer';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -24,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SocketIoModule.forRoot(config)),
     provideStore(),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    importProvidersFrom(StoreModule.forRoot({ odds: oddsReducer, match: matchReducer, ticket: ticketReducer, })),
+    importProvidersFrom(StoreModule.forRoot({ odds: oddsReducer, match: matchReducer, ticket: ticketReducer, user: userReducer })),
     importProvidersFrom(StoreDevtoolsModule.instrument()),
     provideHttpClient(),
     provideEffects(offerEffects),
