@@ -14,11 +14,11 @@ export class AccountService {
 
   login(email: string, password: string): Observable<UserDTO> {
     return this.httpClient
-    .post<UserDTO>(`${this.baseURL}/auth/login`, { username: email, password: password });
+    .post<UserDTO>(`${this.baseURL}/auth/login`, { email: email, password: password });
   }
 
   register(email: string, password: string): Observable<UserDTO> {
     return this.httpClient
-    .post<UserDTO>(`${this.baseURL}/auth/register`, { username: email, password: password });
+    .post<UserDTO>(`${this.baseURL}/auth/register`, { email: email, password: password });
   }
 }

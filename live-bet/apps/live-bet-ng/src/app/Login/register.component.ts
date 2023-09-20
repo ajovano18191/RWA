@@ -24,7 +24,7 @@ import { AccountService } from './account.service';
         <div>
           <mat-form-field>
             <mat-label>Enter your email</mat-label>
-            <input matInput [(ngModel)]="email" />
+            <input matInput [type]="'email'" [(ngModel)]="email" />
           </mat-form-field>
         </div>
         <div>
@@ -38,8 +38,8 @@ import { AccountService } from './account.service';
         </div>
         <div>
           <mat-form-field>
-            <mat-label>Enter your password</mat-label>
-            <input matInput [type]="password" [(ngModel)]="repeatedPassword">
+            <mat-label>Enter your password again</mat-label>
+            <input matInput [type]="'password'" [(ngModel)]="repeatedPassword">
           </mat-form-field>
         </div>
       </mat-card-content>
