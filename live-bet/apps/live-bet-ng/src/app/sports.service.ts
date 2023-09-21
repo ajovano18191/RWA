@@ -46,6 +46,10 @@ export class SportsService {
         this.httpClient.post(`${this.baseURL}/games`, gameDTO).subscribe(() => this.refresh());
     }
 
+    deleteGame(gameId: number) {
+        this.httpClient.delete(`${this.baseURL}/games/${gameId}`).subscribe(() => this.refresh());
+    }
+
     postMatch(matchDTO: MatchDTO) {
         this.httpClient.post(`${this.baseURL}/matches`, matchDTO).subscribe(() => this.refresh());
     }

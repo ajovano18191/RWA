@@ -10,7 +10,7 @@ import { MatchDetailsComponent } from './MatchDetails/match-details.component';
 export const appRoutes: Route[] = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'bookmaker', component: BookmakerComponent, canActivate: [authGuardFn] },
+    { path: 'bookmaker', component: BookmakerComponent,  }, //canActivate: [authGuardFn]
     { 
         path: 'guest', 
         component: GuestComponent, 

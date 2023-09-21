@@ -12,7 +12,9 @@ export class Subgame implements ISubgame {
     @Column()
     name: string;
 
-    @ManyToOne(() => Game, (game) => game.subgames)
+    @ManyToOne(() => Game, (game) => game.subgames, {
+        onDelete: 'SET NULL',
+    })
     game: Game;
 
     @OneToMany(() => Odds, (odds) => odds.subgame)

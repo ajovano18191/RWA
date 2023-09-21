@@ -2,6 +2,10 @@
 @include mat-core();
 $primary: mat-palette($mat-indigo);
 
+:host {
+    position: relative;
+}
+
 .game { 
     width: fit-content; 
     display: flex; 
@@ -21,6 +25,7 @@ $primary: mat-palette($mat-indigo);
     text-align: center; 
     font-weight: bold; 
     font-size: large; 
+    margin-top: 0.5em; 
     margin-bottom: 1em; 
 }
 
@@ -28,4 +33,10 @@ $primary: mat-palette($mat-indigo);
     display: flex; 
     flex-flow: row nowrap; 
     justify-content: space-around; 
+}
+
+.delete-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
 }
