@@ -20,7 +20,7 @@ import { TicketComponent } from '../Ticket/ticket.component';
   styles: [
     ".container { display: flex; flex-direction: row; justify-content: space-between; }",
     ".router { flex: 1; }",
-    ".ticket { width: 410px; }",
+    ".ticket { width: 400px; }",
   ],
 })
 export class GuestComponent {}

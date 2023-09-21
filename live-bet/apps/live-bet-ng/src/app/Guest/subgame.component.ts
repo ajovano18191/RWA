@@ -16,6 +16,7 @@ export class SubgameComponent {
   @Input() subgame: ISubgame = {
     id: 0,
     name: '',
+    isPlayable: true,
     game: {
       id: 0,
       name: '',

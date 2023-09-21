@@ -6,10 +6,10 @@ import { SubgameComponent } from './subgame.component';
 @Component({
   selector: 'match-details-game',
   standalone: true,
-  imports: [CommonModule, SubgameComponent],
+  imports: [CommonModule, SubgameComponent,],
   template: `
     <h1 class="game-name">{{ game.name }}</h1>
-    <match-details-subgame *ngFor="let subgame of game.subgames" [subgame]="subgame" class="white-grey white-grey-hover" />
+    <match-details-subgame *ngFor="let subgame of game.subgames" [subgame]="subgame" [ngClass]="subgame.isPlayable ?  'white-grey-hover' : ''" class="white-grey" />
   `,
   styles: [
     ":host { display: contents; }",

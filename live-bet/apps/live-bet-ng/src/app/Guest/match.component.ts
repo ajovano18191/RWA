@@ -18,8 +18,17 @@ import { OddsComponent } from './odds.component';
     <div class="home-guest-match grey-white grey-white-hover" (click)="go2MatchDetails()">
       {{ match.home }} <br> {{ match.guest }}
     </div>
-    <div class="odds-container grey-white grey-white-hover" *ngFor="let subgame of getSubgames" (click)="add2Ticket(subgame)" >
-      <guest-odds  [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }" class="grey-white grey-white-hover"/>
+    <div 
+      class="odds-container grey-white" 
+      *ngFor="let subgame of getSubgames" 
+      [ngClass]="subgame.isPlayable ?  'grey-white-hover' : ''" 
+      (click)="add2Ticket(subgame)" 
+    >
+      <guest-odds 
+        [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }" 
+        class="grey-white"
+        [ngClass]="subgame.isPlayable ?  'grey-white-hover' : ''"
+      />
     </div>
   `,
   styles: [
@@ -70,6 +79,8 @@ export class MatchComponent {
         subgameId: subgame.id,
       }
     }
-    this.store.dispatch(setEvent({ event }));
+    if(subgame.isPlayable) {
+      this.store.dispatch(setEvent({ event }));
+    }
   }
 }
