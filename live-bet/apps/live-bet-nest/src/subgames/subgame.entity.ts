@@ -12,7 +12,12 @@ export class Subgame implements ISubgame {
     @Column()
     name: string;
 
-    @ManyToOne(() => Game, (game) => game.subgames)
+    @Column({ default: true })
+    isPlayable: boolean;
+
+    @ManyToOne(() => Game, (game) => game.subgames, {
+        onDelete: 'SET NULL',
+    })
     game: Game;
 
     @OneToMany(() => Odds, (odds) => odds.subgame)
@@ -21,8 +26,9 @@ export class Subgame implements ISubgame {
     @OneToMany(() => Event, (event) => event.subgame)
     events: Event[];
 
-    constructor(name: string, game: Game) {
+    constructor(name: string, isPlayable: boolean, game: Game) {
         this.name = name;
+        this.isPlayable = isPlayable;
         this.game = game;
     }
 }

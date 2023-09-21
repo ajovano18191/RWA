@@ -11,7 +11,7 @@ import Offer from './offer';
 @Component({
   selector: 'bookmaker-subgame',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ],
+  imports: [MatFormFieldModule, MatInputModule, FormsModule,],
   template: `
     <mat-form-field class="subgame">
       <mat-label>{{ subgame.name }}</mat-label>
@@ -28,6 +28,7 @@ export class SubgameComponent implements OnInit, OnDestroy {
   @Input() subgame: ISubgame = {
     id: 0,
     name: '',
+    isPlayable: true,
     game: {
       id: 0,
       name: '',
@@ -81,6 +82,6 @@ export class SubgameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      this.oddsSubscription.unsubscribe();
+    this.oddsSubscription.unsubscribe();
   }
 }

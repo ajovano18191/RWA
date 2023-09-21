@@ -27,7 +27,7 @@ export class GamesService {
         const game: Game = this.gamesRepository.create();
         game.name = gameDTO.name;
         game.sport = await this.sportsService.findOne(gameDTO.sportId);
-        game.subgames = gameDTO.subgames.map(p => new Subgame(p.name, game));
+        game.subgames = gameDTO.subgames.map(p => new Subgame(p.name, p.isPlayable, game));
         const newGame = await this.gamesRepository.save(game);
         newGame.subgames.forEach(subgame => subgame.game = undefined);
         return newGame;
@@ -37,7 +37,7 @@ export class GamesService {
         const game: Game = await this.findOne(id);
         game.name = gameDTO.name;
         game.sport = await this.sportsService.findOne(gameDTO.sportId);
-        game.subgames = gameDTO.subgames.map(p => new Subgame(p.name, game));
+        game.subgames = gameDTO.subgames.map(p => new Subgame(p.name, p.isPlayable, game));
         const newGame = await this.gamesRepository.save(game);
         newGame.subgames.forEach(subgame => subgame.game = undefined);
         return newGame;

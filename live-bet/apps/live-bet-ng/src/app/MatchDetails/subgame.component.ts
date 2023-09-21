@@ -23,6 +23,7 @@ export class SubgameComponent implements OnInit {
   @Input() subgame: ISubgame = {
     id: 0,
     name: '',
+    isPlayable: true,
     game: {
       id: 0,
       name: '',
@@ -71,6 +72,8 @@ export class SubgameComponent implements OnInit {
         subgameId: this.subgame.id,
       }
     };
-    this.store.dispatch(setEvent({ event }));
+    if(this.subgame.isPlayable) {
+      this.store.dispatch(setEvent({ event }));
+    }
   }
 }

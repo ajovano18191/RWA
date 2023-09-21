@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { UserDTO } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
 import { Socket } from 'ngx-socket-io';
-import { Observable, tap } from 'rxjs';
+import { Observable, delay, tap } from 'rxjs';
 import { UserActions } from '../store/user.actions';
 
 @Injectable({
@@ -22,10 +22,9 @@ export class AccountService {
     return this.httpClient
     .post<UserDTO>(`${this.baseURL}/auth/login`, { email: email, password: password })
     .pipe(
-      tap(userDTO => {
-        this.saveUserInStore(userDTO);
-        this.setJWTToSocket(userDTO.accessToken);
-      }),
+      tap(userDTO => this.setJWTToSocket(userDTO.accessToken)),
+      delay(1000),
+      tap(userDTO => this.saveUserInStore(userDTO)),
     );
   }
 
@@ -33,10 +32,9 @@ export class AccountService {
     return this.httpClient
     .post<UserDTO>(`${this.baseURL}/auth/register`, { email: email, password: password })
     .pipe(
-      tap(userDTO => {
-        this.setJWTToSocket(userDTO.accessToken);
-        this.saveUserInStore(userDTO);
-      }),
+      tap(userDTO => this.setJWTToSocket(userDTO.accessToken)),
+      delay(1000),
+      tap(userDTO => this.saveUserInStore(userDTO)),
     );
   }
 
