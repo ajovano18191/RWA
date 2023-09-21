@@ -20,12 +20,16 @@ export class AuthController {
 
     @Get('all')
     all() {
-        return "Radi all";
+        return {
+            res: "Radi all",
+        };
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('authorized')
     authorized() {
-        return "Radi authorized";
+        return {
+            res: "Radi authorized",
+        };
     }
 }

@@ -7,8 +7,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { UserActions } from '../store/user.actions';
 import { AccountService } from './account.service';
 
 @Component({
@@ -64,14 +62,12 @@ export class RegisterComponent {
   repeatedPassword: string = "";
 
   private accountService: AccountService = inject(AccountService);
-  private store: Store = inject(Store);
   private router: Router = inject(Router);
 
   register() {
     if(this.password === this.repeatedPassword) {
       this.accountService.register(this.email, this.password)
       .subscribe(user => {
-        this.store.dispatch(UserActions.setUser(user));
         if(user.role === 'bookmaker') {
           //this.router.navigate(['bookmaker']);
         }

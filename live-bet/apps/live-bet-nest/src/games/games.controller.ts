@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { GamesService } from './games.service';
 import { GameDTO } from '@live-bet/dto';
+import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Game } from './game.entity';
+import { GamesService } from './games.service';
 
 @Controller('games')
 export class GamesController {
@@ -18,6 +19,7 @@ export class GamesController {
         return this.gamesService.findOne(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post()
     create(@Body() game: GameDTO): Promise<Game> {
         return this.gamesService.create(game);
