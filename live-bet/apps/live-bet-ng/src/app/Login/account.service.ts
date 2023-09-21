@@ -34,10 +34,15 @@ export class AccountService {
     .post<UserDTO>(`${this.baseURL}/auth/register`, { email: email, password: password })
     .pipe(
       tap(userDTO => {
-        this.saveUserInStore(userDTO);
         this.setJWTToSocket(userDTO.accessToken);
+        this.saveUserInStore(userDTO);
       }),
     );
+  }
+
+  logout(): void {
+    this.setJWTToSocket("");
+    this.store.dispatch(UserActions.clearUser());
   }
 
   testAll() {
