@@ -1,5 +1,6 @@
 import { MatchDTO, MatchOfferDTO } from '@live-bet/dto';
-import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Match } from './match.entity';
 import { MatchesService } from './matches.service';
 
@@ -17,7 +18,8 @@ export class MatchesController {
     findOne(@Param('id', new ParseIntPipe()) id: number): Promise<Match> {
         return this.matchesService.findOne(id);
     }
-
+    
+    @UseGuards(JwtAuthGuard)
     @Post()
     create(@Body() game: MatchDTO): Promise<Match> {
         return this.matchesService.create(game);
@@ -28,15 +30,11 @@ export class MatchesController {
         return this.matchesService.update(id, game);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Put(':id/offer')
     async updateOffer(@Body() matchOfferDTO: MatchOfferDTO): Promise<Match> {
         return await this.matchesService.updateOffer(matchOfferDTO);
     }
-
-    // @Get(':id/start')
-    // startMatch(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
-    //     return this.matchesService.startMatch(id);
-    // }
 
     @Delete(':id')
     remove(@Param('id', new ParseIntPipe()) id: number): Promise<void> {

@@ -2,10 +2,15 @@ import { Route } from '@angular/router';
 import { BookmakerComponent } from './Bookmaker/bookmaker.component';
 import { CompleteOfferViewComponent } from './Guest/complete-offer-view.component';
 import { GuestComponent } from './Guest/guest.component';
+import { authGuardFn } from './Login/auth.guard';
+import { LoginComponent } from './Login/login.component';
+import { RegisterComponent } from './Login/register.component';
 import { MatchDetailsComponent } from './MatchDetails/match-details.component';
 
 export const appRoutes: Route[] = [
-    { path: 'bookmaker', component: BookmakerComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'bookmaker', component: BookmakerComponent, canActivate: [authGuardFn] },
     { 
         path: 'guest', 
         component: GuestComponent, 

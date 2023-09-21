@@ -12,8 +12,6 @@ export class SendOfferService {
   private socket = inject(Socket);
   private httpClient: HttpClient = inject(HttpClient);
 
-  constructor() { }
-
   public sendMatchOffer(match: IMatch, mapMatchOffer: Map<number, number>) {
     const matchOfferDTO: MatchOfferDTO = {
       sportId: match.sport.id,

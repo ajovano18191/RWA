@@ -1,14 +1,15 @@
 import { inject } from "@angular/core";
 import { Actions, ROOT_EFFECTS_INIT, createEffect, ofType } from "@ngrx/effects";
+import { catchError, filter, map, of, switchMap } from "rxjs";
 import { OfferService } from "../offer.service";
-import { catchError, exhaustMap, filter, map, of, tap } from "rxjs";
 import { OddsActions } from "./odds.actions";
+import { UserActions } from "./user.actions";
 
 export const offerEffect = createEffect(
     (actions$ = inject(Actions), oddsService = inject(OfferService)) => 
     actions$.pipe(
-        ofType(ROOT_EFFECTS_INIT),
-        exhaustMap(() =>
+        ofType(ROOT_EFFECTS_INIT, UserActions.setUser, UserActions.clearUser),
+        switchMap(() =>
             oddsService.getOdds().pipe(
                 map((odds) => OddsActions.setOdds(odds)),
                 catchError((error: { message: string }) =>
