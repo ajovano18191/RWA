@@ -1,10 +1,9 @@
 import { MatchDTO, MatchOfferDTO } from '@live-bet/dto';
-import { MatchStatus } from '@live-bet/enums';
-import { Inject, Injectable } from '@nestjs/common';
+import { EventStatus, MatchStatus } from '@live-bet/enums';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SportsService } from '../sports/sports.service';
-import { SubgamesService } from '../subgames/subgames.service';
+import { Event } from '../tickets/event.entity';
 import { Match } from './match.entity';
 import { Odds } from './odds.entity';
 
@@ -15,10 +14,8 @@ export class MatchesService {
         private matchesRepository: Repository<Match>,
         @InjectRepository(Odds)
         private oddsesRepository: Repository<Odds>,
-        @Inject(SportsService)
-        private sportsService: SportsService,
-        @Inject(SubgamesService)
-        private subgamesService: SubgamesService,
+        @InjectRepository(Event)
+        private eventsRepository: Repository<Event>,
     ) {}
 
     findAll(): Promise<Match[]> {
@@ -32,8 +29,12 @@ export class MatchesService {
         });
     }
 
-    findOne(id: number): Promise<Match | null> {
-        return this.matchesRepository.findOneBy({ id });
+    async findOne(id: number): Promise<Match | null> {
+        return await this.matchesRepository
+        .createQueryBuilder("match")
+        .where("match.id = :id", {id})
+        .leftJoinAndSelect("match.oddses", "odds")
+        .getOne();
     } 
 
     async create(matchDTO: MatchDTO): Promise<Match> {
@@ -42,7 +43,6 @@ export class MatchesService {
         match.home = matchDTO.home;
         match.guest = matchDTO.guest;
         match.sportId = matchDTO.sportId;
-        // match.sport = await this.sportsService.findOne(matchDTO.sportId);
         return this.matchesRepository.save(match);
     }
 
@@ -52,7 +52,6 @@ export class MatchesService {
         match.home = matchDTO.home;
         match.guest = matchDTO.guest;
         match.sportId = matchDTO.sportId;
-        // match.sport = await this.sportsService.findOne(matchDTO.sportId);
         return this.matchesRepository.save(match);
     }
 
@@ -61,7 +60,7 @@ export class MatchesService {
         await this.oddsesRepository.delete({ matchId: match.id });
         const promiseOddses = matchOfferDTO.offers.map(async offer => ({
             matchId: match.id,
-            subgameId: offer[0],//await this.subgamesService.findOne(offer[0]),
+            subgameId: offer[0],
             value: offer[1],
         }) as Odds);
         match.oddses = await Promise.all(promiseOddses);
@@ -71,7 +70,7 @@ export class MatchesService {
 
     getMatchesOffer(): Map<number, MatchOfferDTO> {
         const completeOffer = new Map<number, MatchOfferDTO>();        
-        const matches = this.matchesRepository.find({
+        this.matchesRepository.find({
             relations: {
                 oddses: true,
             },
@@ -100,7 +99,24 @@ export class MatchesService {
         return match;
     }
 
-    async endMatch(match: Match): Promise<void> {
+    async endMatch(id: number, winnerSubgameIds: number[]): Promise<void> {
+        const match = await this.matchesRepository
+            .createQueryBuilder("match")
+            .where({ id })
+            .leftJoinAndSelect("match.events", "event")
+            .getOne();
+
+        const setWinnerSubgameIds: Set<number> = new Set<number>(winnerSubgameIds);
+        match.events.forEach(event => {
+            if(setWinnerSubgameIds.has(event.subgameId)) {
+                event.status = EventStatus.winner;
+            }
+            else {
+                event.status = EventStatus.loser;
+            }
+        });
+
+        await this.eventsRepository.save(match.events);
         await this.changeLiveStatus(match, MatchStatus.finished);
     }
 

@@ -15,8 +15,8 @@ export class MatchesController {
     }
 
     @Get(':id')
-    findOne(@Param('id', new ParseIntPipe()) id: number): Promise<Match> {
-        return this.matchesService.findOne(id);
+    async findOne(@Param('id', new ParseIntPipe()) id: number): Promise<Match> {
+        return await this.matchesService.findOne(id);
     }
     
     @UseGuards(JwtAuthGuard)
@@ -34,6 +34,12 @@ export class MatchesController {
     @Put(':id/offer')
     async updateOffer(@Body() matchOfferDTO: MatchOfferDTO): Promise<Match> {
         return await this.matchesService.updateOffer(matchOfferDTO);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Put(':id/end-match')
+    async endMatch(@Param('id', new ParseIntPipe()) id: number, @Body() winnerSubgames: number[]): Promise<void> {
+        await this.matchesService.endMatch(id, winnerSubgames);
     }
 
     @Delete(':id')
