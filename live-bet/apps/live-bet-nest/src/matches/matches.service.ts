@@ -100,7 +100,8 @@ export class MatchesService {
         return match;
     }
 
-    async endMatch(match: Match): Promise<void> {
+    async endMatch(id: number): Promise<void> {
+        const match = await this.matchesRepository.findOneBy({ id });
         await this.changeLiveStatus(match, MatchStatus.finished);
     }
 

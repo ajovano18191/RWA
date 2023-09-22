@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { IMatch } from '@live-bet/dto';
 import { MatchStatus } from '@live-bet/enums';
+import { EndMatchDialogComponent } from './end-match-dialog.component';
 import { GameComponent } from './game.component';
 import Offer from './offer';
 import { SendOfferService } from './send-offer.service';
@@ -12,7 +14,7 @@ import { SendOfferService } from './send-offer.service';
 @Component({
   selector: 'bookmaker-match',
   standalone: true,
-  imports: [MatExpansionModule, CommonModule, MatButtonModule, MatIconModule, GameComponent, ],
+  imports: [MatExpansionModule, CommonModule, MatButtonModule, MatIconModule, GameComponent, MatDialogModule, EndMatchDialogComponent,],
   template: `
     <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header>
@@ -99,7 +101,11 @@ export class MatchComponent implements OnInit {
     this.sendOfferService.startMatch(this.match, this.matchOffer);
   }
 
+  private dialog: MatDialog = inject(MatDialog);
+
   end() {
-    this.sendOfferService.endMatch(this.match.id);
+    this.dialog.open(EndMatchDialogComponent, {
+      data: this.match,
+    });
   }
 }

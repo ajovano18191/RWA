@@ -53,7 +53,6 @@ export class LiveService {
     async endMatch(id: number) {
       const match: Match = await this.matchesService.findOne(id);
       this.completeOffer.delete(match.id);
-      await this.matchesService.endMatch(match);
       this.offer$.next({ event: WsMessages.endMatch, data: {
         sportId: match.sportId,
         matchId: match.id,

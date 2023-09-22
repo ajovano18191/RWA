@@ -36,6 +36,12 @@ export class MatchesController {
         return await this.matchesService.updateOffer(matchOfferDTO);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Put(':id/end-match')
+    async endMatch(@Param('id', new ParseIntPipe()) id: number, @Body() x: any): Promise<void> {
+        await this.matchesService.endMatch(id);
+    }
+
     @Delete(':id')
     remove(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
         return this.matchesService.remove(id);

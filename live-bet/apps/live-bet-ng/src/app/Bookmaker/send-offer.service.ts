@@ -3,6 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { IMatch, MatchOfferDTO } from '@live-bet/dto';
 import { MatchStatus, WsMessages } from '@live-bet/enums';
 import { Socket } from 'ngx-socket-io';
+import { tap } from 'rxjs';
+import { SportsService } from '../sports.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +37,18 @@ export class SendOfferService {
     this.socket.emit(WsMessages.startMatch, matchOfferDTO);
   }
 
-  public endMatch(matchId: number) {
+  private sportsService: SportsService = inject(SportsService);
+
+  public endMatch(matchId: number, winnerSubgames: Map<number, number>) {
     this.socket.emit(WsMessages.endMatch, matchId);
+
+    const arrWinnerSubgames: [number, number][] = Array.from(winnerSubgames.entries());
+    this.httpClient
+    .put(`${this.baseURL}/matches/${matchId}/end-match`, arrWinnerSubgames)
+    .pipe(
+      tap(() => this.sportsService.refresh()),
+    )
+    .subscribe(p => p);
   }
 
   private map2Array(matchOffer: Map<number, number>): number[][] {
