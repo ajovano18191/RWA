@@ -42,7 +42,7 @@ export class SendOfferService {
   public endMatch(matchId: number, winnerSubgames: Map<number, number>) {
     this.socket.emit(WsMessages.endMatch, matchId);
 
-    const arrWinnerSubgames: [number, number][] = Array.from(winnerSubgames.entries());
+    const arrWinnerSubgames: number[] = Array.from(winnerSubgames.values());
     this.httpClient
     .put(`${this.baseURL}/matches/${matchId}/end-match`, arrWinnerSubgames)
     .pipe(

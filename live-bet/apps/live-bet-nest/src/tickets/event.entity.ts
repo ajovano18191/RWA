@@ -1,3 +1,4 @@
+import { EventStatus } from "@live-bet/enums";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Match } from "../matches/match.entity";
 import { Subgame } from "../subgames/subgame.entity";
@@ -31,6 +32,9 @@ export class Event {
         type: "float",
     })
     odds: number;
+
+    @Column({ default: EventStatus.notFinished, })
+    status: number;
 
     constructor(ticketId: number, matchId: number, subgameId: number, odds: number) {
         this.ticketId = ticketId;

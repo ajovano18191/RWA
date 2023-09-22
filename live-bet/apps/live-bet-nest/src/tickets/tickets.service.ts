@@ -1,9 +1,10 @@
 import { TicketDTO } from '@live-bet/dto';
-import { TicketType } from '@live-bet/enums';
+import { MatchStatus, TicketType } from '@live-bet/enums';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LiveService } from '../live/live.service';
+import { MatchesService } from '../matches/matches.service';
 import { Event } from './event.entity';
 import { Ticket } from './ticket.entity';
 
@@ -16,6 +17,8 @@ export class TicketsService {
         private eventsRepository: Repository<Event>,
         @Inject(LiveService)
         private liveService: LiveService,
+        @Inject(MatchesService)
+        private matchesService: MatchesService,
     ) {}
 
     findAll(): Promise<Ticket[]> {
@@ -30,11 +33,22 @@ export class TicketsService {
         const ticket: Ticket = this.ticketsRepository.create();
         ticket.type = ticketDTO.type;
         ticket.stake = ticketDTO.stake;
-        if(ticketDTO.type === TicketType.live) {
-            ticket.events = ticketDTO.events.map(p => new Event(ticket.id, p.matchId, p.subgameId, this.liveService.getOdds(p)));
+        ticket.events = [];
+
+        for(let oddsKey of ticketDTO.events) {
+            let match = await this.matchesService.findOne(oddsKey.matchId);
+            let oddsValue: number = 1;
+            if(match.status === MatchStatus.live) {
+                oddsValue = this.liveService.getOdds(oddsKey);
+            }
+            else if(match.status === MatchStatus.notStarted) {
+                oddsValue = match.oddses.find(odds => odds.subgameId === oddsKey.subgameId).value;
+                
+            }
+            ticket.events.push(new Event(ticket.id, match.id, oddsKey.subgameId, oddsValue));
         }
-        await this.ticketsRepository.save(ticket);
-        return ticket;
+        
+        return await this.ticketsRepository.save(ticket);
     }
 
     async update(id: number, ticketDTO: TicketDTO): Promise<Ticket> {
