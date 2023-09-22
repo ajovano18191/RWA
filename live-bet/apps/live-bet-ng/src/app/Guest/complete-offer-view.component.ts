@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ISport } from '@live-bet/dto';
 import { OfferType } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, map, switchMap } from 'rxjs';
 import { SportsService } from '../sports.service';
 import { OddsActions } from '../store/odds.actions';
 import { SportComponent } from './sport.component';
@@ -19,7 +20,7 @@ import { SportComponent } from './sport.component';
     <button (click)="onClick()">Dodaj kvotu</button>
   `,
   styles: [
-    ":host > * { text-align: center; padding: 20px 0; font-size: 30px; }",
+    ":host > * { text-align: center; font-size: 30px; }",
   ],
 })
 export class CompleteOfferViewComponent {
@@ -41,8 +42,22 @@ export class CompleteOfferViewComponent {
     // }
   }
 
-  //private recieveOfferService = inject(RecieveOfferService);
-
   private sportsService: SportsService = inject(SportsService);
-  sports$: Observable<ISport[]> = this.sportsService.getAllSports(OfferType.live);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  sports$: Observable<ISport[]> = this.route.url
+    .pipe(
+      map(p => p[0].path),
+      map(p => {
+        if(p === 'live') {
+          return OfferType.live;
+        }
+        else if(p === 'betting') {
+          return OfferType.noLive;
+        }
+        else {
+          return OfferType.all;
+        }
+      }),
+      switchMap(offerType => this.sportsService.getAllSports(offerType)),
+    );
 }

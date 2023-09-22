@@ -1,9 +1,10 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { MatchOfferDTO, Odds, OddsKey } from '@live-bet/dto';
 import { WsMessages } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Socket } from 'ngx-socket-io';
-import { Observable, concatMap, filter, from, map, merge, share, take, tap } from 'rxjs';
+import { Observable, concatMap, filter, from, map, merge, share, switchMap, take, tap } from 'rxjs';
 import { SportsService } from './sports.service';
 import { OddsActions } from './store/odds.actions';
 import { selectOdds } from './store/odds.selectors';
@@ -21,10 +22,12 @@ export class OfferService {
   getOdds(): Observable<Odds> {
     this.sub2EndMatches();
 
+    const noLiveOffer$ = this.noLiveOffer();
     const completeOffer$ = this.completeOffer();
     const offer$ = this.offer();
     const newMatche$ = this.newMatch();
-    return merge(completeOffer$, offer$, newMatche$).pipe(
+    
+    return merge(noLiveOffer$, completeOffer$, offer$, newMatche$).pipe(
       share(),
       map(matchOffer => matchOffer.offers.map(p => ({
           oddsKey: {
@@ -38,6 +41,20 @@ export class OfferService {
       concatMap(p => from(p)),
       map(p => p as Odds),
     );
+  }
+
+  private readonly baseURL = "http://localhost:3000/api";
+  private httpClient: HttpClient = inject(HttpClient);
+
+  private noLiveOffer(): Observable<MatchOfferDTO> {
+    return this.httpClient.get(`${this.baseURL}/matches`).pipe(
+      switchMap((matches: any) => from(matches)),
+      map((match: any) => ({
+        sportId: match.sportId,
+        matchId: match.id,
+        offers: match.oddses.map((odds: any) => [odds.subgameId, odds.value])
+      } as MatchOfferDTO)),
+    )
   }
 
   private completeOffer(): Observable<MatchOfferDTO> {
