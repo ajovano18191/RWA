@@ -16,14 +16,18 @@ export const appRoutes: Route[] = [
         component: GuestComponent, 
         children: [
             {
-                path: 'match-details',
-                component: MatchDetailsComponent
+                path: 'live',
+                component: CompleteOfferViewComponent,
             },
             {
-                path: '',
-                component: CompleteOfferViewComponent
+                path: 'betting',
+                component: CompleteOfferViewComponent,
+            },
+            {
+                path: 'match-details',
+                component: MatchDetailsComponent,
             },
         ], 
     },
-    { path: '', redirectTo: '/guest', pathMatch: 'full', },
+    { path: '', redirectTo: '/guest/betting', pathMatch: 'full', },
 ];

@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectMatch } from '../store/match.selector';
@@ -9,7 +9,6 @@ import { GameComponent } from './game.component';
   standalone: true,
   imports: [CommonModule, GameComponent],
   template: `
-    <div (click)="goBack()">Back</div>
     <div class="match-details grey-white">
       <div class="teams white-grey">
         <p>
@@ -33,10 +32,4 @@ import { GameComponent } from './game.component';
 export class MatchDetailsComponent {
   private store = inject(Store);
   matche$ = this.store.select(selectMatch).pipe();
-
-  private location = inject(Location);
-
-  goBack() {
-    this.location.back();
-  }
 }

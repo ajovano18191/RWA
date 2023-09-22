@@ -26,6 +26,9 @@ export class MatchesService {
             relations: {
                 oddses: true,
             },
+            where: {
+                status: MatchStatus.notStarted,
+            }
         });
     }
 
@@ -55,6 +58,7 @@ export class MatchesService {
 
     async updateOffer(matchOfferDTO: MatchOfferDTO): Promise<Match> {
         let match: Match = await this.findOne(matchOfferDTO.matchId);
+        await this.oddsesRepository.delete({ matchId: match.id });
         const promiseOddses = matchOfferDTO.offers.map(async offer => ({
             matchId: match.id,
             subgameId: offer[0],//await this.subgamesService.findOne(offer[0]),
