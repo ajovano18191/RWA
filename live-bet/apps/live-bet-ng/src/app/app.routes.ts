@@ -6,10 +6,12 @@ import { authGuardFn } from './Login/auth.guard';
 import { LoginComponent } from './Login/login.component';
 import { RegisterComponent } from './Login/register.component';
 import { MatchDetailsComponent } from './MatchDetails/match-details.component';
+import { WorkerComponent } from './Worker/worker.component';
 
 export const appRoutes: Route[] = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
+    { path: 'worker', component: WorkerComponent },
     { path: 'bookmaker', component: BookmakerComponent, canActivate: [authGuardFn], }, //canActivate: [authGuardFn]
     { 
         path: 'guest', 
