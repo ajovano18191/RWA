@@ -60,9 +60,11 @@ export class LoginComponent {
   login() {
     this.accountService.login(this.email, this.password).subscribe(user => {
       if(user.role === 'bookmaker') {
-        //this.router.navigate(['bookmaker']);
+        this.router.navigate(['bookmaker']);
       }
-      this.location.back();
+      else if(user.role === 'worker') {
+        this.router.navigate(['guest', 'betting']);
+      }
     });
   }
 

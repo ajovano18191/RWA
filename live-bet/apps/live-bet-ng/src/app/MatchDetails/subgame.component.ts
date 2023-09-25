@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, Input, OnInit, inject } from '@angular/core';
 import { IMatch, ISubgame } from '@live-bet/dto';
+import { MatchStatus } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { OddsComponent } from '../Guest/odds.component';
 import IEvent from '../ievent.model';
@@ -63,6 +64,7 @@ export class SubgameComponent implements OnInit {
     const event: IEvent = {
       home: this.match.home,
       guest: this.match.guest,
+      matchStatus: this.match.status as MatchStatus,
       gameId: this.subgame.game.id,
       gameName: this.subgame.game.name,
       subgameName: this.subgame.name,

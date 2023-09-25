@@ -1,15 +1,16 @@
+import { ITicket } from "@live-bet/dto";
+import { TicketStatus } from "@live-bet/enums";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Event } from "./event.entity";
-import { ITicket } from "@live-bet/dto";
 
 @Entity()
 export class Ticket implements ITicket {
     @PrimaryGeneratedColumn()
     id: number;
-    
-    @Column()
-    type: string;
 
+    @Column({ default: TicketStatus.payInEnabled, })
+    status: string;
+    
     @Column()
     stake: number;
 

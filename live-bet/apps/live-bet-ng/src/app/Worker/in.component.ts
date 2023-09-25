@@ -9,11 +9,13 @@ import {
   MatSnackBar,
   MatSnackBarModule
 } from '@angular/material/snack-bar';
+import { filter } from 'rxjs';
+import { TicketService } from '../ticket.service';
 
 @Component({
   selector: 'worker-in',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSnackBarModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSnackBarModule,],
   template: `
     <mat-card class="example-card">
       <mat-card-header>
@@ -49,15 +51,22 @@ export class InComponent {
   ticketId: number = 0;
   stake: number = 0;
 
+  private ticketService: TicketService = inject(TicketService);
   private snackBar: MatSnackBar = inject(MatSnackBar);
 
   payIn(): void {
-    this.snackBar.open("The ticket was successfully paid.", undefined, {
-      duration: 2000,
-      horizontalPosition: 'start',
-      verticalPosition: 'bottom',
+    this.ticketService.payIn(this.ticketId, this.stake)
+    .pipe(
+      filter(p => p),
+    )
+    .subscribe(() => {
+      this.snackBar.open("The ticket was successfully paid.", undefined, {
+        duration: 2000,
+        horizontalPosition: 'start',
+        verticalPosition: 'bottom',
+      });
+      this.ticketId = 0;
+      this.stake = 0;
     });
-    this.ticketId = 0;
-    this.stake = 0;
   }
 }

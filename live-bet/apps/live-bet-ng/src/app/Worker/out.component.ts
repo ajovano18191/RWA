@@ -1,16 +1,17 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { filter } from 'rxjs';
+import { TicketService } from '../ticket.service';
 
 @Component({
   selector: 'worker-out',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSnackBarModule,],
+  imports: [CommonModule, MatCardModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule,],
   template: `
     <mat-card class="example-card">
       <mat-card-header>
@@ -22,6 +23,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
             <mat-label>Ticket ID</mat-label>
             <input matInput type="number" [(ngModel)]="ticketId">
           </mat-form-field>
+        </div>
+        <div>
+          For payout: {{ payOutValue | number:'1.2-2' }}
         </div>
       </mat-card-content>
       <mat-card-actions>
@@ -38,15 +42,19 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 })
 export class OutComponent {
   ticketId: number = 0;
+  payOutValue: number = 0;
 
-  private snackBar: MatSnackBar = inject(MatSnackBar);
+  private ticketService: TicketService = inject(TicketService);
 
   payOut(): void {
-    this.snackBar.open("The ticket was successfully paid.", undefined, {
-      duration: 2000,
-      horizontalPosition: 'start',
-      verticalPosition: 'bottom',
+    this.payOutValue = 0;
+    this.ticketService.payOut(this.ticketId)
+    .pipe(
+      filter(p => p !== 0),
+    )
+    .subscribe(p => {
+      this.payOutValue = p;
+      this.ticketId = 0;
     });
-    this.ticketId = 0;
   }
 }

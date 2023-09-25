@@ -5,11 +5,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TicketType } from '@live-bet/enums';
+import { MatchStatus } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
-import { Observable, exhaustMap, take } from 'rxjs';
+import { Observable, combineLatest, exhaustMap, map, take } from 'rxjs';
 import IEvent from '../ievent.model';
 import { selectAllEvents, selectEventTotal } from '../store/ticket.selectors';
+import { selectUser } from '../store/user.selector';
 import { TicketService } from '../ticket.service';
 import { TicketIdDialogComponent } from './ticket-id-dialog.component';
 
@@ -30,7 +31,8 @@ import { TicketIdDialogComponent } from './ticket-id-dialog.component';
         </mat-form-field>
       </div>
       <div class="row">
-        <button mat-raised-button class="place-bet-button" (click)="placeBet()">PLACE BET</button>
+        <button mat-raised-button class="place-bet-button" *ngIf="(isTicketPlayable() | async); else notExpress" (click)="placeBet()">PLACE BET</button>
+        <ng-template #notExpress>Ticket with live events can't be express.</ng-template>
       </div>
       <div class="row">
         <div class="payout-label">Payout (RSD):</div>
@@ -69,6 +71,22 @@ export class SummaryComponent implements OnInit {
     this.eventTotal$ = this.store.select(selectEventTotal);
   }
 
+  isTicketPlayable(): Observable<boolean> {
+    return combineLatest([
+      this.event$
+      .pipe(
+        map(events => !events.some(event => event.matchStatus === MatchStatus.live)),
+      ),
+      this.store.select(selectUser)
+      .pipe(
+        map(userDTO => userDTO.role === 'worker'),
+      ),
+    ])
+    .pipe(
+      map(p => p[0] || p[1]),
+    );
+  }
+
   private ticketService: TicketService = inject(TicketService);
   private dialog: MatDialog = inject(MatDialog);
 
@@ -78,7 +96,6 @@ export class SummaryComponent implements OnInit {
       exhaustMap(events =>
         this.ticketService.placeBet({
           stake: this.stake,
-          type: TicketType.live,
           events: events.map(event => event.oddsKey),
         })
       )

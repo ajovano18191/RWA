@@ -3,6 +3,9 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable, map } from 'rxjs';
+import { selectUser } from '../store/user.selector';
 
 @Component({
   selector: 'guest-nav-bar',
@@ -15,6 +18,7 @@ import { Router } from '@angular/router';
         <mat-button-toggle value="back">Back</mat-button-toggle>
         <mat-button-toggle value="betting">Betting</mat-button-toggle>
         <mat-button-toggle value="live">Live</mat-button-toggle>
+        <mat-button-toggle *ngIf="getRole() | async" value="worker">Worker</mat-button-toggle>
       </mat-button-toggle-group>
     <div>
   `,
@@ -43,6 +47,17 @@ export class NavBarComponent {
       case "live":
         this.router.navigate(["guest", "live"]);
         break;
+      case "worker":
+        this.router.navigate(["worker"]);
+        break;
     }
+  }
+
+  private store: Store = inject(Store);
+
+  getRole(): Observable<boolean> {
+    return this.store.select(selectUser).pipe(
+      map(userDTO => userDTO.role === 'worker'),
+    );
   }
 }
