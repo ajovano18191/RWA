@@ -5,13 +5,15 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
+import { LogoutComponent } from '../Login/logout.component';
 import { selectUser } from '../store/user.selector';
 
 @Component({
   selector: 'guest-nav-bar',
   standalone: true,
-  imports: [CommonModule, MatButtonToggleModule, FormsModule],
+  imports: [CommonModule, MatButtonToggleModule, FormsModule, LogoutComponent,],
   template: `
+    <logout />
     <div class="container grey-white" >
       <p class="app-title">Live Bet</p>
       <mat-button-toggle-group [(ngModel)]="navigateTo" (change)="navigate()" aria-label="Font Style" class="grey-white">
