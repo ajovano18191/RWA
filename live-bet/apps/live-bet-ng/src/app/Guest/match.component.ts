@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IMatch, ISubgame } from '@live-bet/dto';
+import { MatchStatus } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import IEvent from '../ievent.model';
 import { MatchActions } from '../store/match.actions';
@@ -70,6 +71,7 @@ export class MatchComponent {
     const event: IEvent = {
       home: this.match.home,
       guest: this.match.guest,
+      matchStatus: this.match.status as MatchStatus,
       gameId: subgame.game.id,
       gameName: subgame.game.name,
       subgameName: subgame.name,

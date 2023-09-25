@@ -1,6 +1,6 @@
 import { TicketDTO } from '@live-bet/dto';
-import { MatchStatus, TicketType } from '@live-bet/enums';
-import { Inject, Injectable } from '@nestjs/common';
+import { EventStatus, MatchStatus, TicketStatus } from '@live-bet/enums';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LiveService } from '../live/live.service';
@@ -25,20 +25,32 @@ export class TicketsService {
         return this.ticketsRepository.find();
     }
 
-    findOne(id: number): Promise<Ticket | null> {
-        return this.ticketsRepository.findOneBy({ id });
+    async findOne(id: number): Promise<Ticket | null> {
+        return await this.ticketsRepository
+        .createQueryBuilder("ticket")
+        .where("ticket.id = :id", { id })
+        .leftJoinAndSelect("ticket.events", "event")
+        .getOne();
     } 
 
-    async create(ticketDTO: TicketDTO): Promise<Ticket> {
+    async create(ticketDTO: TicketDTO, userId: string | undefined = undefined): Promise<Ticket> {
         const ticket: Ticket = this.ticketsRepository.create();
-        ticket.type = ticketDTO.type;
         ticket.stake = ticketDTO.stake;
+        if(userId) {
+            ticket.status = TicketStatus.paidIn;
+        }
+        else {
+            ticket.status = TicketStatus.payInEnabled;
+        }
         ticket.events = [];
 
         for(let oddsKey of ticketDTO.events) {
             let match = await this.matchesService.findOne(oddsKey.matchId);
             let oddsValue: number = 1;
             if(match.status === MatchStatus.live) {
+                if(!userId) {
+                    throw new UnauthorizedException();
+                }
                 oddsValue = this.liveService.getOdds(oddsKey);
             }
             else if(match.status === MatchStatus.notStarted) {
@@ -47,18 +59,54 @@ export class TicketsService {
             }
             ticket.events.push(new Event(ticket.id, match.id, oddsKey.subgameId, oddsValue));
         }
-        
+
         return await this.ticketsRepository.save(ticket);
     }
 
     async update(id: number, ticketDTO: TicketDTO): Promise<Ticket> {
         const ticket: Ticket = await this.findOne(id);
-        ticket.type = ticketDTO.type;
-        ticket.stake = ticketDTO.stake;
-        if(ticketDTO.type === TicketType.live) {
-            ticket.events = ticketDTO.events.map(p => new Event(ticket.id, p.matchId, p.subgameId, this.liveService.getOdds(p)));
-        }        await this.ticketsRepository.save(ticket);
+        ticket.stake = ticketDTO.stake;   
+        await this.ticketsRepository.save(ticket);
         return ticket; 
+    }
+
+    async payIn(id: number, stake: number): Promise<boolean> {
+        const ticket: Ticket | null = await this.findOne(id);
+        if(ticket === null) {
+            return false;
+        }
+
+        ticket.stake = stake;
+
+        if(ticket.status === TicketStatus.payInEnabled) {
+            const isStarted = ticket.events.some(event => event.status !== EventStatus.notFinished);
+            console.log(isStarted);
+            if(isStarted) {
+                ticket.status = TicketStatus.payInDisabled;
+            }
+            else {
+                ticket.status = TicketStatus.paidIn;
+            }
+        }
+        await this.ticketsRepository.save(ticket);
+        return ticket.status === TicketStatus.paidIn;
+    }
+
+    async payOut(id: number): Promise<number> {
+        const ticket: Ticket = await this.findOne(id);
+        let stake: number = 0;
+        if(ticket.status === TicketStatus.paidIn || ticket.status === TicketStatus.winner) {
+            const isWinner = !(ticket.events.some(event => event.status !== EventStatus.winner));
+            if(isWinner) {
+                ticket.status = TicketStatus.paidOut;
+                stake = ticket.stake;
+            }
+            else {
+                ticket.status = TicketStatus.loser;
+            }
+            await this.ticketsRepository.save(ticket);    
+        }
+        return stake;
     }
 
     async remove(id: number): Promise<void> {
