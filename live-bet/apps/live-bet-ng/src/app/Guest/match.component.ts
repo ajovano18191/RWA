@@ -8,13 +8,17 @@ import IEvent from '../ievent.model';
 import { MatchActions } from '../store/match.actions';
 import { setEvent } from '../store/ticket.actions';
 import { OddsComponent } from './odds.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'guest-match',
   standalone: true,
-  imports: [CommonModule, OddsComponent,],
+  imports: [CommonModule, OddsComponent, MatIconModule,],
   template: `
     <div class="match-id grey-white">{{ match.id }}</div>
+    <div class="grey-white favorite">
+      <mat-icon>star</mat-icon>
+    </div>
     <div class="league grey-white">{{ match.league }}</div>
     <div class="home-guest-match grey-white grey-white-hover" (click)="go2MatchDetails()">
       {{ match.home }} <br> {{ match.guest }}
@@ -34,7 +38,7 @@ import { OddsComponent } from './odds.component';
   `,
   styles: [
     ":host { display: contents; }",
-    ":host > div { display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px 0; font-size: 30px; } ",
+    ":host > div { display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px 16px; font-size: 30px; } ",
     ".home-guest-match { grid-column: span 3; line-height: 1.2em; }",
     ".match-id { grid-column-start: 1; }",
     ".odds-container > * { width: 100%; height: 100%; }",
