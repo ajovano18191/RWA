@@ -51,7 +51,7 @@ export class OddsComponent implements OnInit, OnDestroy {
       filter(p => p[1] !== p[0]),
       map((p) => {
         if(p[1] > p[0]) {
-          return "limegreen";
+          return "lime";
         }
         else  {
           return "red";
