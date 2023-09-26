@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { FavoriteComponent } from '../Guest/favorite.component';
 import { selectMatch } from '../store/match.selector';
 import { GameComponent } from './game.component';
 
 @Component({
   selector: 'match-details',
   standalone: true,
-  imports: [CommonModule, GameComponent],
+  imports: [CommonModule, GameComponent, FavoriteComponent,],
   template: `
     <div class="match-details grey-white">
       <div class="teams white-grey">
+        <guest-favorite [match]="(matche$ | async)!" />
         <p>
           {{ (matche$ | async)?.home }}
           <br>
@@ -25,8 +27,8 @@ import { GameComponent } from './game.component';
   styles: [
     ".match-details { padding: 10px; }",
     ".games { display: grid; grid-template-columns: repeat(3, auto); column-gap: 20px; margin-top: -20px; }",
-    ".teams { margin-left: auto; margin-right: auto; width: fit-content; padding-block: 0.5em; padding-inline: 0.5em; font-size: 3em; line-height: 1.2em; }",
-    ".teams > p { margin: 0px }",
+    ".teams { margin-left: auto; margin-right: auto; width: fit-content; padding-block: 0.5em; padding-inline: 0.5em; font-size: 3em; line-height: 1.2em; display: flex; align-items: center; }",
+    ".teams > p { margin: 0px; margin-left: 16px; }",
   ],
 })
 export class MatchDetailsComponent {

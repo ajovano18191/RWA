@@ -1,27 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { IMatch, ISubgame } from '@live-bet/dto';
 import { MatchStatus } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
-import { Observable, map } from 'rxjs';
 import IEvent from '../ievent.model';
-import { setOrDeleteFavorite } from '../store/favorite.actions';
-import { selectFavoriteIds } from '../store/favorite.selectors';
 import { MatchActions } from '../store/match.actions';
 import { setOrDeleteEvent } from '../store/ticket.actions';
+import { FavoriteComponent } from './favorite.component';
 import { OddsContainerComponent } from './odds-container.component';
-import { OddsComponent } from './odds.component';
 
 @Component({
   selector: 'guest-match',
   standalone: true,
-  imports: [CommonModule, OddsComponent, MatIconModule, OddsContainerComponent,],
+  imports: [CommonModule, MatIconModule, OddsContainerComponent, FavoriteComponent,],
   template: `
     <div class="match-id grey-white">{{ match.id }}</div>
-    <div class="grey-white favorite">
-      <mat-icon (click)="test()" [ngStyle]="{'color': textColor$ | async}">star</mat-icon>
+    <div class="grey-white">
+      <guest-favorite [match]="match" />
     </div>
     <div class="league grey-white">{{ match.league }}</div>
     <div class="home-guest-match grey-white grey-white-hover" (click)="go2MatchDetails()">
@@ -36,7 +33,7 @@ import { OddsComponent } from './odds.component';
     ".match-id { grid-column-start: 1; }",
   ],
 })
-export class MatchComponent implements OnInit {
+export class MatchComponent {
   @Input() match: IMatch = {
     id: 0,
     home: '',
@@ -58,21 +55,6 @@ export class MatchComponent implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
 
-  textColor$ = new Observable<string>();
-
-  ngOnInit(): void {
-    this.textColor$ = this.store.select(selectFavoriteIds)
-    .pipe(
-      map(ids => ids as number[]),
-      map(ids => {
-        return ids.includes(this.match.id) ? 'gold' : '';
-      })
-    );
-  }
-
-  test() {
-    this.store.dispatch(setOrDeleteFavorite({ match: this.match, }));
-  }
 
   go2MatchDetails() {
     this.store.dispatch(MatchActions.setMatch(this.match));
