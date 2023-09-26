@@ -19,7 +19,7 @@ import { SubgameComponent } from './subgame.component';
       <guest-match *ngFor="let match of sport.matches" [match]="match" />
   `,
   styles: [
-    ":host { display: grid; grid-template-columns: repeat(14, auto); row-gap: 2.5px; padding: 10px; }",
+    ":host { display: grid; grid-template-columns: repeat(14, auto); row-gap: 2.5px; padding: 10px; overflow-x: auto; }",
     ":host > * { text-align: center; padding: 20px 0; font-size: 30px; }",
     ".match-id { grid-column-start: 1; }",
     ".sport-name { grid-column: 1 / span 5; }",
