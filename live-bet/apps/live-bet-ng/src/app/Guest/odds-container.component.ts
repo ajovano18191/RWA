@@ -1,32 +1,46 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, Input, OnInit, inject } from '@angular/core';
+import { Component, HostBinding, HostListener, Input, OnInit, inject } from '@angular/core';
 import { IMatch, ISubgame, OddsKey } from '@live-bet/dto';
 import { MatchStatus } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
-import { OddsComponent } from '../Guest/odds.component';
 import IEvent from '../ievent.model';
-import { selectMatch } from '../store/match.selector';
 import { setOrDeleteEvent } from '../store/ticket.actions';
 import { selectAllEvents } from '../store/ticket.selectors';
+import { OddsComponent } from './odds.component';
 
 @Component({
-  selector: 'match-details-subgame',
+  selector: 'guest-odds-container',
   standalone: true,
   imports: [CommonModule, OddsComponent,],
   template: `
     <div class="container" [ngStyle]="{'background-color': classe$ | async}" [ngClass]="subgame.isPlayable ? 'grey-white-hover' : ''">
-      <div class="subgame-name">{{ subgame.name }}</div>
-      <guest-odds [odds]="{ sportId: subgame.game.sport.id, matchId: (matche$ | async)!.id, subgameId: subgame.id }" class="white-grey" />
+      <guest-odds 
+        [odds]="oddsKey" 
+        class="grey-white"
+      />
     </div>
   `,
   styles: [
-    
-    ".container { display: flex; justify-content: space-between; font-size: 24px; padding: 10px; } ",
+    ".container { display: flex; justify-content: center; align-items: center; text-align: center; font-size: 30px; width: 100%; height: 100%; } ",
     ".container > * { width: 100%; height: 100%; }",
   ],
 })
-export class SubgameComponent implements OnInit {
+export class OddsContainerComponent implements OnInit {
+  @Input() match: IMatch = {
+    id: 0,
+    home: '',
+    guest: '',
+    league: '',
+    status: 'live',
+    sport: {
+      id: 0,
+      name: '',
+      games: [],
+      matches: [],
+    },
+  };
+
   @Input() subgame: ISubgame = {
     id: 0,
     name: '',
@@ -40,31 +54,14 @@ export class SubgameComponent implements OnInit {
         name: '',
         games: [],
         matches: [],
-      },
+      }
     },
   };
 
-  private store = inject(Store);
-  matche$ = this.store.select(selectMatch);
-
-  private match: IMatch = {
-    id: 0,
-    league: '',
-    home: '',
-    guest: '',
-    status: 'live',
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
-
-  classe$ = new Observable<string>();
+  @HostBinding('class') hoverClass = '';
 
   ngOnInit(): void {
-    this.matche$.subscribe(match => this.match = match);
+    this.hoverClass = this.subgame.isPlayable ? 'grey-white-hover' : '';
     this.classe$ = this.store.select(selectAllEvents)
     .pipe(
       map(events => events.map(event => event.oddsKey)),
@@ -74,7 +71,7 @@ export class SubgameComponent implements OnInit {
           return 'rgb(200, 200, 200)';
         }
         else {
-          return 'white';
+          return 'rgb(100, 100, 100)';
         }
       })
     );
@@ -87,6 +84,10 @@ export class SubgameComponent implements OnInit {
       subgameId: this.subgame.id,
     } as OddsKey;
   }
+
+  private store = inject(Store);
+
+  classe$ = new Observable<string>();
 
   @HostListener('click')
   add2Ticket() {
@@ -102,10 +103,9 @@ export class SubgameComponent implements OnInit {
         matchId: this.match.id,
         subgameId: this.subgame.id,
       }
-    };
+    }
     if(this.subgame.isPlayable) {
       this.store.dispatch(setOrDeleteEvent({ event }));
     }
   }
 }
-// ":host { display: flex; justify-content: space-between; padding: 10px; font-size: 24px; }",

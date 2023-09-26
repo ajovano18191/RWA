@@ -7,6 +7,7 @@ import { OfferType } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Observable, map, switchMap } from 'rxjs';
 import { SportsService } from '../sports.service';
+import { selectAllFavorites } from '../store/favorite.selectors';
 import { OddsActions } from '../store/odds.actions';
 import { SportComponent } from './sport.component';
 
@@ -27,6 +28,12 @@ import { SportComponent } from './sport.component';
           <span class="mat-tab-label">{{ sport.name }}</span>
         </ng-template>
         <guest-sport [sport]="sport" class="white-grey" />
+      </mat-tab>
+      <mat-tab label="Favorites">
+        <ng-template mat-tab-label>
+          <span class="mat-tab-label">Favorites</span>
+        </ng-template>
+        <guest-sport *ngFor="let sport of favoriteSport$ | async" [sport]="sport" class="white-grey" />
       </mat-tab>
     </mat-tab-group>
     <button (click)="onClick()">Dodaj kvotu</button>
@@ -57,20 +64,38 @@ export class CompleteOfferViewComponent {
 
   private sportsService: SportsService = inject(SportsService);
   private route: ActivatedRoute = inject(ActivatedRoute);
-  sports$: Observable<ISport[]> = this.route.url
-    .pipe(
-      map(p => p[0].path),
-      map(p => {
-        if(p === 'live') {
-          return OfferType.live;
-        }
-        else if(p === 'betting') {
-          return OfferType.noLive;
-        }
-        else {
-          return OfferType.all;
-        }
-      }),
+
+  private offerType$ = this.route.url
+  .pipe(
+    map(p => p[0].path),
+    map(p => {
+      if(p === 'live') {
+        return OfferType.live;
+      }
+      else if(p === 'betting') {
+        return OfferType.noLive;
+      }
+      else {
+        return OfferType.all;
+      }
+    })
+  );
+
+  sports$: Observable<ISport[]> = this.offerType$.pipe(
       switchMap(offerType => this.sportsService.getAllSports(offerType)),
-    );
+  );
+
+  favoriteSport$ = this.store.select(selectAllFavorites)
+  .pipe(
+    map(matches =>  {
+      const sportsMap = new Map<number, ISport>();
+      matches.forEach(match => {
+        sportsMap.set(match.sport.id, {...match.sport, matches: [], });
+      });
+      matches.forEach(match => {
+        sportsMap.get(match.sport.id)?.matches.push(match);
+      })
+      return Array.from(sportsMap.values());
+    }),
+  );
 }
