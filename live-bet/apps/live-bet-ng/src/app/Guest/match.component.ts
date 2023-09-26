@@ -11,12 +11,13 @@ import { setOrDeleteFavorite } from '../store/favorite.actions';
 import { selectFavoriteIds } from '../store/favorite.selectors';
 import { MatchActions } from '../store/match.actions';
 import { setEvent } from '../store/ticket.actions';
+import { OddsContainerComponent } from './odds-container.component';
 import { OddsComponent } from './odds.component';
 
 @Component({
   selector: 'guest-match',
   standalone: true,
-  imports: [CommonModule, OddsComponent, MatIconModule,],
+  imports: [CommonModule, OddsComponent, MatIconModule, OddsContainerComponent,],
   template: `
     <div class="match-id grey-white">{{ match.id }}</div>
     <div class="grey-white favorite">
@@ -26,25 +27,13 @@ import { OddsComponent } from './odds.component';
     <div class="home-guest-match grey-white grey-white-hover" (click)="go2MatchDetails()">
       {{ match.home }} <br> {{ match.guest }}
     </div>
-    <div 
-      class="odds-container grey-white" 
-      *ngFor="let subgame of getSubgames" 
-      [ngClass]="subgame.isPlayable ?  'grey-white-hover' : ''" 
-      (click)="add2Ticket(subgame)" 
-    >
-      <guest-odds 
-        [odds]="{ sportId: match.sport.id, matchId: match.id, subgameId: subgame.id }" 
-        class="grey-white"
-        [ngClass]="subgame.isPlayable ?  'grey-white-hover' : ''"
-      />
-    </div>
+    <guest-odds-container *ngFor="let subgame of getSubgames" [subgame]="subgame" [match]="match" class="grey-white" />
   `,
   styles: [
     ":host { display: contents; }",
     ":host > div { display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px 16px; font-size: 30px; } ",
     ".home-guest-match { grid-column: span 3; line-height: 1.2em; }",
     ".match-id { grid-column-start: 1; }",
-    ".odds-container > * { width: 100%; height: 100%; }",
   ],
 })
 export class MatchComponent implements OnInit {
