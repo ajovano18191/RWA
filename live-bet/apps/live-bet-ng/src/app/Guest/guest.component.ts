@@ -20,9 +20,10 @@ import { NavBarComponent } from './nav-bar.component';
     </div>
   `,
   styles: [
-    ".container { display: flex; flex-flow: row wrap; justify-content: space-between; }",
-    ".router { flex: 1; min-width: 850px; }",
-    ".ticket { flex: 1; min-width: 270px; max-width: 400px; }",
+    ".container { display: flex; flex-flow: row wrap; }",
+    ".router { flex: 1; max-width: calc(100% - 400px); }",
+    ".ticket { width: 400px; }",
+    "@media (max-width: 1332px){ .container { flex-direction: column; } .router { max-width: 100%; } }",
   ],
 })
 export class GuestComponent {}
