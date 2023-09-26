@@ -25,7 +25,7 @@ import { selectUser } from '../store/user.selector';
     <div>
   `,
   styles: [
-    ":host { position: sticky; top: 0; }",
+    ":host { position: sticky; top: 0; z-index: 1000; width: 100%; }",
     ".container { display:flex; flex-flow: row wrap; padding: 12px; }",
     ".app-title { font-size: 36px; margin-top: 12px; max-width: 400px; min-width: 150px; flex: 1; }",
     "mat-button-toggle-group { display: flex; }",
