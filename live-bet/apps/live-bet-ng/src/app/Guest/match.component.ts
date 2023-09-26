@@ -10,7 +10,7 @@ import IEvent from '../ievent.model';
 import { setOrDeleteFavorite } from '../store/favorite.actions';
 import { selectFavoriteIds } from '../store/favorite.selectors';
 import { MatchActions } from '../store/match.actions';
-import { setEvent } from '../store/ticket.actions';
+import { setOrDeleteEvent } from '../store/ticket.actions';
 import { OddsContainerComponent } from './odds-container.component';
 import { OddsComponent } from './odds.component';
 
@@ -94,7 +94,7 @@ export class MatchComponent implements OnInit {
       }
     }
     if(subgame.isPlayable) {
-      this.store.dispatch(setEvent({ event }));
+      this.store.dispatch(setOrDeleteEvent({ event }));
     }
   }
 }

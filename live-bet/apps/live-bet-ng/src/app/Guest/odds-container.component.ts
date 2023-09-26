@@ -5,7 +5,7 @@ import { MatchStatus } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 import IEvent from '../ievent.model';
-import { setEvent } from '../store/ticket.actions';
+import { setOrDeleteEvent } from '../store/ticket.actions';
 import { selectAllEvents } from '../store/ticket.selectors';
 import { OddsComponent } from './odds.component';
 
@@ -105,7 +105,7 @@ export class OddsContainerComponent implements OnInit {
       }
     }
     if(this.subgame.isPlayable) {
-      this.store.dispatch(setEvent({ event }));
+      this.store.dispatch(setOrDeleteEvent({ event }));
     }
   }
 }

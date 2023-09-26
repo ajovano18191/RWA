@@ -7,7 +7,7 @@ import { Observable, map } from 'rxjs';
 import { OddsComponent } from '../Guest/odds.component';
 import IEvent from '../ievent.model';
 import { selectMatch } from '../store/match.selector';
-import { setEvent } from '../store/ticket.actions';
+import { setOrDeleteEvent } from '../store/ticket.actions';
 import { selectAllEvents } from '../store/ticket.selectors';
 
 @Component({
@@ -104,7 +104,7 @@ export class SubgameComponent implements OnInit {
       }
     };
     if(this.subgame.isPlayable) {
-      this.store.dispatch(setEvent({ event }));
+      this.store.dispatch(setOrDeleteEvent({ event }));
     }
   }
 }

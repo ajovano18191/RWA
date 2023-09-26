@@ -18,7 +18,14 @@ export const initialState: State = adapter.getInitialState({
 
 export const ticketReducer = createReducer(
     initialState,
-    on(TicketActions.setEvent, (state, { event }) => {
+    on(TicketActions.setOrDeleteEvent, (state, { event }) => {
+        const matchId = (state.ids as number[]).filter((id: number) => id === event.oddsKey.matchId)[0];
+        if(matchId) {
+            const foundedEvent = state.entities[matchId]!;
+            if(foundedEvent.oddsKey.subgameId === event.oddsKey.subgameId) {
+                return adapter.removeOne(event.oddsKey.matchId, state);
+            }
+        }
         return adapter.setOne(event, state);
     }),
     on(TicketActions.deleteEvent, (state, { matchId }) => {
