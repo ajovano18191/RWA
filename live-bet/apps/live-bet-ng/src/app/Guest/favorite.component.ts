@@ -45,6 +45,6 @@ export class FavoriteComponent implements OnInit {
   }
 
   setOrDeleteFavorite() {
-    this.store.dispatch(setOrDeleteFavorite({ match: this.match, }));
+    this.store.dispatch(setOrDeleteFavorite(this.match));
   }
 }

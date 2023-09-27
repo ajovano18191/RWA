@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostBinding, HostListener, Input, OnInit, inject } from '@angular/core';
 import { IMatch, ISubgame, OddsKey } from '@live-bet/dto';
-import { MatchStatus } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
-import IEvent from '../ievent.model';
 import { setOrDeleteEvent } from '../store/ticket.actions';
 import { selectAllEvents } from '../store/ticket.selectors';
 import { OddsComponent } from './odds.component';
@@ -80,21 +78,8 @@ export class OddsContainerComponent implements OnInit {
 
   @HostListener('click')
   add2Ticket() {
-    const event: IEvent = {
-      home: this.match.home,
-      guest: this.match.guest,
-      matchStatus: this.match.status as MatchStatus,
-      gameId: this.subgame.game.id,
-      gameName: this.subgame.game.name,
-      subgameName: this.subgame.name,
-      oddsKey: {
-        sportId: this.match.sport.id,
-        matchId: this.match.id,
-        subgameId: this.subgame.id,
-      }
-    }
     if(this.subgame.isPlayable) {
-      this.store.dispatch(setOrDeleteEvent({ event }));
+      this.store.dispatch(setOrDeleteEvent({ match: this.match, subgame: this.subgame, }));
     }
   }
 }

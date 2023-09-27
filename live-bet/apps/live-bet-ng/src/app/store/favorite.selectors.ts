@@ -1,6 +1,8 @@
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromFavorite from './favorite.reducer';
 
+const selectors = fromFavorite.adapter.getSelectors();
+
 export interface State {
     favorites: fromFavorite.State;
 }
@@ -13,20 +15,20 @@ export const selectFavoriteState = createFeatureSelector<fromFavorite.State>('fa
 
 export const selectFavoriteIds = createSelector(
     selectFavoriteState,
-    fromFavorite.selectFavoriteIds
+    selectors.selectIds
 );
 
 export const selectFavoriteEntities = createSelector(
     selectFavoriteState,
-    fromFavorite.selectFavoriteEntities
+    selectors.selectEntities
 );
 
 export const selectAllFavorites = createSelector(
     selectFavoriteState,
-    fromFavorite.selectAllFavorites
+    selectors.selectAll
 );
 
 export const selectFavoriteTotal = createSelector(
     selectFavoriteState,
-    fromFavorite.selectFavoriteTotal
+    selectors.selectTotal
 );

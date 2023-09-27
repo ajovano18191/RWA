@@ -1,11 +1,11 @@
+import { IMatch, ISubgame } from '@live-bet/dto';
+import { MatchStatus } from '@live-bet/enums';
 import { EntityAdapter, EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import IEvent from '../ievent.model';
 import * as TicketActions from "./ticket.actions";
 
-export interface State extends EntityState<IEvent> {
-    selectedEventId: number | null;
-}
+export interface State extends EntityState<IEvent> { }
 
 export const adapter: EntityAdapter<IEvent> = createEntityAdapter<IEvent>({
     selectId: (p) => p.oddsKey.matchId,
@@ -13,20 +13,19 @@ export const adapter: EntityAdapter<IEvent> = createEntityAdapter<IEvent>({
 
 export const initialState: State = adapter.getInitialState({
     ids: [] = [],
-    selectedEventId: null,
 });
 
 export const ticketReducer = createReducer(
     initialState,
-    on(TicketActions.setOrDeleteEvent, (state, { event }) => {
-        const matchId = (state.ids as number[]).filter((id: number) => id === event.oddsKey.matchId)[0];
+    on(TicketActions.setOrDeleteEvent, (state, { match, subgame, }) => {
+        const matchId = (state.ids as number[]).filter((id: number) => id === match.id)[0];
         if(matchId) {
             const foundedEvent = state.entities[matchId]!;
-            if(foundedEvent.oddsKey.subgameId === event.oddsKey.subgameId) {
-                return adapter.removeOne(event.oddsKey.matchId, state);
+            if(foundedEvent.oddsKey.subgameId === subgame.id) {
+                return adapter.removeOne(match.id, state);
             }
         }
-        return adapter.setOne(event, state);
+        return adapter.setOne(matchAndSubgame2Event(match, subgame), state);
     }),
     on(TicketActions.deleteEvent, (state, { matchId }) => {
         return adapter.removeOne(matchId, state);
@@ -36,23 +35,18 @@ export const ticketReducer = createReducer(
     }),
 );
 
-export const getSelectedEventId = (state: State) => state.selectedEventId;
-
-const {
-    selectIds,
-    selectEntities,
-    selectAll,
-    selectTotal,
-  } = adapter.getSelectors();
-
-// select the array of user ids
-export const selectEventIds = selectIds;
- 
-// select the dictionary of user entities
-export const selectEventEntities = selectEntities;
-
-// select the array of users
-export const selectAllEvents = selectAll;
- 
-// select the total user count
-export const selectEventTotal = selectTotal;
+function matchAndSubgame2Event(match: IMatch, subgame: ISubgame): IEvent {
+    return {
+        home: match.home,
+        guest: match.guest,
+        matchStatus: match.status as MatchStatus,
+        gameId: subgame.game.id,
+        gameName: subgame.game.name,
+        subgameName: subgame.name,
+        oddsKey: {
+          sportId: match.sport.id,
+          matchId: match.id,
+          subgameId: subgame.id,
+        }
+    };
+}
