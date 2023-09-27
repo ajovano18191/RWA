@@ -55,17 +55,9 @@ export class LoginComponent {
 
   private accountService: AccountService = inject(AccountService);
   private router: Router = inject(Router);
-  private location: Location = inject(Location);
 
   login() {
-    this.accountService.login(this.email, this.password).subscribe(user => {
-      if(user.role === 'bookmaker') {
-        this.router.navigate(['bookmaker']);
-      }
-      else if(user.role === 'worker') {
-        this.router.navigate(['guest', 'betting']);
-      }
-    });
+    this.accountService.login(this.email, this.password);;
   }
 
   go2Register() {

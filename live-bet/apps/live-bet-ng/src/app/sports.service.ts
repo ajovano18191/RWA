@@ -2,13 +2,13 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { GameDTO, ISport, MatchDTO } from "@live-bet/dto";
 import { OfferType } from "@live-bet/enums";
-import { BehaviorSubject, Observable, exhaustMap, map, shareReplay, tap } from "rxjs";
+import { BehaviorSubject, Observable, exhaustMap, shareReplay, tap } from "rxjs";
+import { baseURL } from "./const";
 
 @Injectable({
     providedIn: 'root',
   })
 export class SportsService {
-    private readonly baseURL = "http://localhost:3000/api";
     private httpClient: HttpClient = inject(HttpClient);
 
     private getResponse$ = new BehaviorSubject<ISport[]>([]);
@@ -17,13 +17,12 @@ export class SportsService {
         return this.getResponse$.pipe(
             exhaustMap(() => 
                 this.httpClient
-                .get(`${this.baseURL}/sports`, {
+                .get<ISport[]>(`${baseURL}/sports`, {
                     params: {
                         offerType: offerType,
                     },
                 })
                 .pipe(
-                    map(p => <ISport[]>p),
                     tap(sports => {
                         sports.forEach(sport => {
                             sport.matches.forEach(match => match.sport = sport);
@@ -43,15 +42,15 @@ export class SportsService {
     }
 
     postGame(gameDTO: GameDTO) {
-        this.httpClient.post(`${this.baseURL}/games`, gameDTO).subscribe(() => this.refresh());
+        this.httpClient.post(`${baseURL}/games`, gameDTO).subscribe(() => this.refresh());
     }
 
     deleteGame(gameId: number) {
-        this.httpClient.delete(`${this.baseURL}/games/${gameId}`).subscribe(() => this.refresh());
+        this.httpClient.delete(`${baseURL}/games/${gameId}`).subscribe(() => this.refresh());
     }
 
     postMatch(matchDTO: MatchDTO) {
-        this.httpClient.post(`${this.baseURL}/matches`, matchDTO).subscribe(() => this.refresh());
+        this.httpClient.post(`${baseURL}/matches`, matchDTO).subscribe(() => this.refresh());
     }
 
     refresh(): void {

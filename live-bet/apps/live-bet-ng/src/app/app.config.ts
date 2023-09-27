@@ -8,21 +8,16 @@ import {
 import { provideEffects } from '@ngrx/effects';
 import { StoreModule, provideStore } from '@ngrx/store';
 import { StoreDevtoolsModule, provideStoreDevtools } from '@ngrx/store-devtools';
-import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { SocketIoModule } from 'ngx-socket-io';
 import { AuthInterceptor } from './Login/auth.interceptor';
 import { appRoutes } from './app.routes';
+import { socketIoConfig } from './const';
 import { favoriteReducer } from './store/favorite.reducer';
 import { matchReducer } from './store/match.reducer';
 import { oddsReducer } from './store/odds.reducer';
 import * as offerEffects from './store/offers.effects';
 import { ticketReducer } from './store/ticket.reducer';
 import { userReducer } from './store/user.reducer';
-
-
-
-export const socketIoConfig: SocketIoConfig = { url: 'http://localhost:3000', options: {
-  extraHeaders: { Authorization: `Bearer ` }
-} };
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -33,7 +28,7 @@ export const appConfig: ApplicationConfig = {
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     importProvidersFrom(StoreModule.forRoot({ odds: oddsReducer, match: matchReducer, ticket: ticketReducer, user: userReducer, favorite: favoriteReducer, })),
     importProvidersFrom(StoreDevtoolsModule.instrument()),
-    provideHttpClient(withInterceptors([AuthInterceptor])),
+    provideHttpClient(withInterceptors([AuthInterceptor]), ),
     provideEffects(offerEffects),
-],
+  ],
 };
