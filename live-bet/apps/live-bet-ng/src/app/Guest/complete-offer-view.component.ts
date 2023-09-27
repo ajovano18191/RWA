@@ -7,7 +7,7 @@ import { OfferType } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Observable, map, switchMap } from 'rxjs';
 import { SportsService } from '../sports.service';
-import { selectAllFavorites } from '../store/favorite.selectors';
+import { selectAllFavorites, selectFavoriteTotal } from '../store/favorite.selectors';
 import { OddsActions } from '../store/odds.actions';
 import { SportComponent } from './sport.component';
 
@@ -31,7 +31,7 @@ import { SportComponent } from './sport.component';
       </mat-tab>
       <mat-tab label="Favorites">
         <ng-template mat-tab-label>
-          <span class="mat-tab-label">Favorites</span>
+          <span class="mat-tab-label">Favorites {{ numOfFavoriteMatche$ | async }}</span>
         </ng-template>
         <guest-sport *ngFor="let sport of favoriteSport$ | async" [sport]="sport" class="white-grey" />
       </mat-tab>
@@ -98,4 +98,6 @@ export class CompleteOfferViewComponent {
       return Array.from(sportsMap.values());
     }),
   );
+
+  numOfFavoriteMatche$ = this.store.select(selectFavoriteTotal);
 }
