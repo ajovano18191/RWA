@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { IGame, ISport, ISubgame } from '@live-bet/dto';
+import { IGame, ISport, ISubgame, newISport } from '@live-bet/dto';
 import { GameComponent } from './game.component';
 import { MatchComponent } from './match.component';
 import { SubgameComponent } from './subgame.component';
@@ -38,12 +38,7 @@ import { SubgameComponent } from './subgame.component';
   ],
 })
 export class SportComponent {
-  @Input() sport: ISport = {
-    id: 0,
-    name: '',
-    matches: [],
-    games: [],
-  };
+  @Input() sport: ISport = newISport();
 
   get getGames(): IGame[] {
     return this.sport.games.slice(0, 3);

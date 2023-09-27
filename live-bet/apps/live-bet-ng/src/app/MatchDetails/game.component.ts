@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { IGame } from '@live-bet/dto';
+import { IGame, newIGame } from '@live-bet/dto';
 import { SubgameComponent } from './subgame.component';
 
 @Component({
@@ -17,15 +17,5 @@ import { SubgameComponent } from './subgame.component';
   ],
 })
 export class GameComponent {
-  @Input() game: IGame = {
-    id: 0,
-    name: '',
-    subgames: [],
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
+  @Input() game: IGame = newIGame();
 }

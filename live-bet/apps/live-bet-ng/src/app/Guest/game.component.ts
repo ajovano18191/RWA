@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { IGame } from '@live-bet/dto';
+import { IGame, newIGame } from '@live-bet/dto';
 
 @Component({
   selector: 'guest-game',
@@ -14,15 +14,5 @@ import { IGame } from '@live-bet/dto';
   ],
 })
 export class GameComponent {
-  @Input() game: IGame = {
-    id: 0,
-    name: '',
-    subgames: [],
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    }
-  };
+  @Input() game: IGame = newIGame();
 }

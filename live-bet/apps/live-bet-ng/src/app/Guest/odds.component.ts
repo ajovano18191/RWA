@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
-import { Odds, OddsKey } from '@live-bet/dto';
+import { Odds, OddsKey, newOddsKey } from '@live-bet/dto';
 import { Observable, delay, filter, map, merge, pairwise, share, tap } from 'rxjs';
 import { OfferService } from '../offer.service';
 
@@ -20,11 +20,7 @@ import { OfferService } from '../offer.service';
 })
 export class OddsComponent implements OnInit, OnDestroy {
   // display: flex; justify-content: flex-end; align-items: center; 
-  @Input() odds: OddsKey = {
-    sportId: 0,
-    matchId: 0,
-    subgameId: 0,
-  }
+  @Input() oddsKey: OddsKey = newOddsKey();
 
   @Output() oddChangeEvent = new EventEmitter<Odds>();
 
@@ -33,11 +29,11 @@ export class OddsComponent implements OnInit, OnDestroy {
   textColor$: Observable<string> = new Observable<string>();
 
   ngOnInit(): void {
-    this.oddse$ = this.offerService.oddsSelector(this.odds)
+    this.oddse$ = this.offerService.oddsSelector(this.oddsKey)
     .pipe(
       tap(p => 
         this.oddChangeEvent.emit({
-          oddsKey: this.odds,
+          oddsKey: this.oddsKey,
           value: p,
         })
       ),
@@ -71,7 +67,7 @@ export class OddsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.oddChangeEvent.emit({
-      oddsKey: this.odds,
+      oddsKey: this.oddsKey,
       value: 1,
     })
   }

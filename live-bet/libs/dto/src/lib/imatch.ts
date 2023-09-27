@@ -8,3 +8,19 @@ export interface IMatch {
     status: string;
     sport: ISport;
 }
+
+export function newIMatch(): IMatch {
+    return {
+        id: 0,
+        home: '',
+        guest: '',
+        league: '',
+        status: 'live',
+        sport: {
+          id: 0,
+          name: '',
+          games: [],
+          matches: [],
+        },
+    };
+}

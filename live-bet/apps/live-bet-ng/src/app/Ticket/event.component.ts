@@ -6,7 +6,7 @@ import { Odds } from '@live-bet/dto';
 import { MatchStatus } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { OddsComponent } from '../Guest/odds.component';
-import IEvent from '../ievent.model';
+import IEvent, { newIEvent } from '../ievent.model';
 import { deleteEvent } from '../store/ticket.actions';
 
 @Component({
@@ -27,7 +27,7 @@ import { deleteEvent } from '../store/ticket.actions';
         {{ event.gameName }}
       </div>
       <div class="subgame-name">{{ event.subgameName }}</div>
-      <guest-odds [odds]="event.oddsKey" (oddChangeEvent)="oddChangeEvent.emit($event)" />
+      <guest-odds [oddsKey]="event.oddsKey" (oddChangeEvent)="oddChangeEvent.emit($event)" />
     </div>
   `,
   styles: [
@@ -38,19 +38,7 @@ import { deleteEvent } from '../store/ticket.actions';
   ],
 })
 export class EventComponent {
-  @Input() event: IEvent = {
-    home: 'string',
-    guest: 'string',
-    matchStatus: MatchStatus.notStarted,
-    gameId: 0,
-    gameName: 'string',
-    subgameName: 'string',
-    oddsKey: {
-      sportId: 0,
-      matchId: 0,
-      subgameId: 0,
-    },
-  };
+  @Input() event: IEvent = newIEvent();
 
   @Output() oddChangeEvent = new EventEmitter<Odds>();
 

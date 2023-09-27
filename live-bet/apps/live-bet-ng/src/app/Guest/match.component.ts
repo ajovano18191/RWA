@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { IGame, IMatch, ISubgame } from '@live-bet/dto';
+import { IGame, IMatch, ISubgame, newIMatch } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
 import { MatchActions } from '../store/match.actions';
 import { FavoriteComponent } from './favorite.component';
@@ -36,19 +36,7 @@ import { OddsContainerComponent } from './odds-container.component';
   ],
 })
 export class MatchComponent {
-  @Input() match: IMatch = {
-    id: 0,
-    home: '',
-    guest: '',
-    league: '',
-    status: 'live',
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
+  @Input() match: IMatch = newIMatch();
 
   get getGames(): IGame[] {
     return this.match.sport.games.slice(0, 3);

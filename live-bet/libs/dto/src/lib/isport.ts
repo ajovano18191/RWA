@@ -6,3 +6,12 @@ export interface ISport {
     games: IGame[];
     matches: IMatch[];
 }
+
+export function newISport(): ISport {
+    return {
+        id: 0,
+        name: '',
+        matches: [],
+        games: [],
+    };
+}

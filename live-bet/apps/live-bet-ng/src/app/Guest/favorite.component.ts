@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { IMatch } from '@live-bet/dto';
+import { IMatch, newIMatch } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 import { setOrDeleteFavorite } from '../store/favorite.actions';
@@ -19,19 +19,7 @@ import { selectFavoriteIds } from '../store/favorite.selectors';
   ],
 })
 export class FavoriteComponent implements OnInit {
-  @Input() match: IMatch = {
-    id: 0,
-    home: '',
-    guest: '',
-    league: '',
-    status: 'live',
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
+  @Input() match: IMatch = newIMatch();
 
   private store = inject(Store);
   textColor$ = new Observable<string>();

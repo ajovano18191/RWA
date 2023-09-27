@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { IGame } from '@live-bet/dto';
+import { IGame, newIGame } from '@live-bet/dto';
 import { SportsService } from '../sports.service';
 import Offer from './offer';
 import { SubgameComponent } from './subgame.component';
@@ -27,17 +27,7 @@ import { SubgameComponent } from './subgame.component';
   styleUrls: ['./game.component.scss'],
 })
 export class GameComponent {
-  @Input() game: IGame = {
-    id: 0,
-    name: '',
-    subgames: [],
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
+  @Input() game: IGame = newIGame();
 
   @Input() matchId: number = 0;
 

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostBinding, HostListener, Input, OnInit, inject } from '@angular/core';
-import { IMatch, ISubgame, OddsKey } from '@live-bet/dto';
+import { IMatch, ISubgame, OddsKey, newIMatch, newISubgame } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 import { setOrDeleteEvent } from '../store/ticket.actions';
@@ -13,7 +13,7 @@ import { OddsComponent } from './odds.component';
   imports: [CommonModule, OddsComponent,],
   template: `
     <div class="container grey-white" [ngStyle]="{'background-color': backgroundColor$ | async}" [ngClass]="subgame.isPlayable ? 'grey-white-hover' : ''">
-      <guest-odds [odds]="oddsKey" class="grey-white" />
+      <guest-odds [oddsKey]="oddsKey" class="grey-white" />
     </div>
   `,
   styles: [
@@ -22,36 +22,9 @@ import { OddsComponent } from './odds.component';
   ],
 })
 export class OddsContainerComponent implements OnInit {
-  @Input() match: IMatch = {
-    id: 0,
-    home: '',
-    guest: '',
-    league: '',
-    status: 'live',
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
+  @Input() match: IMatch = newIMatch();
 
-  @Input() subgame: ISubgame = {
-    id: 0,
-    name: '',
-    isPlayable: true,
-    game: {
-      id: 0,
-      name: '',
-      subgames: [],
-      sport: {
-        id: 0,
-        name: '',
-        games: [],
-        matches: [],
-      }
-    },
-  };
+  @Input() subgame: ISubgame = newISubgame();
 
   get oddsKey() {
     return {

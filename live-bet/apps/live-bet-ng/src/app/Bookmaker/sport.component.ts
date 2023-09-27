@@ -11,7 +11,7 @@ import { filter, map } from 'rxjs';
 import { AddMatchDialogComponent } from './add-match-dialog.component';
 import { AddGameDialogComponent } from './add-game-dialog.component';
 import { MatchComponent } from './match.component';
-import { GameDTO, ISport, MatchDTO } from '@live-bet/dto';
+import { GameDTO, ISport, MatchDTO, newIGame, newIMatch, newISport } from '@live-bet/dto';
 import { SportsService } from '../sports.service';
 
 @Component({
@@ -45,24 +45,14 @@ import { SportsService } from '../sports.service';
   providers: [SportComponent],
 })
 export class SportComponent {
-  @Input() sport: ISport = {
-    id: 0,
-    name: '',
-    matches: [],
-    games: [],
-  };
+  @Input() sport: ISport = newISport();
 
   public dialog: MatDialog = inject(MatDialog);
   private sportsService: SportsService = inject(SportsService);
 
   public openAddMatchDialog() {
     const dialogRef = this.dialog.open(AddMatchDialogComponent, {
-      data: {
-        league: '',
-        home: '',
-        guest: '',
-        sportId: this.sport.id,
-      },
+      data: newIMatch(),
     });
 
     dialogRef.afterClosed()
@@ -78,11 +68,7 @@ export class SportComponent {
   public openAddGameDialog() {
     const dialogRef = this.dialog.open(AddGameDialogComponent, {
       panelClass: 'disable-horizontal-scroll',
-      data: {
-        name: '',
-        subgames: [],
-        sportId: this.sport.id,
-      },
+      data: newIGame(),
     });
 
     dialogRef.afterClosed()
