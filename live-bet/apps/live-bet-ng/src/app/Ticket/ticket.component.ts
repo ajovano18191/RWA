@@ -30,14 +30,10 @@ import { SummaryComponent } from './summary.component';
     ".clear-button { background-color: rgb(100, 100, 100) !important; color: white !important; border: 2px solid white; }",
   ],
 })
-export class TicketComponent implements OnInit {
+export class TicketComponent {
   private store = inject(Store);
 
-  event$ = new Observable<IEvent[]>();
-  
-  ngOnInit(): void {
-    this.event$ = this.store.select(selectAllEvents);
-  }
+  event$: Observable<IEvent[]> = this.store.select(selectAllEvents);
 
   ticketMap: Map<number, number> = new Map<number, number>();
   summaryOdds: number = 1;

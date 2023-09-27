@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -57,19 +57,14 @@ import { TicketIdDialogComponent } from './ticket-id-dialog.component';
     ".empty-ticket {text-align: center; }",
   ],
 })
-export class SummaryComponent implements OnInit {
+export class SummaryComponent {
   private store = inject(Store);
 
-  event$: Observable<IEvent[]> = new Observable<IEvent[]>();
-  eventTotal$ = new Observable<number>();
+  event$: Observable<IEvent[]> = this.store.select(selectAllEvents);
+  eventTotal$ = this.store.select(selectEventTotal);
   stake: number = 20;
   
   @Input() summaryOdds: number = 1;
-
-  ngOnInit(): void {
-    this.event$ = this.store.select(selectAllEvents);
-    this.eventTotal$ = this.store.select(selectEventTotal);
-  }
 
   isTicketPlayable(): Observable<boolean> {
     return combineLatest([
