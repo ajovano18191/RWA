@@ -14,16 +14,13 @@ import { OddsComponent } from './odds.component';
   standalone: true,
   imports: [CommonModule, OddsComponent,],
   template: `
-    <div class="container" [ngStyle]="{'background-color': classe$ | async}" [ngClass]="subgame.isPlayable ? 'grey-white-hover' : ''">
-      <guest-odds 
-        [odds]="oddsKey" 
-        class="grey-white"
-      />
+    <div class="container grey-white" [ngStyle]="{'background-color': backgroundColor$ | async}" [ngClass]="subgame.isPlayable ? 'grey-white-hover' : ''">
+      <guest-odds [odds]="oddsKey" class="grey-white" />
     </div>
   `,
   styles: [
-    ".container { display: flex; justify-content: center; align-items: center; text-align: center; font-size: 30px; width: 100%; height: 100%; } ",
-    ".container > * { width: 100%; height: 100%; }",
+    ":host { display: contents; }",
+    ".container { display: flex; justify-content: flex-end; align-items: center; font-size: 30px; height: 100%; padding: 0px 16px;  } ",
   ],
 })
 export class OddsContainerComponent implements OnInit {
@@ -58,25 +55,6 @@ export class OddsContainerComponent implements OnInit {
     },
   };
 
-  @HostBinding('class') hoverClass = '';
-
-  ngOnInit(): void {
-    this.hoverClass = this.subgame.isPlayable ? 'grey-white-hover' : '';
-    this.classe$ = this.store.select(selectAllEvents)
-    .pipe(
-      map(events => events.map(event => event.oddsKey)),
-      map(oddsKeys => oddsKeys.filter(odssKey => odssKey.sportId === this.oddsKey.sportId && odssKey.matchId === this.oddsKey.matchId && odssKey.subgameId === this.oddsKey.subgameId)[0]),
-      map(p => {
-        if(p) {
-          return 'rgb(200, 200, 200)';
-        }
-        else {
-          return 'rgb(100, 100, 100)';
-        }
-      })
-    );
-  }
-
   get oddsKey() {
     return {
       sportId: this.match.sport.id,
@@ -85,9 +63,20 @@ export class OddsContainerComponent implements OnInit {
     } as OddsKey;
   }
 
-  private store = inject(Store);
+  @HostBinding('class') hoverClass = '';
 
-  classe$ = new Observable<string>();
+  private store = inject(Store);
+  backgroundColor$ = new Observable<string>();
+
+  ngOnInit(): void {
+    this.hoverClass = this.subgame.isPlayable ? 'grey-white-hover' : '';
+    this.backgroundColor$ = this.store.select(selectAllEvents)
+    .pipe(
+      map(events => events.map(event => event.oddsKey)),
+      map(oddsKeys => oddsKeys.filter(odssKey => odssKey.sportId === this.oddsKey.sportId && odssKey.matchId === this.oddsKey.matchId && odssKey.subgameId === this.oddsKey.subgameId)[0]),
+      map(p => p ? 'rgb(200, 200, 200' : ''),
+    );
+  }
 
   @HostListener('click')
   add2Ticket() {

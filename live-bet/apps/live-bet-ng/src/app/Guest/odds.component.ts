@@ -14,11 +14,12 @@ import { OfferService } from '../offer.service';
     </div>
   `,
   styles: [
-    ":host { display: flex; justify-content: flex-end; align-items: center; background-color: transparent; }",
-    ".odds-value { transition: color 1s; padding-right: 5px; }",
+    ":host { background-color: transparent; }",
+    ".odds-value { transition: color 1s; }",
   ],
 })
 export class OddsComponent implements OnInit, OnDestroy {
+  // display: flex; justify-content: flex-end; align-items: center; 
   @Input() odds: OddsKey = {
     sportId: 0,
     matchId: 0,
@@ -27,9 +28,9 @@ export class OddsComponent implements OnInit, OnDestroy {
 
   @Output() oddChangeEvent = new EventEmitter<Odds>();
 
+  private offerService: OfferService = inject(OfferService);
   oddse$ = new Observable<number>();
   textColor$: Observable<string> = new Observable<string>();
-  private offerService: OfferService = inject(OfferService);
 
   ngOnInit(): void {
     this.oddse$ = this.offerService.oddsSelector(this.odds)
