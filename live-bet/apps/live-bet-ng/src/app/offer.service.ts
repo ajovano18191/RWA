@@ -5,10 +5,11 @@ import { WsMessages } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Socket } from 'ngx-socket-io';
 import { Observable, concatMap, filter, from, map, merge, share, switchMap, take, tap } from 'rxjs';
+import { baseURL } from './const';
 import { SportsService } from './sports.service';
 import { OddsActions } from './store/odds.actions';
 import { selectOdds } from './store/odds.selectors';
-import { baseURL } from './const';
+import { selectAllEvents } from './store/ticket.selectors';
 
 @Injectable({
   providedIn: 'root'
@@ -104,5 +105,14 @@ export class OfferService {
     );
 
     return merge(currentStoreValue$, storeValue$);
+  }
+
+  backgroundColor$(oddsKey: OddsKey) {
+    return this.store.select(selectAllEvents)
+    .pipe(
+      map(events => events.map(event => event.oddsKey)),
+      map(oddsKeys => oddsKeys.filter(currOddsKey => currOddsKey.sportId === oddsKey.sportId && currOddsKey.matchId === oddsKey.matchId && currOddsKey.subgameId === oddsKey.subgameId)[0]),
+      map(p => p ? '#ffbf00' : ''),
+    );
   }
 }

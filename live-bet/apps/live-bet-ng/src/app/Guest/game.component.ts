@@ -5,8 +5,8 @@ import { IGame, newIGame } from '@live-bet/dto';
 @Component({
   selector: 'guest-game',
   standalone: true,
-  imports: [CommonModule],
-  template:  `<div class="game-name grey-white">{{ game.name }}</div>`,
+  imports: [CommonModule,],
+  template:  `<div class="game-name back-text">{{ game.name }}</div>`,
   styles: [
     ":host { display: contents; }",
     ":host > * { text-align: center; padding: 20px 0; font-size: 30px; }",

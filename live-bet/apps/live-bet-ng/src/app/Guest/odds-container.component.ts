@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, HostBinding, HostListener, Input, OnInit, inject } from '@angular/core';
 import { IMatch, ISubgame, OddsKey, newIMatch, newISubgame } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
+import { OfferService } from '../offer.service';
 import { setOrDeleteEvent } from '../store/ticket.actions';
-import { selectAllEvents } from '../store/ticket.selectors';
 import { OddsComponent } from './odds.component';
 
 @Component({
@@ -12,8 +12,8 @@ import { OddsComponent } from './odds.component';
   standalone: true,
   imports: [CommonModule, OddsComponent,],
   template: `
-    <div class="container grey-white" [ngStyle]="{'background-color': backgroundColor$ | async}" [ngClass]="subgame.isPlayable ? 'grey-white-hover' : ''">
-      <guest-odds [oddsKey]="oddsKey" class="grey-white" />
+    <div class="container back-text" [ngStyle]="{'background-color': backgroundColor$ | async}" [ngClass]="subgame.isPlayable ? 'back-text-hover' : ''">
+      <guest-odds [oddsKey]="oddsKey" class="back-text" />
     </div>
   `,
   styles: [
@@ -37,16 +37,12 @@ export class OddsContainerComponent implements OnInit {
   @HostBinding('class') hoverClass = '';
 
   private store = inject(Store);
+  private offerService: OfferService = inject(OfferService);
   backgroundColor$ = new Observable<string>();
 
   ngOnInit(): void {
-    this.hoverClass = this.subgame.isPlayable ? 'grey-white-hover' : '';
-    this.backgroundColor$ = this.store.select(selectAllEvents)
-    .pipe(
-      map(events => events.map(event => event.oddsKey)),
-      map(oddsKeys => oddsKeys.filter(odssKey => odssKey.sportId === this.oddsKey.sportId && odssKey.matchId === this.oddsKey.matchId && odssKey.subgameId === this.oddsKey.subgameId)[0]),
-      map(p => p ? 'rgb(200, 200, 200' : ''),
-    );
+    this.hoverClass = this.subgame.isPlayable ? 'back-text-hover' : '';
+    this.backgroundColor$ = this.offerService.backgroundColor$(this.oddsKey);
   }
 
   @HostListener('click')

@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Odds } from '@live-bet/dto';
-import { MatchStatus } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { OddsComponent } from '../Guest/odds.component';
 import IEvent, { newIEvent } from '../ievent.model';
@@ -31,10 +30,10 @@ import { deleteEvent } from '../store/ticket.actions';
     </div>
   `,
   styles: [
-    ":host { display: flex; flex-direction: column; border: 2px solid white; border-radius: 16px; margin-block: 8px; padding-inline: 12px; }",
+    ":host { display: flex; flex-direction: column; border: 3px solid #ffbf00; border-radius: 16px; margin-block: 8px; padding-inline: 12px; }",
     ".row { display: flex; justify-content: space-between; margin-block: 8px; }",
-    ".delete-button { margin-top: -12px; margin-right: -16px; background-color: rgb(100, 100, 100) !important; color: white !important; border: 2px solid white; }",
-    ".live { border: 1px solid white; border-radius: 7.5px; padding: 0px 2px; }",
+    ".delete-button { margin-top: -12px; margin-right: -16px; background-color: #172034 !important; color: #ffbf00 !important; border: 3px solid #ffbf00; }",
+    ".live { border: 3px solid #ffbf00; border-radius: 7.5px; padding: 0px 2px; }",
   ],
 })
 export class EventComponent {

@@ -20,19 +20,19 @@ import { SportComponent } from './sport.component';
         <ng-template mat-tab-label>
           <span class="mat-tab-label">All sports</span>
         </ng-template>
-        <guest-sport *ngFor="let sport of sports$ | async" [sport]="sport" class="white-grey" />
+        <guest-sport *ngFor="let sport of sports$ | async" [sport]="sport" class="border-text" />
       </mat-tab>
       <mat-tab *ngFor="let sport of sports$ | async" [label]="sport.name">
         <ng-template mat-tab-label>
           <span class="mat-tab-label">{{ sport.name }}</span>
         </ng-template>
-        <guest-sport [sport]="sport" class="white-grey" />
+        <guest-sport [sport]="sport" class="border-text" />
       </mat-tab>
       <mat-tab label="Favorites">
         <ng-template mat-tab-label>
           <span class="mat-tab-label">Favorites {{ numOfFavoriteMatche$ | async }}</span>
         </ng-template>
-        <guest-sport *ngFor="let sport of favoriteSport$ | async" [sport]="sport" class="white-grey" />
+        <guest-sport *ngFor="let sport of favoriteSport$ | async" [sport]="sport" class="border-text" />
       </mat-tab>
     </mat-tab-group>
   `,

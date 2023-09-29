@@ -28,7 +28,7 @@ export class FavoriteComponent implements OnInit {
     this.textColor$ = this.store.select(selectFavoriteIds)
     .pipe(
       map(ids => ids as number[]),
-      map(ids => ids.includes(this.match.id) ? 'gold' : ''),
+      map(ids => ids.includes(this.match.id) ? '#ffbf00' : ''),
     );
   }
 

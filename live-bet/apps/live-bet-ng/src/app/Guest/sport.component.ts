@@ -10,17 +10,17 @@ import { SubgameComponent } from './subgame.component';
   standalone: true,
   imports: [CommonModule, GameComponent, SubgameComponent, MatchComponent,],
   template: `
-      <div class="sport-name grey-white">{{ sport.name }}</div>
+      <div class="sport-name back-text">{{ sport.name }}</div>
       <ng-container *ngFor="let game of getGames">
-        <div class="white-grey"></div>
+        <div class="border-text"></div>
         <guest-game [game]="game"/>
       </ng-container>
-      <div class="match-id grey-white">ID</div>
-      <div class="grey-white">F</div>
-      <div class="league grey-white">League</div>
-      <div class="home-guest grey-white">Home - Guest</div>
+      <div class="match-id back-text">ID</div>
+      <div class="back-text">F</div>
+      <div class="league back-text">League</div>
+      <div class="home-guest back-text">Home - Guest</div>
       <ng-container *ngFor="let game of getGames">
-        <div class="white-grey"></div>
+        <div class="border-text"></div>
         <ng-container *ngFor="let subgame of game.subgames">
         <guest-subgame [subgame]="subgame" />
         </ng-container>

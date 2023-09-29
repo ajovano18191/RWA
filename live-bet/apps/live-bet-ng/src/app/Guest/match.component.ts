@@ -13,18 +13,18 @@ import { OddsContainerComponent } from './odds-container.component';
   standalone: true,
   imports: [CommonModule, MatIconModule, OddsContainerComponent, FavoriteComponent,],
   template: `
-    <div class="grey-white favorite">
+    <div class="back-text favorite">
       <guest-favorite [match]="match" />
     </div>
-    <div class="match-id grey-white">{{ match.id }}</div>
-    <div class="league grey-white">{{ match.league }}</div>
-    <div class="home-guest-match grey-white grey-white-hover" (click)="go2MatchDetails()">
+    <div class="match-id back-text">{{ match.id }}</div>
+    <div class="league back-text">{{ match.league }}</div>
+    <div class="home-guest-match back-text back-text-hover" (click)="go2MatchDetails()">
       {{ match.home }} - {{ match.guest }}
     </div>
     <ng-container *ngFor="let game of getGames">
-      <div class="white-grey"></div>
+      <div class="border-text"></div>
       <ng-container *ngFor="let subgame of game.subgames">
-        <guest-odds-container [subgame]="subgame" [match]="match" class="grey-white" />
+        <guest-odds-container [subgame]="subgame" [match]="match" class="back-text" />
       </ng-container>
     </ng-container>
   `,

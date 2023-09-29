@@ -5,8 +5,8 @@ import { ISubgame, newISubgame } from '@live-bet/dto';
 @Component({
   selector: 'guest-subgame',
   standalone: true,
-  imports: [CommonModule],
-  template: `<div class="subgame-name grey-white">{{ subgame.name }}</div>`,
+  imports: [CommonModule,],
+  template: `<div class="subgame-name back-text">{{ subgame.name }}</div>`,
   styles: [
     ":host { display: contents; }",
     ":host > * { text-align: center; padding: 20px 0; font-size: 30px; } ",
