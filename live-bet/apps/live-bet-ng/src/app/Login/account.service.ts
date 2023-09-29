@@ -26,7 +26,7 @@ export class AccountService {
 
   private loginOrRegister(path: string, email: string, password: string): void {
     this.httpClient
-    .post<UserDTO>(`${baseURL}/auth/${path}`, { email: email, password: password })
+    .post<UserDTO>(`${baseURL}/auth/${path}`, { username: email, password: password })
     .pipe(
       tap(userDTO => this.setJWTToSocket(userDTO.accessToken)),
       delay(1000),

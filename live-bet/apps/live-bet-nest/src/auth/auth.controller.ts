@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { RolesGuard } from './role.guard';
 import { BookmakerGuard } from './bookmaker.role.guard';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { LocalAuthGuard } from './local.auth.guard';
 import { WorkerGuard } from './worker.role.guard';
 
 @Controller('auth')
@@ -11,14 +11,15 @@ export class AuthController {
         private authService: AuthService,
     ) { }
 
+    @UseGuards(LocalAuthGuard)
     @Post('login')
-    async login(@Body() user: { email: string, password: string, }) {
-        return await this.authService.login(user);
+    async login(@Request() req) {
+        return await this.authService.login(req.user);
     }
 
     @Post('register')
-    async register(@Body() user: { email: string, password: string, }) {
-        return await this.authService.register(user.email, user.password);
+    async register(@Body() user: { username: string, password: string, }) {
+        return await this.authService.register(user.username, user.password);
     }
 
     @Get('all')

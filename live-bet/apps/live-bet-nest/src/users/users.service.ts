@@ -20,7 +20,6 @@ export class UsersService {
     const user = this.usersRepository.create();
     user.email = email;
     user.password = password;
-    user.role = "bookmaker";
     return this.usersRepository.save(user);
   }
 }
