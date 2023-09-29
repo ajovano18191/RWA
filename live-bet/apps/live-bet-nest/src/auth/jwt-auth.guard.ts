@@ -9,13 +9,15 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     @Inject(AuthService)
     private authService: AuthService;
 
-    canActivate(context: ExecutionContext) {
+    override canActivate(context: ExecutionContext) {
         if(context.getType() === 'ws') {
           const token = context.getArgByIndex(0).handshake.headers.authorization.split(' ')[1];
           
           const decoded = this.authService.jwtService.verify(token, {
               secret: jwtConstants.secret
           }) as any;
+
+          context.switchToHttp().getRequest().user = decoded;
 
           return this.authService.findOneUser(decoded.sub) !== undefined;
         }

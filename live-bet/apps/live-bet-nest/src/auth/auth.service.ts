@@ -27,7 +27,7 @@ export class AuthService {
     if(!validatedUser) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.email };
+    const payload = { sub: user.email, role: validatedUser.role };
     return {
       accessToken: this.jwtService.sign(payload),
       role: validatedUser.role,
