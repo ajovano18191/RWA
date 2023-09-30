@@ -3,6 +3,7 @@ import { WsMessages } from '@live-bet/enums';
 import { UseGuards } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
 import { Subject } from 'rxjs';
+import { BookmakerGuard } from '../auth/bookmaker.role.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { LiveService } from './live.service';
 
@@ -17,9 +18,9 @@ export class LiveGateway {
     private liveService: LiveService,
   ) { }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BookmakerGuard)
   @SubscribeMessage(WsMessages.sendOffer)
-  sendOffer(@MessageBody() data: MatchOfferDTO, @ConnectedSocket() client: any): void {
+  sendOffer(@MessageBody() data: MatchOfferDTO): void {
     return this.liveService.sendOffer(data);
   }
 
@@ -33,13 +34,13 @@ export class LiveGateway {
     return await this.liveService.getCompleteOffer(client);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BookmakerGuard)
   @SubscribeMessage(WsMessages.startMatch)
   async startMatch(@MessageBody() data: MatchOfferDTO): Promise<void> {
     return await this.liveService.startMatch(data);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BookmakerGuard)
   @SubscribeMessage(WsMessages.endMatch)
   async endMatch(@MessageBody() id: number): Promise<void> {
     return await this.liveService.endMatch(id);
