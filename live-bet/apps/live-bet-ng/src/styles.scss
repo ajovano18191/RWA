@@ -1,22 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+$back-color: #172034;
+$border-color: #ffbf00; 
+$text-color: #ffffff;
 
 html, body { height: 100%; overflow-y: hidden; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: white; color: black; }
 
-.grey-white {
-    background-color: rgb(100, 100, 100);
-    color: white;
+.back-text {
+    background-color: $back-color;
+    color:  $text-color;
 }
 
-.grey-white-hover:hover {
-    background-color: rgb(200, 200, 200) !important;
+.back-text-hover:hover {
+    background-color: $border-color !important;
 }
 
-.white-grey {
-    background-color: white;
-    color: rgb(100, 100, 100);
+.border-color {
+    border: 3px solid $border-color;
 }
 
-.white-grey-hover:hover {
-    background-color: rgb(200, 200, 200) !important;
+.border-text {
+    background-color: $border-color;
+    color: $back-color;
+}
+
+.border-text-hover:hover {
+    background-color: $border-color !important;
 }

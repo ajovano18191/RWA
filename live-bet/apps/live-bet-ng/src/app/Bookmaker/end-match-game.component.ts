@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
-import { IGame } from '@live-bet/dto';
+import { IGame, newIGame } from '@live-bet/dto';
 
 @Component({
   selector: 'guest-end-match-game',
@@ -25,17 +25,7 @@ import { IGame } from '@live-bet/dto';
   ],
 })
 export class EndMatchGameComponent {
-  @Input() game: IGame = {
-    id: 0,
-    name: '',
-    subgames: [],
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
+  @Input() game: IGame = newIGame();
 
   subgameKey: {
     gameId: number,

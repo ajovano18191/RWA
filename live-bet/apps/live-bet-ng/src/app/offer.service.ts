@@ -5,19 +5,16 @@ import { WsMessages } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Socket } from 'ngx-socket-io';
 import { Observable, concatMap, filter, from, map, merge, share, switchMap, take, tap } from 'rxjs';
+import { baseURL } from './const';
 import { SportsService } from './sports.service';
 import { OddsActions } from './store/odds.actions';
 import { selectOdds } from './store/odds.selectors';
+import { selectAllEvents } from './store/ticket.selectors';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OfferService {
-
-  private socket: Socket = inject(Socket);
-  private sportsService: SportsService = inject(SportsService);
-
-  private store: Store = inject(Store);
 
   getOdds(): Observable<Odds> {
     this.sub2EndMatches();
@@ -43,11 +40,10 @@ export class OfferService {
     );
   }
 
-  private readonly baseURL = "http://localhost:3000/api";
   private httpClient: HttpClient = inject(HttpClient);
 
   private noLiveOffer(): Observable<MatchOfferDTO> {
-    return this.httpClient.get(`${this.baseURL}/matches`).pipe(
+    return this.httpClient.get(`${baseURL}/matches`).pipe(
       switchMap((matches: any) => from(matches)),
       map((match: any) => ({
         sportId: match.sportId,
@@ -56,6 +52,8 @@ export class OfferService {
       } as MatchOfferDTO)),
     )
   }
+
+  private socket: Socket = inject(Socket);
 
   private completeOffer(): Observable<MatchOfferDTO> {
     this.socket.emit(WsMessages.completeOffer);
@@ -74,12 +72,16 @@ export class OfferService {
     );
   }
 
+  private sportsService: SportsService = inject(SportsService);
+
   private newMatch(): Observable<MatchOfferDTO> {
     return this.socket.fromEvent(WsMessages.startMatch).pipe(
       tap(() => this.sportsService.refresh()),
       map(p => p as MatchOfferDTO),
     );
   }
+
+  private store: Store = inject(Store);
 
   private sub2EndMatches() {
     this.socket.fromEvent(WsMessages.endMatch).subscribe((p) => {
@@ -103,5 +105,14 @@ export class OfferService {
     );
 
     return merge(currentStoreValue$, storeValue$);
+  }
+
+  backgroundColor$(oddsKey: OddsKey) {
+    return this.store.select(selectAllEvents)
+    .pipe(
+      map(events => events.map(event => event.oddsKey)),
+      map(oddsKeys => oddsKeys.filter(currOddsKey => currOddsKey.sportId === oddsKey.sportId && currOddsKey.matchId === oddsKey.matchId && currOddsKey.subgameId === oddsKey.subgameId)[0]),
+      map(p => p ? '#ffbf00' : ''),
+    );
   }
 }

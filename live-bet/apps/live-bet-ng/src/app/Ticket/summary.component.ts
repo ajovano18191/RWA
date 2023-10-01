@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -31,7 +31,7 @@ import { TicketIdDialogComponent } from './ticket-id-dialog.component';
         </mat-form-field>
       </div>
       <div class="row">
-        <button mat-raised-button class="place-bet-button" *ngIf="(isTicketPlayable() | async); else notExpress" (click)="placeBet()">PLACE BET</button>
+        <button mat-raised-button class="place-bet-button border-color" *ngIf="(isTicketPlayable() | async); else notExpress" (click)="placeBet()">PLACE BET</button>
         <ng-template #notExpress>Ticket with live events can't be express.</ng-template>
       </div>
       <div class="row">
@@ -53,23 +53,18 @@ import { TicketIdDialogComponent } from './ticket-id-dialog.component';
     "input { text-align: right; }",
     "input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }",
     "input[type=number] { -moz-appearance: textfield; }",
-    ".place-bet-button { width: 100%; margin-top: -12px; background-color: rgb(100, 100, 100) !important; color: white !important; border: 2px solid white; }",
+    ".place-bet-button { width: 100%; margin-top: -12px; background-color: #172034 !important; color: white !important; border: 3px solid #ffbf00; }",
     ".empty-ticket {text-align: center; }",
   ],
 })
-export class SummaryComponent implements OnInit {
+export class SummaryComponent {
   private store = inject(Store);
 
-  event$: Observable<IEvent[]> = new Observable<IEvent[]>();
-  eventTotal$ = new Observable<number>();
+  event$: Observable<IEvent[]> = this.store.select(selectAllEvents);
+  eventTotal$ = this.store.select(selectEventTotal);
   stake: number = 20;
   
   @Input() summaryOdds: number = 1;
-
-  ngOnInit(): void {
-    this.event$ = this.store.select(selectAllEvents);
-    this.eventTotal$ = this.store.select(selectEventTotal);
-  }
 
   isTicketPlayable(): Observable<boolean> {
     return combineLatest([

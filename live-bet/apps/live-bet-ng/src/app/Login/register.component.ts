@@ -66,15 +66,7 @@ export class RegisterComponent {
 
   register() {
     if(this.password === this.repeatedPassword) {
-      this.accountService.register(this.email, this.password)
-      .subscribe(user => {
-        if(user.role === 'bookmaker') {
-          this.router.navigate(['bookmaker']);
-        }
-        else if(user.role === 'worker') {
-          this.router.navigate(['guest', 'betting']);
-        }
-      });
+      this.accountService.register(this.email, this.password);
     }
   }
 

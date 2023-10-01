@@ -10,3 +10,19 @@ export default interface IEvent {
     subgameName: string,
     oddsKey: OddsKey,
 }
+
+export function newIEvent(): IEvent {
+    return {
+        home: 'string',
+        guest: 'string',
+        matchStatus: MatchStatus.notStarted,
+        gameId: 0,
+        gameName: 'string',
+        subgameName: 'string',
+        oddsKey: {
+          sportId: 0,
+          matchId: 0,
+          subgameId: 0,
+        },
+    };
+}

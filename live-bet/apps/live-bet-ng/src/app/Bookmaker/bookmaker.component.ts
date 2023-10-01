@@ -20,7 +20,9 @@ import { SportComponent } from './sport.component';
       </div>
     </mat-accordion>
   `,
-  styles: [],
+  styles: [
+    ":host { overflow: auto; height: 100%; display: block; }",
+  ],
 })
 export class BookmakerComponent {
   private sportsService: SportsService = inject(SportsService);

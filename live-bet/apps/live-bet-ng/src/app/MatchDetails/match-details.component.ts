@@ -10,8 +10,8 @@ import { GameComponent } from './game.component';
   standalone: true,
   imports: [CommonModule, GameComponent, FavoriteComponent,],
   template: `
-    <div class="match-details grey-white">
-      <div class="teams white-grey">
+    <div class="match-details back-text">
+      <div class="teams back-text border-color">
         <guest-favorite [match]="(matche$ | async)!" />
         <p>
           {{ (matche$ | async)?.home }}

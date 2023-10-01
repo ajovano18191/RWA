@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } fro
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ISubgame, OddsKey } from '@live-bet/dto';
+import { ISubgame, OddsKey, newISubgame } from '@live-bet/dto';
 import { Subscription } from 'rxjs';
 import { OfferService } from '../offer.service';
 import { OddsActions } from '../store/odds.actions';
@@ -25,22 +25,7 @@ import Offer from './offer';
   ],
 })
 export class SubgameComponent implements OnInit, OnDestroy {
-  @Input() subgame: ISubgame = {
-    id: 0,
-    name: '',
-    isPlayable: true,
-    game: {
-      id: 0,
-      name: '',
-      subgames: [],
-      sport: {
-        id: 0,
-        name: '',
-        games: [],
-        matches: [],
-      },
-    },
-  };
+  @Input() subgame: ISubgame = newISubgame();
 
   @Input() matchId: number = 0;
 

@@ -1,5 +1,6 @@
 import { GameDTO } from '@live-bet/dto';
 import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { BookmakerGuard } from '../auth/bookmaker.role.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Game } from './game.entity';
 import { GamesService } from './games.service';
@@ -19,7 +20,7 @@ export class GamesController {
         return this.gamesService.findOne(id);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, BookmakerGuard)
     @Post()
     create(@Body() game: GameDTO): Promise<Game> {
         return this.gamesService.create(game);
@@ -30,6 +31,7 @@ export class GamesController {
         return this.gamesService.update(id, game);
     }
 
+    @UseGuards(JwtAuthGuard, BookmakerGuard)
     @Delete(':id')
     remove(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
         return this.gamesService.remove(id);

@@ -2,12 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { IMatch, ISubgame } from '@live-bet/dto';
-import { MatchStatus } from '@live-bet/enums';
+import { IGame, IMatch, ISubgame, newIMatch } from '@live-bet/dto';
 import { Store } from '@ngrx/store';
-import IEvent from '../ievent.model';
 import { MatchActions } from '../store/match.actions';
-import { setOrDeleteEvent } from '../store/ticket.actions';
 import { FavoriteComponent } from './favorite.component';
 import { OddsContainerComponent } from './odds-container.component';
 
@@ -16,37 +13,34 @@ import { OddsContainerComponent } from './odds-container.component';
   standalone: true,
   imports: [CommonModule, MatIconModule, OddsContainerComponent, FavoriteComponent,],
   template: `
-    <div class="match-id grey-white">{{ match.id }}</div>
-    <div class="grey-white">
+    <div class="back-text favorite">
       <guest-favorite [match]="match" />
     </div>
-    <div class="league grey-white">{{ match.league }}</div>
-    <div class="home-guest-match grey-white grey-white-hover" (click)="go2MatchDetails()">
-      {{ match.home }} <br> {{ match.guest }}
+    <div class="match-id back-text">{{ match.id }}</div>
+    <div class="league back-text">{{ match.league }}</div>
+    <div class="home-guest-match back-text back-text-hover" (click)="go2MatchDetails()">
+      {{ match.home }} - {{ match.guest }}
     </div>
-    <guest-odds-container *ngFor="let subgame of getSubgames" [subgame]="subgame" [match]="match" class="grey-white" />
+    <ng-container *ngFor="let game of getGames">
+      <div class="border-text"></div>
+      <ng-container *ngFor="let subgame of game.subgames">
+        <guest-odds-container [subgame]="subgame" [match]="match" class="back-text" />
+      </ng-container>
+    </ng-container>
   `,
   styles: [
     ":host { display: contents; }",
     ":host > div { display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px 16px; font-size: 30px; } ",
+    ".favorite { grid-column-start: 1; }",
     ".home-guest-match { grid-column: span 3; line-height: 1.2em; }",
-    ".match-id { grid-column-start: 1; }",
   ],
 })
 export class MatchComponent {
-  @Input() match: IMatch = {
-    id: 0,
-    home: '',
-    guest: '',
-    league: '',
-    status: 'live',
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
+  @Input() match: IMatch = newIMatch();
+
+  get getGames(): IGame[] {
+    return this.match.sport.games.slice(0, 3);
+  }
 
   get getSubgames(): ISubgame[] {
     return this.match.sport.games.slice(0, 3).map(p => p.subgames).flat();
@@ -55,28 +49,8 @@ export class MatchComponent {
   private store = inject(Store);
   private router = inject(Router);
 
-
   go2MatchDetails() {
     this.store.dispatch(MatchActions.setMatch(this.match));
     this.router.navigate(['guest', 'match-details']);
-  }
-
-  add2Ticket(subgame: ISubgame) {
-    const event: IEvent = {
-      home: this.match.home,
-      guest: this.match.guest,
-      matchStatus: this.match.status as MatchStatus,
-      gameId: subgame.game.id,
-      gameName: subgame.game.name,
-      subgameName: subgame.name,
-      oddsKey: {
-        sportId: this.match.sport.id,
-        matchId: this.match.id,
-        subgameId: subgame.id,
-      }
-    }
-    if(subgame.isPlayable) {
-      this.store.dispatch(setOrDeleteEvent({ event }));
-    }
   }
 }

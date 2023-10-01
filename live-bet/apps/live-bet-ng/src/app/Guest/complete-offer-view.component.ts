@@ -7,8 +7,7 @@ import { OfferType } from '@live-bet/enums';
 import { Store } from '@ngrx/store';
 import { Observable, map, switchMap } from 'rxjs';
 import { SportsService } from '../sports.service';
-import { selectAllFavorites } from '../store/favorite.selectors';
-import { OddsActions } from '../store/odds.actions';
+import { selectAllFavorites, selectFavoriteTotal } from '../store/favorite.selectors';
 import { SportComponent } from './sport.component';
 
 @Component({
@@ -21,22 +20,21 @@ import { SportComponent } from './sport.component';
         <ng-template mat-tab-label>
           <span class="mat-tab-label">All sports</span>
         </ng-template>
-        <guest-sport *ngFor="let sport of sports$ | async" [sport]="sport" class="white-grey" />
+        <guest-sport *ngFor="let sport of sports$ | async" [sport]="sport" class="border-text" />
       </mat-tab>
       <mat-tab *ngFor="let sport of sports$ | async" [label]="sport.name">
         <ng-template mat-tab-label>
           <span class="mat-tab-label">{{ sport.name }}</span>
         </ng-template>
-        <guest-sport [sport]="sport" class="white-grey" />
+        <guest-sport [sport]="sport" class="border-text" />
       </mat-tab>
       <mat-tab label="Favorites">
         <ng-template mat-tab-label>
-          <span class="mat-tab-label">Favorites</span>
+          <span class="mat-tab-label">Favorites {{ numOfFavoriteMatche$ | async }}</span>
         </ng-template>
-        <guest-sport *ngFor="let sport of favoriteSport$ | async" [sport]="sport" class="white-grey" />
+        <guest-sport *ngFor="let sport of favoriteSport$ | async" [sport]="sport" class="border-text" />
       </mat-tab>
     </mat-tab-group>
-    <button (click)="onClick()">Dodaj kvotu</button>
   `,
   styles: [
     ":host > * { text-align: center; font-size: 30px; }",
@@ -44,25 +42,7 @@ import { SportComponent } from './sport.component';
   ],
 })
 export class CompleteOfferViewComponent {
-  private store = inject(Store);
 
-  onClick(): void {
-    // for(let i = 0; i < 5; i++) {
-      let x = {
-        id: Math.floor(Math.random() * 100),
-        sportId: 1,//Math.floor(Math.random() * 2) + 1,
-        matchId: Math.floor(Math.random() * 5) + 1,
-        subgameId: Math.floor(Math.random() * 9),
-      };
-
-      this.store.dispatch(OddsActions.setOdds({
-        oddsKey: x,
-        value: Math.random(),
-      }))
-    // }
-  }
-
-  private sportsService: SportsService = inject(SportsService);
   private route: ActivatedRoute = inject(ActivatedRoute);
 
   private offerType$ = this.route.url
@@ -81,10 +61,14 @@ export class CompleteOfferViewComponent {
     })
   );
 
+  private sportsService: SportsService = inject(SportsService);
+
   sports$: Observable<ISport[]> = this.offerType$.pipe(
       switchMap(offerType => this.sportsService.getAllSports(offerType)),
   );
 
+  private store = inject(Store);
+  
   favoriteSport$ = this.store.select(selectAllFavorites)
   .pipe(
     map(matches =>  {
@@ -94,8 +78,10 @@ export class CompleteOfferViewComponent {
       });
       matches.forEach(match => {
         sportsMap.get(match.sport.id)?.matches.push(match);
-      })
+      });
       return Array.from(sportsMap.values());
     }),
   );
+
+  numOfFavoriteMatche$ = this.store.select(selectFavoriteTotal);
 }

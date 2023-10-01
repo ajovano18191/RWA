@@ -14,13 +14,13 @@ import { selectUser } from '../store/user.selector';
   imports: [CommonModule, MatButtonToggleModule, FormsModule, LogoutComponent,],
   template: `
     <logout />
-    <div class="container grey-white" >
+    <div class="container back-text" >
       <p class="app-title">Live Bet</p>
-      <mat-button-toggle-group [(ngModel)]="navigateTo" (change)="navigate()" aria-label="Font Style" class="grey-white">
-        <mat-button-toggle value="back">Back</mat-button-toggle>
-        <mat-button-toggle value="betting">Betting</mat-button-toggle>
-        <mat-button-toggle value="live">Live</mat-button-toggle>
-        <mat-button-toggle *ngIf="getRole() | async" value="worker">Worker</mat-button-toggle>
+      <mat-button-toggle-group [(ngModel)]="navigateTo" (change)="navigate()" aria-label="Font Style" class="back-text">
+        <mat-button-toggle class="border-color" value="back">Back</mat-button-toggle>
+        <mat-button-toggle class="border-color" value="betting">Betting</mat-button-toggle>
+        <mat-button-toggle class="border-color" value="live">Live</mat-button-toggle>
+        <mat-button-toggle class="border-color" *ngIf="getRole() | async" value="worker">Worker</mat-button-toggle>
       </mat-button-toggle-group>
     <div>
   `,
@@ -28,8 +28,8 @@ import { selectUser } from '../store/user.selector';
     ":host { position: sticky; top: 0; z-index: 1000; width: 100%; }",
     ".container { display:flex; flex-flow: row wrap; padding: 12px; }",
     ".app-title { font-size: 36px; margin-top: 12px; max-width: 400px; min-width: 150px; flex: 1; }",
-    "mat-button-toggle-group { display: flex; }",
-    "mat-button-toggle { background-color: rgb(100, 100, 100) !important; color: white !important; border: 2px solid white; }"
+    "mat-button-toggle-group { display: flex; border: none; }",
+    "mat-button-toggle { background-color: #172034 !important; color: white !important; }"
   ],
 })
 export class NavBarComponent {

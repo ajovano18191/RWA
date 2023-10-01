@@ -11,7 +11,7 @@ import { ITicket } from '@live-bet/dto';
   standalone: true,
   imports: [MatDialogModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule],
   providers: [MatDialog],
-  template: `<div class="grey-white dialog-body">Ticket with ID: {{ ticket.id }} was successfully created.</div>`,
+  template: `<div class="back-text dialog-body">Ticket with ID: {{ ticket.id }} was successfully created.</div>`,
   styles: [
     ".dialog-body { padding: 1em; font-size: 3em; line-height: 1em; }",
   ],

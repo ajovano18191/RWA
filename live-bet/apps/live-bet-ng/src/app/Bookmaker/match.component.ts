@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { IMatch } from '@live-bet/dto';
+import { IMatch, newIMatch } from '@live-bet/dto';
 import { GameComponent } from './game.component';
 import { MatchActionsComponent } from './match-actions.component';
 import Offer from './offer';
@@ -37,19 +37,7 @@ import Offer from './offer';
   ],
 })
 export class MatchComponent implements OnInit {
-  @Input() match: IMatch = {
-    id: 0,
-    home: '',
-    guest: '',
-    league: '',
-    status: 'not-started',
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
+  @Input() match: IMatch = newIMatch();
 
   matchOffer: Map<number, number> = new Map<number, number>();
 

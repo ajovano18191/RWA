@@ -3,7 +3,7 @@ import { Component, Input, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { IMatch } from '@live-bet/dto';
+import { IMatch, newIMatch } from '@live-bet/dto';
 import { MatchStatus } from '@live-bet/enums';
 import { EndMatchDialogComponent } from './end-match-dialog.component';
 import { SendOfferService } from './send-offer.service';
@@ -38,19 +38,7 @@ import { SendOfferService } from './send-offer.service';
   ],
 })
 export class MatchActionsComponent {
-  @Input() match: IMatch = {
-    id: 0,
-    home: '',
-    guest: '',
-    league: '',
-    status: 'not-started',
-    sport: {
-      id: 0,
-      name: '',
-      games: [],
-      matches: [],
-    },
-  };
+  @Input() match: IMatch = newIMatch();
 
   @Input() matchOffer: Map<number, number> = new Map<number, number>();
 

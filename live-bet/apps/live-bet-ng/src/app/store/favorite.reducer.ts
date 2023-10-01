@@ -17,7 +17,7 @@ export const initialState: State = adapter.getInitialState({
 
 export const favoriteReducer = createReducer(
     initialState,
-    on(FavoriteActions.setOrDeleteFavorite, (state, { match }) => {
+    on(FavoriteActions.setOrDeleteFavorite, (state, match: IMatch) => {
         let matchId = (state.ids as number[]).filter((id: number) => id === match.id)[0];
         if(matchId) {
             return adapter.removeOne(match.id, state);
@@ -27,22 +27,3 @@ export const favoriteReducer = createReducer(
         }
     }),
 );
-
-const {
-    selectIds,
-    selectEntities,
-    selectAll,
-    selectTotal,
-  } = adapter.getSelectors();
-
-// select the array of user ids
-export const selectFavoriteIds = selectIds;
- 
-// select the dictionary of user entities
-export const selectFavoriteEntities = selectEntities;
-
-// select the array of users
-export const selectAllFavorites = selectAll;
- 
-// select the total user count
-export const selectFavoriteTotal = selectTotal;
