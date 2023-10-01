@@ -1,11 +1,11 @@
-import { Observable, Subject, filter, interval, last, map, share, takeWhile, tap } from "rxjs";
+import { Subject, interval, last, map, share, takeWhile, tap } from "rxjs";
 import { Draw } from "./Draw";
 import { IDrawable } from "./IDrawable";
 import { Lavirint } from "./Lavirint/Lavirint";
 
 export enum ScoreValues {
     nextLevel = 10,
-    startGame = 10,
+    startGame = 10000,
     default = 1,
 }
 
@@ -45,7 +45,6 @@ export class Score implements IDrawable {
     private sub2Scores(): void {
         const score$ = interval(1000)
         .pipe(
-            tap(p => console.log(p)),
             map(() => this.score--),
             takeWhile(p => p > 0),
             share(),

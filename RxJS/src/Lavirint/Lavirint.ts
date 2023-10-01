@@ -1,15 +1,14 @@
-import { Observable, switchMap, map, shareReplay, fromEvent, filter, pairwise, scan, merge, from, withLatestFrom, tap } from "rxjs";
+import { Observable, filter, from, fromEvent, map, merge, pairwise, scan, shareReplay, switchMap, withLatestFrom } from "rxjs";
 import { Draw } from "../Draw";
-import { LavirintItem } from "../LavirintItems/LavirintItem";
-import { Level } from "../Level";
 import { IDrawable } from "../IDrawable";
-import { LavirintDrawer } from "./LavirintDrawer";
-import { LavirintConfigurator } from "./LavirintConfigurator";
+import { Wall } from "../LavirintItems/Wall";
+import { Level } from "../Level";
 import { Player } from "../Player";
 import { Direction, Position } from "../Position";
-import { Wall } from "../LavirintItems/Wall";
-import { LavirintMatrix } from "./LavirintMatrix";
 import { Score, ScoreValues } from "../Score";
+import { LavirintConfigurator } from "./LavirintConfigurator";
+import { LavirintDrawer } from "./LavirintDrawer";
+import { LavirintMatrix } from "./LavirintMatrix";
 
 export class Lavirint implements IDrawable {
 
@@ -25,7 +24,7 @@ export class Lavirint implements IDrawable {
 
     constructor() {
         this.lavirintDrawer = new LavirintDrawer(this);
-        this.lavirintConfigurator = new LavirintConfigurator(this);
+        this.lavirintConfigurator = new LavirintConfigurator();
         this.level = new Level();
         this.player = new Player();
         this.score = new Score(this);
@@ -112,7 +111,7 @@ export class Lavirint implements IDrawable {
     }
 
     private nextLevel(): void {
-        const inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
+        const inLvl = <HTMLInputElement>document.querySelector(".input-level");                                    
         inLvl.value = (+inLvl.value + 1).toString();
         inLvl.dispatchEvent(new Event("change"));
         
@@ -120,7 +119,7 @@ export class Lavirint implements IDrawable {
     }
 
     resetGame(): void {
-        const inLvl = <HTMLInputElement>document.querySelector(".input-level-picker");                                    
+        const inLvl = <HTMLInputElement>document.querySelector(".input-level");                                    
         inLvl.value = (0).toString();
         inLvl.dispatchEvent(new Event("change"));
     }
