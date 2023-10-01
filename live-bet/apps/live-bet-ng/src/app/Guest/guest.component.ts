@@ -28,8 +28,8 @@ import { NavBarComponent } from './nav-bar.component';
     </mat-drawer-container>
   `,
   styles: [
-    ".draw-container { height: 100%;}",
-    "mat-drawer { width: 400px; background-color: #172034; color: white; }",
+    ".draw-container { height: 100%; padding-bottom: 78px; }",
+    "mat-drawer { width: 400px; background-color: #172034; color: white; padding-bottom: 78px; }",
     ".router { overflow-y: auto; height: 100%; }",
     ".ticket-fab { position: absolute; top: 50%; right: 0; z-index: 1; background-color: white !important; color: #172034 !important; font-size: 16px; }",
     ".button-icon { margin-right: -4px !important; }",

@@ -52,7 +52,12 @@ export class SportComponent {
 
   public openAddMatchDialog() {
     const dialogRef = this.dialog.open(AddMatchDialogComponent, {
-      data: newIMatch(),
+      data: {
+        league: '',
+        home: '',
+        guest: '',
+        sportId: this.sport.id,
+      } as MatchDTO,
     });
 
     dialogRef.afterClosed()
@@ -68,7 +73,11 @@ export class SportComponent {
   public openAddGameDialog() {
     const dialogRef = this.dialog.open(AddGameDialogComponent, {
       panelClass: 'disable-horizontal-scroll',
-      data: newIGame(),
+      data: {
+        name: '',
+        sportId: this.sport.id,
+        subgames: [],
+      } as GameDTO,
     });
 
     dialogRef.afterClosed()
