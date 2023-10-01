@@ -5,7 +5,7 @@ import { Lavirint } from "./Lavirint/Lavirint";
 
 export enum ScoreValues {
     nextLevel = 10,
-    startGame = 10000,
+    startGame = 120,
     default = 1,
 }
 
