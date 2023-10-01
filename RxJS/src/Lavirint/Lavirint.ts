@@ -5,7 +5,7 @@ import { Wall } from "../LavirintItems/Wall";
 import { Level } from "../Level";
 import { Player } from "../Player";
 import { Direction, Position } from "../Position";
-import { Score, ScoreValues } from "../Score";
+import { ScoreValues, scoreInstance } from "../Score";
 import { LavirintConfigurator } from "./LavirintConfigurator";
 import { LavirintDrawer } from "./LavirintDrawer";
 import { LavirintMatrix } from "./LavirintMatrix";
@@ -18,7 +18,6 @@ export class Lavirint implements IDrawable {
     private lavirintConfigurator: LavirintConfigurator;
     private level: Level;
     private player: Player;
-    private score: Score;
     
     public root: HTMLDivElement;
 
@@ -27,12 +26,11 @@ export class Lavirint implements IDrawable {
         this.lavirintConfigurator = new LavirintConfigurator();
         this.level = new Level();
         this.player = new Player();
-        this.score = new Score(this);
+        scoreInstance.lav = this;
     }
 
     public draw(parent: HTMLElement): HTMLElement {
         this.root = Draw.div(parent, "div-lavirint");
-        this.score.draw(this.root);
         this.lavirintConfigurator.draw(this.root);
 
         this.lavMat$ = this.lavirintConfigurator.level$
@@ -115,7 +113,7 @@ export class Lavirint implements IDrawable {
         inLvl.value = (+inLvl.value + 1).toString();
         inLvl.dispatchEvent(new Event("change"));
         
-        this.score.increase(ScoreValues.nextLevel);
+        scoreInstance.increase(ScoreValues.nextLevel);
     }
 
     resetGame(): void {

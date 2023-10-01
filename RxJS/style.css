@@ -1,3 +1,33 @@
+.div-lavirint {
+  display: flex;
+}
+
+.div-lavirint-config {
+  width: 220px;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.div-config-container {
+  margin-block: 4px;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.div-config-container > * {
+  text-align: left;
+  margin-inline: 8px;
+  width: 100%;
+}
+
+.flex-2 {
+  flex: 2;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
 .grid-container {
   display: grid;
   gap: 0px;

@@ -1,6 +1,7 @@
 import { fromEvent, map, Observable, startWith } from "rxjs";
 import { Draw } from "../Draw";
 import { IDrawable } from "../IDrawable";
+import { scoreInstance } from "../Score";
 
 type ConfiguratorParams = {
     title: string;
@@ -20,11 +21,11 @@ export class LavirintConfigurator implements IDrawable {
     private _level$: Observable<string> = new Observable<string>();
     private _playerColor$: Observable<string>;
 
-    constructor() { }
-
     public draw(parent: HTMLElement): HTMLElement {
         this.root = Draw.div(parent, "div-lavirint-config");
         
+        scoreInstance.draw(this.root);
+
         this._lavirintSize$ = this.drawOneConfigurator({
             title: "Velicina lavirinta",
             cssName: "lavirint-size",
@@ -71,8 +72,9 @@ export class LavirintConfigurator implements IDrawable {
     }
 
     drawOneConfigurator(configuratorParams: ConfiguratorParams): Observable<string> {
-        const label = Draw.label(this.root, `${configuratorParams.title}: `, `lbl-${configuratorParams.cssName}`);
-        const picker = Draw.input(this.root, configuratorParams.type, `input-${configuratorParams.cssName}`);
+        const divContainer = Draw.div(this.root, "div-config-container");
+        const label = Draw.label(divContainer, `${configuratorParams.title}: `, `lbl-${configuratorParams.cssName} flex-2`);
+        const picker = Draw.input(divContainer, configuratorParams.type, `input-${configuratorParams.cssName} flex-1`);
 
         picker.value = configuratorParams.defaultValue;
 

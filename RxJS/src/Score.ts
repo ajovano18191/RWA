@@ -11,16 +11,18 @@ export enum ScoreValues {
 
 export class Score implements IDrawable {
 
+    public lav: Lavirint;
     private score: number = ScoreValues.startGame;
     private scoreLabel: HTMLElement;
     private startInterval$ = new Subject<void>();
 
-    constructor(private lav: Lavirint) {}
+    constructor() {}
 
     public draw(parent: HTMLElement): HTMLElement {
-        const container = Draw.div(parent, "div-score")
-        const key = Draw.label(container, "Score: ")
-        this.scoreLabel = Draw.label(container, this.score.toString())
+        const container = Draw.div(parent, "div-score div-config-container")
+        const key = Draw.label(container, "Score: ", "flex-2")
+        this.scoreLabel = Draw.label(container, this.score.toString(), "flex-1");
+        this.scoreLabel.style.textAlign = "right";
 
         this.initStartInterval$();
 
@@ -64,3 +66,5 @@ export class Score implements IDrawable {
         });
     }
 }
+
+export const scoreInstance = new Score();
