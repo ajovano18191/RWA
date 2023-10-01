@@ -1,0 +1,42 @@
+@import '@angular/material/theming';
+@include mat-core();
+$primary: mat-palette($mat-indigo);
+
+:host {
+    position: relative;
+}
+
+.game { 
+    width: fit-content; 
+    display: flex; 
+    flex-direction: column; 
+    align-content: center; 
+
+    margin: 8px; 
+    padding: 8px; 
+    padding-bottom: 0px; 
+    border-radius: 25px; 
+
+    color: white; 
+    background-color: mat-color($primary); 
+}
+
+.game-title { 
+    text-align: center; 
+    font-weight: bold; 
+    font-size: large; 
+    margin-top: 0.5em; 
+    margin-bottom: 1em; 
+}
+
+.subgames { 
+    display: flex; 
+    flex-flow: row wrap; 
+    justify-content: space-around; 
+}
+
+.delete-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}

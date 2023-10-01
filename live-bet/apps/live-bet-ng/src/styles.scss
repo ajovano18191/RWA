@@ -1,0 +1,28 @@
+$back-color: #172034;
+$border-color: #ffbf00; 
+$text-color: #ffffff;
+
+html, body { height: 100%; overflow-y: hidden; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: white; color: black; }
+
+.back-text {
+    background-color: $back-color;
+    color:  $text-color;
+}
+
+.back-text-hover:hover {
+    background-color: $border-color !important;
+}
+
+.border-color {
+    border: 3px solid $border-color;
+}
+
+.border-text {
+    background-color: $border-color;
+    color: $back-color;
+}
+
+.border-text-hover:hover {
+    background-color: $border-color !important;
+}
